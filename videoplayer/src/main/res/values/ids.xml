@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="salient_video_fullscreen_id" type="id" />
+    <item name="salient_video_tiny_id" type="id" />
+</resources>
