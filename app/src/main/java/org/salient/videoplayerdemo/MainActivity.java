@@ -1,8 +1,7 @@
-package org.salient.salientvideoplayerdemo;
+package org.salient.videoplayerdemo;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
 
 import org.salient.MediaPlayerManager;
 import org.salient.VideoView;

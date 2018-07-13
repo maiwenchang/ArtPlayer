@@ -1,4 +1,4 @@
-package org.salient.salientvideoplayerdemo;
+package org.salient.videoplayerdemo;
 
 import org.junit.Test;
 

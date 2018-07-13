@@ -1,4 +1,4 @@
-package org.salient.salientvideoplayerdemo;
+package org.salient.videoplayerdemo;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
