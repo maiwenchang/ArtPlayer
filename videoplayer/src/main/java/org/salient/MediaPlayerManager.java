@@ -113,7 +113,9 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     }
 
     public void pause() {
-        instance().mediaPlayer.pause();
+        if (isPlaying()) {
+            instance().mediaPlayer.pause();
+        }
     }
 
     public void start() {

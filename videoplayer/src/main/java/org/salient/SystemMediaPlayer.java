@@ -66,15 +66,24 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
 
     @Override
     public void pause() {
-        if (mediaPlayer != null) {
-            mediaPlayer.pause();
-            MediaPlayerManager.instance().updateState(MediaPlayerManager.PlayerState.PAUSED);
+        try {
+            if (mediaPlayer != null) {
+                mediaPlayer.pause();
+                MediaPlayerManager.instance().updateState(MediaPlayerManager.PlayerState.PAUSED);
+            }
+        } catch (IllegalStateException e) {
+            e.printStackTrace();
         }
     }
 
     @Override
     public boolean isPlaying() {
-        return mediaPlayer.isPlaying();
+        try {
+            return mediaPlayer.isPlaying();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     @Override
@@ -90,41 +99,63 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
 
     @Override
     public void release() {
-        if (mediaPlayer != null) {
-            mediaPlayer.release();
-            MediaPlayerManager.instance().updateState(MediaPlayerManager.PlayerState.IDLE);
+        try {
+            if (mediaPlayer != null) {
+                mediaPlayer.release();
+                MediaPlayerManager.instance().updateState(MediaPlayerManager.PlayerState.IDLE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     @Override
     public long getCurrentPosition() {
-        if (mediaPlayer != null) {
-            return mediaPlayer.getCurrentPosition();
-        } else {
-            return 0;
+        try {
+            if (mediaPlayer != null) {
+                return mediaPlayer.getCurrentPosition();
+            } else {
+                return 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return 0;
     }
 
     @Override
     public long getDuration() {
-        if (mediaPlayer != null) {
-            return mediaPlayer.getDuration();
-        } else {
-            return 0;
+        try {
+            if (mediaPlayer != null) {
+                return mediaPlayer.getDuration();
+            } else {
+                return 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return 0;
     }
 
     @Override
     public void setSurface(Surface surface) {
-        if (mediaPlayer != null) {
-            mediaPlayer.setSurface(surface);
+        try {
+            if (mediaPlayer != null) {
+                mediaPlayer.setSurface(surface);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     @Override
     public void setVolume(float leftVolume, float rightVolume) {
-        if (mediaPlayer != null) {
-            mediaPlayer.setVolume(leftVolume, rightVolume);
+        try {
+            if (mediaPlayer != null) {
+                mediaPlayer.setVolume(leftVolume, rightVolume);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -148,8 +179,12 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
     }
 
     public void CloseVolume() {
-        if (mediaPlayer != null) {
-            mediaPlayer.setVolume(0, 0);
+        try {
+            if (mediaPlayer != null) {
+                mediaPlayer.setVolume(0, 0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
