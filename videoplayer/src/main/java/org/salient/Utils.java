@@ -44,16 +44,24 @@ public class Utils {
         }
     }
 
-    /**
-     * This method requires the caller to hold the permission ACCESS_NETWORK_STATE.
-     *
-     * @param context context
-     * @return if wifi is connected,return true
-     */
+    public static boolean isNetConnected(Context context) {
+        ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getActiveNetworkInfo();
+            if (info != null && info.isConnected()) {
+                return info.getState() == NetworkInfo.State.CONNECTED;
+            }
+        }
+        return false;
+    }
+
     public static boolean isWifiConnected(Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        return networkInfo != null && networkInfo.getType() == ConnectivityManager.TYPE_WIFI;
+        if (connectivityManager != null) {
+            NetworkInfo wifiNetworkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            return wifiNetworkInfo.isConnected();
+        }
+        return false;
     }
 
     /**

@@ -2,7 +2,8 @@ package org.salient;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
-import android.support.annotation.Nullable;
+import android.net.Uri;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -11,6 +12,7 @@ import android.view.ViewParent;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -18,12 +20,15 @@ import android.widget.TextView;
 /**
  * > Created by Mai on 2018/7/10
  * *
- * > Description: 视频播放器的控制面板
+ * > Description: 视频播放器的控制面板，旨在展示与视频播放相关的核心功能；
+ * <p>
  * *
  */
 public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarChangeListener, CheckBox.OnCheckedChangeListener {
 
     private final String TAG = ControlPanel.class.getSimpleName();
+
+    private final long autoDismissTime = 3000;
 
     private CheckBox start;
     private CheckBox ivVolume;
@@ -35,16 +40,20 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
     private ProgressBar loading;
     private ImageView back;
     private ImageView video_cover;
+    private ImageView ivFullscreen;
+    private LinearLayout llAlert;
+    private TextView tvAlert;
+    private TextView tvConfirm;
 
     public ControlPanel(Context context) {
         super(context);
     }
 
-    public ControlPanel(Context context, @Nullable AttributeSet attrs) {
+    public ControlPanel(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ControlPanel(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public ControlPanel(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -66,7 +75,12 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
         loading = findViewById(R.id.loading);
         back = findViewById(R.id.back);
         video_cover = findViewById(R.id.video_cover);
+        llAlert = findViewById(R.id.llAlert);
+        tvAlert = findViewById(R.id.tvAlert);
+        tvConfirm = findViewById(R.id.tvConfirm);
+        ivFullscreen = findViewById(R.id.ivFullscreen);
 
+        ivFullscreen.setOnClickListener(this);
         back.setOnClickListener(this);
         bottom_seek_progress.setOnSeekBarChangeListener(this);
         ivVolume.setOnCheckedChangeListener(this);
@@ -75,19 +89,37 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
 
     @Override
     public void onStateError() {
-
+        hideUI(start, layout_top, layout_bottom);
+        showUI(llAlert);
+        tvAlert.setText("oops~~ unknown error");
+        tvConfirm.setText("retry");
+        tvConfirm.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mTarget != null) {
+                    hideUI(llAlert);
+                    mTarget.start();
+                }
+            }
+        });
     }
 
     @Override
     public void onStateIdle() {
-        hideUI(layout_bottom);
-        showUI(video_cover);
-        start.setChecked(false);
-        if (MediaPlayerManager.instance().isMute) {
-            ivVolume.setChecked(false);
-        } else {
-            ivVolume.setChecked(true);
+        try {
+            hideUI(layout_bottom, layout_top);
+            showUI(video_cover);
+            start.setChecked(false);
+            if (mTarget != null && !TextUtils.isEmpty(mTarget.getCoverUrl())) {
+                if (!mTarget.isCurrentPlay() || !MediaPlayerManager.instance().isPlaying()) {
+                    video_cover.setImageURI(Uri.parse(mTarget.getCoverUrl()));
+                    showUI(video_cover);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        SynchronizeViewState();
     }
 
     @Override
@@ -103,27 +135,26 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
     @Override
     public void onStatePlaying() {
         start.setChecked(true);
-        showUI(layout_bottom);
+        showUI(layout_bottom, layout_top);
         hideUI(video_cover);
-        if (mTarget != null) {
-            if (mTarget.mWindowType == VideoView.WindowType.FULLSCREEN) {
-                showUI(layout_top);
-            } else {
-                hideUI(layout_top);
-            }
-        }
+        startDismissTask();
     }
 
     @Override
     public void onStatePaused() {
         start.setChecked(false);
+        showUI(start, layout_bottom);
+        hideUI(video_cover);
     }
 
     @Override
     public void onStatePlaybackCompleted() {
         start.setChecked(false);
         hideUI(layout_bottom);
-        showUI(video_cover);
+        showUI(video_cover, start);
+        if (mTarget.mWindowType == VideoView.WindowType.FULLSCREEN) {
+            showUI(layout_top);
+        }
     }
 
     @Override
@@ -155,18 +186,23 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
 
     @Override
     public void onEnterFullScreen() {
-
+        showUI(layout_top, back);
+        hideUI(ivFullscreen);
+        SynchronizeViewState();
     }
 
     @Override
     public void onExitFullScreen() {
-
+        hideUI(layout_top, back);
+        showUI(ivFullscreen);
+        SynchronizeViewState();
     }
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
         Log.i(TAG, "bottomProgress onStartTrackingTouch [" + this.hashCode() + "] ");
         MediaPlayerManager.instance().cancelProgressTimer();
+        cancelDismissTask();
         ViewParent vpdown = getParent();
         while (vpdown != null) {
             vpdown.requestDisallowInterceptTouchEvent(true);
@@ -178,13 +214,15 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
     public void onStopTrackingTouch(SeekBar seekBar) {
         Log.i(TAG, "bottomProgress onStopTrackingTouch [" + this.hashCode() + "] ");
         MediaPlayerManager.instance().startProgressTimer();
+        startDismissTask();
         ViewParent vpup = getParent();
         while (vpup != null) {
             vpup.requestDisallowInterceptTouchEvent(false);
             vpup = vpup.getParent();
         }
         if (MediaPlayerManager.instance().getCurrentState() != MediaPlayerManager.PlayerState.PLAYING &&
-                MediaPlayerManager.instance().getCurrentState() != MediaPlayerManager.PlayerState.PAUSED) return;
+                MediaPlayerManager.instance().getCurrentState() != MediaPlayerManager.PlayerState.PAUSED)
+            return;
         long time = seekBar.getProgress() * MediaPlayerManager.instance().getDuration() / 100;
         MediaPlayerManager.instance().seekTo(time);
         Log.i(TAG, "seekTo " + time + " [" + this.hashCode() + "] ");
@@ -200,6 +238,7 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        cancelDismissTask();
         int id = buttonView.getId();
         if (id == R.id.ivVolume) {
             if (isChecked) {
@@ -208,23 +247,45 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
                 MediaPlayerManager.instance().mute(true);
             }
         } else if (id == R.id.start) {
-            //todo 抛出wifi提醒
-
-//            if (!Utils.getCurrentFromDataSource(mTarget.dataSourceObjects, mTarget.currentUrlMapIndex).toString().startsWith("file") && !
-//                    Utils.getCurrentFromDataSource(mTarget.dataSourceObjects, mTarget.currentUrlMapIndex).toString().startsWith("/") &&
-//                    !Utils.isWifiConnected(getContext()) /*&& !WIFI_TIP_DIALOG_SHOWED*/) {
-//
-//                //showWifiDialog();
-//
-//                return;
-//            }
-
+            if (mTarget == null) {
+                return;
+            }
             if (isChecked) {
+                if (MediaPlayerManager.instance().isPlaying()) {
+                    return;
+                }
+                if (!Utils.isNetConnected(getContext())) {
+                    onStateError();
+                    return;
+                }
+                if (!Utils.isWifiConnected(getContext())) {
+                    showWifiAlert();
+                    return;
+                }
                 mTarget.start();
             } else {
                 mTarget.pause();
             }
         }
+        startDismissTask();
+    }
+
+    //显示WiFi状态提醒
+    public void showWifiAlert() {
+        MediaPlayerManager.instance().releaseAllVideos();
+        hideUI(start, layout_bottom, layout_top);
+        showUI(llAlert);
+        tvAlert.setText("Is in non-WIFI");
+        tvConfirm.setText("continue");
+        tvConfirm.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mTarget != null) {
+                    hideUI(llAlert);
+                    mTarget.start();
+                }
+            }
+        });
     }
 
     @Override
@@ -232,21 +293,83 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
         int id = v.getId();
         if (id == R.id.surface_container) {
             if (mTarget == null) return;
-            if (mTarget.isCurrentPlay()
-                    && mTarget.mWindowType == VideoView.WindowType.NORMAL
-                    && MediaPlayerManager.instance().getCurrentState() == MediaPlayerManager.PlayerState.PLAYING) {
-                mTarget.startWindowFullscreen(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+            if (!mTarget.isCurrentPlay()) {
+                return;
+            }
+            if (mTarget.mWindowType == VideoView.WindowType.NORMAL && MediaPlayerManager.instance().getCurrentState() == MediaPlayerManager.PlayerState.PLAYING) {
+                //mTarget.startWindowFullscreen(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+                if (layout_bottom.getVisibility() != VISIBLE) {
+                    showUI(layout_bottom, layout_top, start);
+                } else {
+                    hideUI(layout_top, layout_bottom, start);
+                }
+                startDismissTask();
+            } else if (mTarget.mWindowType == VideoView.WindowType.FULLSCREEN && MediaPlayerManager.instance().getCurrentState() == MediaPlayerManager.PlayerState.PLAYING) {
+                if (layout_bottom.getVisibility() != VISIBLE) {
+                    showUI(layout_top, layout_bottom, start);
+                } else {
+                    hideUI(layout_top, layout_bottom, start);
+                }
+                startDismissTask();
             }
         } else if (id == R.id.back) {
             if (mTarget == null) return;
             if (mTarget.mWindowType == VideoView.WindowType.FULLSCREEN) {
                 MediaPlayerManager.instance().backPress(getContext());
             }
+        } else if (id == R.id.ivFullscreen) {
+            if (mTarget == null) return;
+            if (mTarget.mWindowType != VideoView.WindowType.FULLSCREEN) {
+                mTarget.startWindowFullscreen(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+            }
         }
     }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                break;
+            case MotionEvent.ACTION_MOVE:
+                break;
+            case MotionEvent.ACTION_UP:
+                break;
+        }
         return false;
     }
+
+    //同步跟MediaPlayer状态无关的视图
+    public void SynchronizeViewState() {
+        if (MediaPlayerManager.instance().isMute) {
+            ivVolume.setChecked(false);
+        } else {
+            ivVolume.setChecked(true);
+        }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        cancelDismissTask();
+    }
+
+    private void startDismissTask() {
+        cancelDismissTask();
+        postDelayed(mDismissTask, autoDismissTime);
+    }
+
+    private void cancelDismissTask() {
+        getHandler().removeCallbacks(mDismissTask);
+    }
+
+    private Runnable mDismissTask = new Runnable() {
+        @Override
+        public void run() {
+            Log.d(TAG, "task run : " + System.currentTimeMillis());
+            if (mTarget != null && mTarget.isCurrentPlay() && MediaPlayerManager.instance().isPlaying()) {
+                hideUI(layout_bottom, layout_top, start);
+            }
+        }
+    };
+
 }

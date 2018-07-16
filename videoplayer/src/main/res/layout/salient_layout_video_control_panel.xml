@@ -3,14 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:descendantFocusability="blocksDescendants">
+    android:descendantFocusability="blocksDescendants"
+    tools:background="#000000">
 
     <ImageView
         android:id="@+id/video_cover"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:visibility="invisible"/>
+        android:visibility="invisible" />
 
     <RelativeLayout
         android:id="@+id/controlPlane"
@@ -37,20 +38,39 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_centerVertical="true"
-                android:padding="15dp"
+                android:paddingBottom="15dp"
+                android:paddingLeft="15dp"
+                android:paddingTop="15dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/salient_icon_back" />
+                android:src="@drawable/salient_icon_back"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/ivFullscreen"
+                android:layout_toRightOf="@id/back"
+                android:paddingBottom="15dp"
+                android:paddingLeft="15dp"
+                android:paddingTop="15dp"
+                android:textColor="#ffffff"
+                tools:text="标题" />
 
             <!--required-->
             <ImageView
-                android:id="@+id/fullscreen"
+                android:id="@+id/ivFullscreen"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
-                android:padding="15dp"
+                android:layout_centerVertical="true"
+                android:paddingBottom="10dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="10dp"
                 android:scaleType="centerInside"
-                android:src="@drawable/salient_icon_full_screen"
-                android:visibility="gone"/>
+                android:src="@drawable/salient_icon_full_screen" />
         </RelativeLayout>
 
         <LinearLayout
@@ -66,8 +86,8 @@
                 android:id="@+id/start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:checked="false"
-                android:button="@drawable/salient_selector_video_play" />
+                android:button="@drawable/salient_selector_video_play"
+                android:checked="false" />
         </LinearLayout>
 
         <ProgressBar
@@ -141,6 +161,38 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/llAlert"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#80000000"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="invisible"
+            tools:visibility="visible">
+
+            <TextView
+                android:id="@+id/tvAlert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+                android:textSize="15sp"
+                tools:text="正在使用非WIFI网络" />
+
+            <TextView
+                android:id="@+id/tvConfirm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/bg_btn_corner_stroke_white"
+                android:paddingBottom="5dp"
+                android:paddingLeft="12dp"
+                android:paddingRight="12dp"
+                android:paddingTop="5dp"
+                android:textColor="#ffffff"
+                android:textSize="13sp"
+                tools:text="继续播放" />
+        </LinearLayout>
 
     </RelativeLayout>
 
