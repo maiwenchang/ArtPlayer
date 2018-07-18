@@ -3,6 +3,7 @@ package org.salient;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -106,19 +107,9 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
 
     @Override
     public void onStateIdle() {
-        try {
-            hideUI(layout_bottom, layout_top);
-            showUI(video_cover);
-            start.setChecked(false);
-            if (mTarget != null && !TextUtils.isEmpty(mTarget.getCoverUrl())) {
-                if (!mTarget.isCurrentPlay() || !MediaPlayerManager.instance().isPlaying()) {
-                    video_cover.setImageURI(Uri.parse(mTarget.getCoverUrl()));
-                    showUI(video_cover);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        hideUI(layout_bottom, layout_top);
+        showUI(video_cover);
+        start.setChecked(false);
         SynchronizeViewState();
     }
 
@@ -186,14 +177,14 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
 
     @Override
     public void onEnterFullScreen() {
-        showUI(layout_top, back);
+        showUI(back);
         hideUI(ivFullscreen);
         SynchronizeViewState();
     }
 
     @Override
     public void onExitFullScreen() {
-        hideUI(layout_top, back);
+        hideUI(back);
         showUI(ivFullscreen);
         SynchronizeViewState();
     }
@@ -359,7 +350,10 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
     }
 
     private void cancelDismissTask() {
-        getHandler().removeCallbacks(mDismissTask);
+        Handler handler = getHandler();
+        if (handler != null && mDismissTask != null) {
+            handler.removeCallbacks(mDismissTask);
+        }
     }
 
     private Runnable mDismissTask = new Runnable() {
@@ -371,5 +365,9 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
             }
         }
     };
+
+    public ImageView getCoverView(){
+        return video_cover;
+    }
 
 }

@@ -41,13 +41,11 @@ public class VideoView extends FrameLayout {
     public int heightRatio = 0;
     // settable by the client
     private Uri mUri;
-    private String mCoverUrl;
     private Object[] mHeaders = null; // 标题
     private int mScreenOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
     private int positionInList = -1;
     private int mScreenWidth;
     private int mScreenHeight;
-    private AudioManager mAudioManager;
     private AbsControlPanel mControlPanel;
     private FrameLayout textureViewContainer;
     public VideoView(@NonNull Context context) {
@@ -74,7 +72,6 @@ public class VideoView extends FrameLayout {
 
         mScreenWidth = getContext().getResources().getDisplayMetrics().widthPixels;
         mScreenHeight = getContext().getResources().getDisplayMetrics().heightPixels;
-        mAudioManager = (AudioManager) getContext().getSystemService(Context.AUDIO_SERVICE);
 
         try {
             if (isCurrentPlay()) {
@@ -153,6 +150,10 @@ public class VideoView extends FrameLayout {
         this.currentUrlMapIndex = defaultUrlMapIndex;
         this.mWindowType = windowType;
         this.mHeaders = headers;
+
+        if (mControlPanel != null) {
+            mControlPanel.onStateIdle();
+        }
     }
 
     @Override
@@ -339,6 +340,7 @@ public class VideoView extends FrameLayout {
     }
 
     public AbsControlPanel getControlPanel() {
+
         return mControlPanel;
     }
 
@@ -373,14 +375,6 @@ public class VideoView extends FrameLayout {
 
     public FrameLayout getTextureViewContainer() {
         return textureViewContainer;
-    }
-
-    public String getCoverUrl() {
-        return mCoverUrl;
-    }
-
-    public void setCoverUrl(String mCoverUrl) {
-        this.mCoverUrl = mCoverUrl;
     }
 
     public void completeVideo() {
