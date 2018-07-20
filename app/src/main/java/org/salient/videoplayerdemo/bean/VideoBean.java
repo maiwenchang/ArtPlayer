@@ -23,6 +23,15 @@ public class VideoBean{
     private String title;
     private String url;
     private int videoId;
+    private int listPosition;
+
+    public int getListPosition() {
+        return listPosition;
+    }
+
+    public void setListPosition(int listPosition) {
+        this.listPosition = listPosition;
+    }
 
     public String getHightUrl() {
         return hightUrl;

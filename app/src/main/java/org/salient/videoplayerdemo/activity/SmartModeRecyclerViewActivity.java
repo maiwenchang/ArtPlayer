@@ -32,13 +32,10 @@ public class SmartModeRecyclerViewActivity extends BaseActivity {
         RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter();
         recycler_view.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recycler_view.setAdapter(recyclerViewAdapter);
-        List<VideoBean> allAttention = new ArrayList<>();
-        allAttention.addAll(getAllAttention());
-        allAttention.addAll(getAllAttention());
-        allAttention.addAll(getAllAttention());
-        allAttention.addAll(getAllAttention());
-        allAttention.addAll(getAllAttention());
-        recyclerViewAdapter.setList(allAttention);
+        List<VideoBean> list = new ArrayList<>();
+        list.addAll(getAllComing());
+        list.addAll(getAllAttention());
+        recyclerViewAdapter.setList(list);
         recyclerViewAdapter.notifyDataSetChanged();
 
     }

@@ -9,6 +9,10 @@ import android.widget.GridView;
 import android.widget.ListView;
 
 import org.salient.videoplayerdemo.adapter.ListViewAdapter;
+import org.salient.videoplayerdemo.bean.VideoBean;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * > Created by Mai on 2018/7/19
@@ -25,7 +29,10 @@ public class ListViewActivity extends BaseActivity {
         setContentView(listView,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         ListViewAdapter listViewAdapter = new ListViewAdapter();
         listView.setAdapter(listViewAdapter);
-        listViewAdapter.setList(getAllComing());
+        List<VideoBean> list = new ArrayList<>();
+        list.addAll(getAllAttention());
+        list.addAll(getAllComing());
+        listViewAdapter.setList(list);
         listViewAdapter.notifyDataSetChanged();
     }
 

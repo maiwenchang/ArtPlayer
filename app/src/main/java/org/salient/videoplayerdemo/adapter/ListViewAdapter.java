@@ -9,6 +9,7 @@ import android.widget.BaseAdapter;
 
 import com.bumptech.glide.Glide;
 
+import org.salient.VideoLayerManager;
 import org.salient.VideoView;
 import org.salient.videoplayerdemo.ControlPanel;
 import org.salient.videoplayerdemo.R;
@@ -49,36 +50,40 @@ public class ListViewAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final ViewHolder viewHolder;
-        Log.d(getClass().getSimpleName(), "getView : " + position);
+        //Log.d(getClass().getSimpleName(), "getView : " + position);
         if (convertView == null) {
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_video_view, parent, false);
-            viewHolder = new ViewHolder();
-            viewHolder.videoView = convertView.findViewById(R.id.videoView);
-            viewHolder.videoView.setControlPanel(new ControlPanel(parent.getContext()));
+            viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
-            Log.d(getClass().getSimpleName(), "new ViewHolder");
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         final VideoBean item = getItem(position);
         if (item != null) {
-            viewHolder.videoView.setUp(item.getUrl(), item);
-            viewHolder.videoView.setComparator(new Comparator<VideoView<VideoBean>>() {
-                @Override
-                public int compare(VideoView<VideoBean> o1, VideoView<VideoBean> o2) {
-                    if (item.getVideoId() == o2.getData().getVideoId()) {
-                        return 0;
-                    }
-                    return -1;
-                }
-            });
-            ControlPanel controlPanel = (ControlPanel) viewHolder.videoView.getControlPanel();
-            Glide.with(viewHolder.videoView.getContext())
+            item.setListPosition(position);
+            VideoView<VideoBean> videoView = viewHolder.videoView;
+            videoView.setUp(item.getUrl(), item);
+            ControlPanel controlPanel = (ControlPanel) videoView.getControlPanel();
+            Glide.with(videoView.getContext())
                     .load(item.getImage())
                     .into(controlPanel.getCoverView());
         }
         return convertView;
     }
+
+    private Comparator<VideoView> mComparator = new Comparator<VideoView>() {
+        @Override
+        public int compare(VideoView self, VideoView current) {
+            if (self.getData() instanceof VideoBean
+                    && VideoLayerManager.instance().getCurrentData() instanceof VideoBean
+                    && ((VideoBean) self.getData()).getListPosition() == ((VideoBean) VideoLayerManager.instance().getCurrentData()).getListPosition()) {
+                //We use video ID to distinguish whether it is the same video.
+                // If is, return 0.
+                return 0;
+            }
+            return -1;
+        }
+    };
 
     @Override
     public void registerDataSetObserver(DataSetObserver observer) {
@@ -87,5 +92,12 @@ public class ListViewAdapter extends BaseAdapter {
 
     public class ViewHolder {
         VideoView<VideoBean> videoView;
+
+        ViewHolder(View convertView) {
+            Log.d(getClass().getSimpleName(), "new ViewHolder");
+            videoView = convertView.findViewById(R.id.videoView);
+            videoView.setControlPanel(new ControlPanel(convertView.getContext()));
+            videoView.setComparator(mComparator);
+        }
     }
 }

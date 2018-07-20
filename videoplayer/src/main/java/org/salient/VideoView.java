@@ -2,7 +2,6 @@ package org.salient;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
-import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +18,6 @@ import android.widget.Toast;
 
 import java.lang.reflect.Constructor;
 import java.util.Comparator;
-import java.util.LinkedHashMap;
 
 /**
  * > Created by Mai on 2018/7/10
@@ -34,17 +32,18 @@ public class VideoView<T> extends FrameLayout {
     private final int ROOT_VIEW_POSITION = -1;
     private final int CONTROL_PANEL_POSITION = 1;
     public WindowType mWindowType = WindowType.NORMAL;
-    public Object[] dataSourceObjects;
-    public int currentUrlMapIndex = 0;
     public int widthRatio = 0;
     public int heightRatio = 0;
 
     // settable by the client
-    private T mData = null; // 标题
+    private T mData = null;
+    private Object dataSourceObjects;
     private int mScreenOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
     private AbsControlPanel mControlPanel;
     private FrameLayout textureViewContainer;
     private DetachAction mDetachAction = DetachAction.NOTHING;
+    private boolean mSmartMode = true;
+
     public VideoView(@NonNull Context context) {
         super(context);
         init(context);
@@ -87,7 +86,7 @@ public class VideoView<T> extends FrameLayout {
      * @return boolean
      */
     public boolean isCurrentPlay() {
-        return VideoLayerManager.isCurrentFloor(this);//不仅正在播放的url不能一样，并且各个清晰度也不能一样
+        return VideoLayerManager.instance().isCurrentPlaying(this);//不仅正在播放的url不能一样，并且各个清晰度也不能一样
     }
 
     public void setUp(String url) {
@@ -102,27 +101,56 @@ public class VideoView<T> extends FrameLayout {
         setUp(url, windowType, null);
     }
 
-    public void setUp(String url, WindowType windowType, T data) {
-        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-        map.put(URL_KEY_DEFAULT, url);
-        Object[] dataSourceObjects = new Object[1];
-        dataSourceObjects[0] = map;
-        setUp(dataSourceObjects, 0, windowType, data);
-    }
-
-    public void setUp(Object[] dataSourceObjects, int defaultUrlMapIndex, WindowType windowType, T data) {
+    public void setUp(Object dataSourceObjects, WindowType windowType, T data) {
         this.dataSourceObjects = dataSourceObjects;
-        this.currentUrlMapIndex = defaultUrlMapIndex;
         this.mWindowType = windowType;
         this.mData = data;
+        if (mSmartMode) {
+            autoMatch();
+        } else if (mControlPanel != null) {
+            mControlPanel.onStateIdle();
+        }
     }
 
-    public void setData(T data){
+    public boolean isSmartMode() {
+        return mSmartMode;
+    }
+
+    public void setSmartMode(boolean mSmartMode) {
+        this.mSmartMode = mSmartMode;
+    }
+
+    private void autoMatch() {
+        if (VideoLayerManager.instance().isCurrentPlaying(this)) {
+            if (mWindowType == WindowType.NORMAL) {
+                if (VideoLayerManager.instance().getSecondFloor() != null) {
+                    closeWindowFullScreen();
+                }
+                removeTextureView();
+                addTextureView();
+                AbsControlPanel currentControlPanel = VideoLayerManager.instance().getCurrentControlPanel();
+                if (currentControlPanel != null) {
+                    currentControlPanel.onStateIdle();
+                }
+                VideoLayerManager.instance().setFirstFloor(this);
+
+                if (mControlPanel != null) {
+                    mControlPanel.notifyStateChange();
+                }
+            }
+        } else {
+            if (mControlPanel != null) {
+                mControlPanel.onStateIdle();
+            }
+        }
+    }
+
+    public void setData(T data) {
         mData = data;
     }
 
-    public T getData(){
-        return  mData;
+    public T getData() {
+        return mData;
     }
 
     @Override
@@ -163,7 +191,7 @@ public class VideoView<T> extends FrameLayout {
     public void start() {
         Log.d(TAG, "start [" + this.hashCode() + "] ");
 
-        if (dataSourceObjects == null || Utils.getCurrentFromDataSource(dataSourceObjects, currentUrlMapIndex) == null) {
+        if (dataSourceObjects == null) {
             Toast.makeText(getContext(), "No Url", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -200,7 +228,7 @@ public class VideoView<T> extends FrameLayout {
     }
 
     public void startVideo() {
-        VideoLayerManager.completeAll();
+        VideoLayerManager.instance().completeAll();
         Log.d(TAG, "startVideo [" + this.hashCode() + "] ");
 
         initTextureView();
@@ -210,11 +238,18 @@ public class VideoView<T> extends FrameLayout {
 
         Utils.scanForActivity(getContext()).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        MediaPlayerManager.instance().setDataSource(dataSourceObjects);
-        MediaPlayerManager.instance().setCurrentDataSource(Utils.getCurrentFromDataSource(dataSourceObjects, currentUrlMapIndex));
+        MediaPlayerManager.instance().setCurrentDataSource(dataSourceObjects);
 
-        VideoLayerManager.setFirstFloor(this);
+        VideoLayerManager.instance().setFirstFloor(this);
 
+    }
+
+    public Object getDataSourceObjects() {
+        return dataSourceObjects;
+    }
+
+    public void setDataSourceObjects(Object dataSourceObjects) {
+        this.dataSourceObjects = dataSourceObjects;
     }
 
     /**
@@ -242,7 +277,7 @@ public class VideoView<T> extends FrameLayout {
             vp.addView(fullScreenVideoView, lp);
             fullScreenVideoView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN);
-            fullScreenVideoView.setUp(dataSourceObjects, currentUrlMapIndex, WindowType.FULLSCREEN, mData);
+            fullScreenVideoView.setUp(dataSourceObjects, WindowType.FULLSCREEN, mData);
 
             fullScreenVideoView.addTextureView();
 
@@ -259,7 +294,7 @@ public class VideoView<T> extends FrameLayout {
                 absControlPanel.onEnterFullScreen();
             }
 
-            VideoLayerManager.setSecondFloor(fullScreenVideoView);
+            VideoLayerManager.instance().setSecondFloor(fullScreenVideoView);
 
             Utils.setRequestedOrientation(getContext(), screenOrientation);
 
@@ -275,7 +310,6 @@ public class VideoView<T> extends FrameLayout {
     //退出全屏或小窗
     public void closeWindowFullScreen() {
         Log.i(TAG, "closeWindowFullScreen " + " [" + this.hashCode() + "] ");
-        currentUrlMapIndex = VideoLayerManager.getSecondFloor().currentUrlMapIndex;
         MediaPlayerManager.instance().clearFloatScreen(getContext());
         addTextureView();
         MediaPlayerManager.instance().updateState(MediaPlayerManager.instance().getCurrentState());
@@ -296,12 +330,12 @@ public class VideoView<T> extends FrameLayout {
 
     public void initTextureView() {
         removeTextureView();
+        MediaPlayerManager.instance().surfaceTexture = null;
         MediaPlayerManager.instance().textureView = new ResizeTextureView(getContext());
         MediaPlayerManager.instance().textureView.setSurfaceTextureListener(MediaPlayerManager.instance());
     }
 
     public void removeTextureView() {
-        MediaPlayerManager.instance().surfaceTexture = null;
         if (MediaPlayerManager.instance().textureView != null && MediaPlayerManager.instance().textureView.getParent() != null) {
             ((ViewGroup) MediaPlayerManager.instance().textureView.getParent()).removeView(MediaPlayerManager.instance().textureView);
         }
@@ -354,6 +388,9 @@ public class VideoView<T> extends FrameLayout {
             //Utils.saveProgress(getContext(), Utils.getCurrentFromDataSource(dataSourceObjects, currentUrlMapIndex), position);
         }
         MediaPlayerManager.instance().updateState(MediaPlayerManager.PlayerState.IDLE);
+        if (mControlPanel != null) {
+            mControlPanel.onStateIdle();
+        }
         mediaPlayerManager.cancelProgressTimer();
         textureViewContainer.removeView(MediaPlayerManager.instance().textureView);
         mediaPlayerManager.currentVideoWidth = 0;
@@ -392,24 +429,19 @@ public class VideoView<T> extends FrameLayout {
     }
 
     /**
-     *
      * @param detachAction DetachAction
      */
-    public void setDetachStrategy(DetachAction detachAction){
+    public void setDetachStrategy(DetachAction detachAction) {
         mDetachAction = detachAction;
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        textureViewContainer.removeAllViews();
         if (isCurrentPlay()) {
-            Log.d(getClass().getSimpleName(), "onDetachedFromWindow");
+            Log.d(getClass().getSimpleName(), "onDetachedFromWindow : " + hashCode());
             switch (mDetachAction) {
                 case NOTHING:
-                    if (mControlPanel != null) {
-                        mControlPanel.onStateIdle();
-                    }
                     break;
                 case PAUSE:
                     MediaPlayerManager.instance().pause();
@@ -426,43 +458,30 @@ public class VideoView<T> extends FrameLayout {
     }
 
     @Override
-    protected void onAttachedToWindow() {
-        if (isCurrentPlay()) {
-            Log.d(getClass().getSimpleName(), "onAttachedToWindow");
-            if (VideoLayerManager.getSecondFloor() != null) {
-                closeWindowFullScreen();
-            }
-            addTextureView();
-            MediaPlayerManager.instance().updateState(MediaPlayerManager.instance().getCurrentState());
-        } else {
-            Log.d(getClass().getSimpleName(), "onStateIdle");
-            if (mControlPanel != null) {
-                mControlPanel.onStateIdle();
-            }
-        }
-        super.onAttachedToWindow();
-    }
-
-    @Override
     public boolean equals(Object obj) {
-        return obj instanceof VideoView && mComparator.compare(this, (VideoView) obj) == 0;
+        return obj instanceof VideoView && mComparator.compare((VideoView) obj, this) == 0;
     }
 
-    public void setComparator(@NonNull Comparator<VideoView<T>> mComparator) {
+    public void setComparator(@NonNull Comparator<VideoView> mComparator) {
         this.mComparator = mComparator;
     }
 
-    private Comparator<VideoView<T>> mComparator = new Comparator<VideoView<T>>() {
+    public Comparator getComparator() {
+        return mComparator;
+    }
+
+    private Comparator<VideoView> mComparator = new Comparator<VideoView>() {
+
         @Override
-        public int compare(VideoView<T> o1, VideoView<T> o2) {
-            if (o1 == o2 && Utils.dataSourceObjectsContainsUri(dataSourceObjects, MediaPlayerManager.instance().getCurrentDataSource())){
+        public int compare(VideoView self, VideoView currentFloor) {
+            if (self == currentFloor && self.getDataSourceObjects() == MediaPlayerManager.instance().getCurrentDataSource()) {
                 return 0;
             }
             return -1;
         }
     };
 
-    public enum DetachAction{
+    public enum DetachAction {
         NOTHING,
         PAUSE,
         STOP,

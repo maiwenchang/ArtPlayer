@@ -1,5 +1,7 @@
 package org.salient;
 
+import android.support.annotation.NonNull;
+
 /**
  * > Created by Mai on 2018/57/10
  * *
@@ -8,23 +10,50 @@ package org.salient;
  */
 public class VideoLayerManager {
 
-    private static VideoView firstFloor;
-    private static VideoView secondFloor;
+    private Object currentData;
 
-    public static VideoView getFirstFloor() {
+    private VideoView firstFloor;
+    private VideoView secondFloor;
+
+    public static VideoLayerManager instance() {
+        return VideoLayerManager.ManagerHolder.INSTANCE;
+    }
+
+    //内部类实现单例模式
+    private static class ManagerHolder {
+        private static final VideoLayerManager INSTANCE = new VideoLayerManager();
+    }
+
+    public <T> T getCurrentData() {
+        try {
+            return (T) currentData;
+        } catch (Exception e) {
+            throw new ClassCastException();
+        }
+    }
+
+    public <T> void setCurrentData(T currentData) {
+        this.currentData = currentData;
+    }
+
+    public VideoView getFirstFloor() {
         return firstFloor;
     }
 
-    public static void setFirstFloor(VideoView firstFloor) {
-        VideoLayerManager.firstFloor = firstFloor;
+    public void setFirstFloor(VideoView firstFloor) {
+        this.firstFloor = firstFloor;
+        if (firstFloor != null) {
+            this.currentData = firstFloor.getData();
+        }
     }
 
-    public static VideoView getSecondFloor() {
+    public VideoView getSecondFloor() {
         return secondFloor;
     }
 
-    public static void setSecondFloor(VideoView secondFloor) {
-        VideoLayerManager.secondFloor = secondFloor;
+    public void setSecondFloor(VideoView secondFloor) {
+        this.secondFloor = secondFloor;
+
     }
 
     /**
@@ -32,7 +61,7 @@ public class VideoLayerManager {
      *
      * @return VideoView
      */
-    public static VideoView getCurrentFloor() {
+    public VideoView getCurrentFloor() {
         if (getSecondFloor() != null) {
             return getSecondFloor();
         }
@@ -44,11 +73,11 @@ public class VideoLayerManager {
      *
      * @return VideoView
      */
-    public static boolean isCurrentFloor(VideoView videoView) {
-        return getCurrentFloor() != null && getCurrentFloor().equals(videoView) ;
+    public boolean isCurrentPlaying(@NonNull VideoView videoView) {
+        return getCurrentFloor() != null && getCurrentFloor().equals(videoView);
     }
 
-    public static AbsControlPanel getCurrentControlPanel() {
+    public AbsControlPanel getCurrentControlPanel() {
         VideoView currentFloor = getCurrentFloor();
         AbsControlPanel controlPanel = null;
         if (currentFloor != null) {
@@ -60,7 +89,7 @@ public class VideoLayerManager {
     /**
      * 结束全部播放
      */
-    public static void completeAll() {
+    public void completeAll() {
         if (secondFloor != null) {
             secondFloor.completeVideo();
             secondFloor = null;
@@ -68,6 +97,9 @@ public class VideoLayerManager {
         if (firstFloor != null) {
             firstFloor.completeVideo();
             firstFloor = null;
+        }
+        if (currentData != null) {
+            currentData = null;
         }
     }
 

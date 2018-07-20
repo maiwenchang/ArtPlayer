@@ -40,9 +40,9 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
             MediaPlayerManager.instance().updateState(MediaPlayerManager.PlayerState.PREPARING);
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-            if (dataSourceObjects.length > 1) {
-                mediaPlayer.setLooping((boolean) dataSourceObjects[1]);
-            }
+//            if (dataSourceObjects.length > 1) {
+//                mediaPlayer.setLooping((boolean) dataSourceObjects[1]);
+//            }
             mediaPlayer.setOnPreparedListener(this);
             mediaPlayer.setOnCompletionListener(this);
             mediaPlayer.setOnBufferingUpdateListener(this);
@@ -51,13 +51,7 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
             mediaPlayer.setOnErrorListener(this);
             mediaPlayer.setOnInfoListener(this);
             mediaPlayer.setOnVideoSizeChangedListener(this);
-            Class<MediaPlayer> clazz = MediaPlayer.class;
-            Method method = clazz.getDeclaredMethod("setDataSource", String.class, Map.class);
-            if (dataSourceObjects.length > 2) {
-                method.invoke(mediaPlayer, currentDataSource.toString(), dataSourceObjects[2]);
-            } else {
-                method.invoke(mediaPlayer, currentDataSource.toString(), null);
-            }
+            mediaPlayer.setDataSource(currentDataSource.toString());
             mediaPlayer.prepareAsync();
         } catch (Exception e) {
             e.printStackTrace();
@@ -162,7 +156,7 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
     public void OpenVolume() {
         try {
             if (mediaPlayer != null) {
-                VideoView currentFloor = VideoLayerManager.getCurrentFloor();
+                VideoView currentFloor = VideoLayerManager.instance().getCurrentFloor();
                 if (currentFloor == null) return;
                 Context context = currentFloor.getContext();
                 if (context == null) return;
@@ -210,15 +204,15 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
 
     @Override
     public void onBufferingUpdate(MediaPlayer mediaPlayer, final int percent) {
-        if (VideoLayerManager.getCurrentControlPanel() != null) {
-            VideoLayerManager.getCurrentControlPanel().onBufferingUpdate(percent);
+        if (VideoLayerManager.instance().getCurrentControlPanel() != null) {
+            VideoLayerManager.instance().getCurrentControlPanel().onBufferingUpdate(percent);
         }
     }
 
     @Override
     public void onSeekComplete(MediaPlayer mediaPlayer) {
-        if (VideoLayerManager.getCurrentControlPanel() != null) {
-            VideoLayerManager.getCurrentControlPanel().onSeekComplete();
+        if (VideoLayerManager.instance().getCurrentControlPanel() != null) {
+            VideoLayerManager.instance().getCurrentControlPanel().onSeekComplete();
         }
     }
 
@@ -236,8 +230,8 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
                 MediaPlayerManager.instance().updateState(MediaPlayerManager.PlayerState.PREPARED);
             }
         } else {
-            if (VideoLayerManager.getCurrentControlPanel() != null) {
-                VideoLayerManager.getCurrentControlPanel().onInfo(what, extra);
+            if (VideoLayerManager.instance().getCurrentControlPanel() != null) {
+                VideoLayerManager.instance().getCurrentControlPanel().onInfo(what, extra);
             }
         }
         return false;

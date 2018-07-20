@@ -24,7 +24,7 @@ import static org.salient.VideoView.URL_KEY_DEFAULT;
  * > Description: 视频播放器管理类
  * *
  */
-public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
+public class MediaPlayerManager<T> implements TextureView.SurfaceTextureListener {
 
     private PlayerState mCurrentState = PlayerState.IDLE;
     private AudioManager.OnAudioFocusChangeListener onAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
@@ -78,25 +78,17 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
         return ManagerHolder.INSTANCE;
     }
 
-    public Object[] getDataSource() {
-        return instance().mediaPlayer.dataSourceObjects;
-    }
-
-    public void setDataSource(Object[] dataSourceObjects) {
-        instance().mediaPlayer.dataSourceObjects = dataSourceObjects;
-    }
-
     public PlayerState getCurrentState() {
         return mCurrentState;
     }
 
     //正在播放的url或者uri
     public Object getCurrentDataSource() {
-        return instance().mediaPlayer.currentDataSource;
+        return instance().mediaPlayer.getCurrentDataSource();
     }
 
     public void setCurrentDataSource(Object currentDataSource) {
-        instance().mediaPlayer.currentDataSource = currentDataSource;
+        instance().mediaPlayer.setCurrentDataSource(currentDataSource);
     }
 
     public long getCurrentPosition() {
@@ -128,7 +120,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     public void releaseAllVideos() {
         if ((System.currentTimeMillis() - mClickFullScreenTime) > FULL_SCREEN_NORMAL_DELAY) {
             Log.d(TAG, "releaseAllVideos");
-            VideoLayerManager.completeAll();
+            VideoLayerManager.instance().completeAll();
             MediaPlayerManager.instance().releaseMediaPlayer();
         }
     }
@@ -179,8 +171,8 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
                 cancelProgressTimer();
                 break;
         }
-        VideoView currentFloor = VideoLayerManager.getCurrentFloor();
-        if (currentFloor != null) {
+        VideoView currentFloor = VideoLayerManager.instance().getCurrentFloor();
+        if (currentFloor != null && VideoLayerManager.instance().isCurrentPlaying(currentFloor)) {
             AbsControlPanel controlPanel = currentFloor.getControlPanel();
             if (controlPanel != null) {
                 controlPanel.notifyStateChange();//通知当前的控制面板改变布局
@@ -200,8 +192,8 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
-        if (VideoLayerManager.getCurrentFloor() == null) return;
-        Log.i("testt", "onSurfaceTextureAvailable [" + VideoLayerManager.getCurrentFloor().hashCode() + "] ");
+        if (VideoLayerManager.instance().getCurrentFloor() == null) return;
+        Log.i("testt", "onSurfaceTextureAvailable [" + VideoLayerManager.instance().getCurrentFloor().hashCode() + "] ");
         if (MediaPlayerManager.instance().surfaceTexture == null) {
             MediaPlayerManager.instance().surfaceTexture = surfaceTexture;
             prepare();
@@ -212,18 +204,18 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
 
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i1) {
-        Log.i("testt", "onSurfaceTextureSizeChanged [" + VideoLayerManager.getCurrentFloor().hashCode() + "] ");
+        Log.i("testt", "onSurfaceTextureSizeChanged [" + VideoLayerManager.instance().getCurrentFloor().hashCode() + "] ");
     }
 
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
-        Log.i("testt", "onSurfaceTextureDestroyed [" + VideoLayerManager.getCurrentFloor().hashCode() + "] ");
+        Log.i("testt", "onSurfaceTextureDestroyed [" + VideoLayerManager.instance().getCurrentFloor().hashCode() + "] ");
         return MediaPlayerManager.instance().surfaceTexture == null;
     }
 
     @Override
     public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
-        //Log.i("testt", "onSurfaceTextureUpdated [" + VideoLayerManager.getCurrentFloor().hashCode() + "] ");
+        //Log.i("testt", "onSurfaceTextureUpdated [" + VideoLayerManager.instance().getCurrentFloor().hashCode() + "] ");
     }
 
     public void setMediaPlayer(AbsMediaPlayer mediaPlayer) {
@@ -268,7 +260,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
      * @param dataSourceObjects 视频dataSourceObjects
      * @param headers           标题
      */
-    public void startFullscreen(Context context, Class<AbsControlPanel> clazz, Object[] dataSourceObjects, int defaultUrlMapIndex, int screenRotation, Object... headers) {
+    public void startFullscreen(Context context, Class<AbsControlPanel> clazz, Object[] dataSourceObjects, int screenRotation, Object... headers) {
         Utils.hideSupportActionBar(context);
         Utils.setRequestedOrientation(context, screenRotation);
         ViewGroup vp = (Utils.scanForActivity(context)).findViewById(Window.ID_ANDROID_CONTENT);
@@ -285,7 +277,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
             vp.addView(fullScreenVideoView, lp);
             fullScreenVideoView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                     | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN);
-            fullScreenVideoView.setUp(dataSourceObjects, defaultUrlMapIndex, VideoView.WindowType.FULLSCREEN, headers);
+            fullScreenVideoView.setUp(dataSourceObjects, VideoView.WindowType.FULLSCREEN, headers);
 
             fullScreenVideoView.addTextureView();
 
@@ -314,17 +306,17 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
             return false;
         }
 
-        if (VideoLayerManager.getSecondFloor() != null) {//退出全屏，返回常规窗口
+        if (VideoLayerManager.instance().getSecondFloor() != null) {//退出全屏，返回常规窗口
             mClickFullScreenTime = System.currentTimeMillis();
-            if (Utils.dataSourceObjectsContainsUri(VideoLayerManager.getFirstFloor().dataSourceObjects, instance().getCurrentDataSource())) {
-                VideoLayerManager.getFirstFloor().closeWindowFullScreen();
+            if (true/*Utils.dataSourceObjectsContainsUri(VideoLayerManager.instance().getFirstFloor().getDataSourceObjects(), instance().getCurrentDataSource())*/) {
+                VideoLayerManager.instance().getFirstFloor().closeWindowFullScreen();
             } else {
                 quitFullscreenOrTinyWindow(context);
             }
             return true;
-        } else if (VideoLayerManager.getFirstFloor() != null &&
-                (VideoLayerManager.getFirstFloor().mWindowType == VideoView.WindowType.FULLSCREEN ||
-                        VideoLayerManager.getFirstFloor().mWindowType == VideoView.WindowType.TINY)) {//退出全屏（直接开启的全屏，只有一层，没有常规窗口）,或退出小屏
+        } else if (VideoLayerManager.instance().getFirstFloor() != null &&
+                (VideoLayerManager.instance().getFirstFloor().mWindowType == VideoView.WindowType.FULLSCREEN ||
+                        VideoLayerManager.instance().getFirstFloor().mWindowType == VideoView.WindowType.TINY)) {//退出全屏（直接开启的全屏，只有一层，没有常规窗口）,或退出小屏
             mClickFullScreenTime = System.currentTimeMillis();
             quitFullscreenOrTinyWindow(context);
             return true;
@@ -342,11 +334,11 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     public void quitFullscreenOrTinyWindow(Context context) {
         instance().clearFloatScreen(context);
         instance().releaseMediaPlayer();
-        VideoLayerManager.completeAll();
+        VideoLayerManager.instance().completeAll();
     }
 
     public void clearFloatScreen(Context context) {
-        Utils.setRequestedOrientation(context, VideoLayerManager.getCurrentFloor().getScreenOrientation());
+        Utils.setRequestedOrientation(context, VideoLayerManager.instance().getCurrentFloor().getScreenOrientation());
         Utils.showSupportActionBar(context);
         ViewGroup vp = (Utils.scanForActivity(context))//.getWindow().getDecorView();
                 .findViewById(Window.ID_ANDROID_CONTENT);
@@ -363,7 +355,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
             if (tinyWindow.getTextureViewContainer() != null)
                 tinyWindow.getTextureViewContainer().removeView(MediaPlayerManager.instance().textureView);
         }
-        VideoLayerManager.setSecondFloor(null);
+        VideoLayerManager.instance().setSecondFloor(null);
     }
 
     public void startProgressTimer() {
@@ -419,7 +411,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
                 long position = getCurrentPositionWhenPlaying();
                 long duration = getDuration();
                 int progress = (int) (position * 100 / (duration == 0 ? 1 : duration));
-                AbsControlPanel currentControlPanel = VideoLayerManager.getCurrentControlPanel();
+                AbsControlPanel currentControlPanel = VideoLayerManager.instance().getCurrentControlPanel();
                 if (currentControlPanel != null) {
                     currentControlPanel.onProgressUpdate(progress, position, duration);
                 }

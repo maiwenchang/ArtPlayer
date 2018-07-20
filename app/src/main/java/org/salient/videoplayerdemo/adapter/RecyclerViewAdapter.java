@@ -10,12 +10,14 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
+import org.salient.VideoLayerManager;
 import org.salient.VideoView;
 import org.salient.videoplayerdemo.ControlPanel;
 import org.salient.videoplayerdemo.R;
 import org.salient.videoplayerdemo.bean.VideoBean;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -59,7 +61,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(@NonNull VideoViewHolder holder, int position) {
         Log.d("testt", "onBindViewHolder position:" + position + "hashCode : " + holder.videoView.hashCode());
         VideoBean videoBean = mList.get(holder.getAdapterPosition());
-
+        videoBean.setListPosition(position);
         holder.videoView.setUp(videoBean.getUrl(), videoBean);
 
         ImageView coverView = ((ControlPanel) holder.videoView.getControlPanel()).getCoverView();
@@ -97,11 +99,28 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             videoView = itemView.findViewById(R.id.videoView);
             ControlPanel controlPanel = new ControlPanel(videoView.getContext());
             videoView.setControlPanel(controlPanel);
+            //videoView.setComparator(mComparator);
 
             //Specify the Detach Action which would be called when the VideoView has been detached from its window.
             //videoView.setDetachStrategy(VideoView.DetachAction.PAUSE);
 
         }
     }
+
+    private Comparator<VideoView> mComparator = new Comparator<VideoView>() {
+        @Override
+        public int compare(VideoView self, VideoView current) {
+            if (self.getData() instanceof VideoBean
+                    && VideoLayerManager.instance().getCurrentData() instanceof VideoBean
+                    && ((VideoBean) self.getData()).getListPosition() == ((VideoBean) VideoLayerManager.instance().getCurrentData()).getListPosition()) {
+                //We use the position on the list to distinguish whether it is the same video.
+                // If is, return 0.
+                return 0;
+            }
+            return -1;
+        }
+    };
+
+
 
 }
