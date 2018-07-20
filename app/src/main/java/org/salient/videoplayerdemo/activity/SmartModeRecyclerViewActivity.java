@@ -9,6 +9,10 @@ import android.view.View;
 
 import org.salient.videoplayerdemo.R;
 import org.salient.videoplayerdemo.adapter.RecyclerViewAdapter;
+import org.salient.videoplayerdemo.bean.VideoBean;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * > Created by Mai on 2018/7/17
@@ -28,7 +32,13 @@ public class SmartModeRecyclerViewActivity extends BaseActivity {
         RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter();
         recycler_view.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         recycler_view.setAdapter(recyclerViewAdapter);
-        recyclerViewAdapter.setList(getAllAttention());
+        List<VideoBean> allAttention = new ArrayList<>();
+        allAttention.addAll(getAllAttention());
+        allAttention.addAll(getAllAttention());
+        allAttention.addAll(getAllAttention());
+        allAttention.addAll(getAllAttention());
+        allAttention.addAll(getAllAttention());
+        recyclerViewAdapter.setList(allAttention);
         recyclerViewAdapter.notifyDataSetChanged();
 
     }

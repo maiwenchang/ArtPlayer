@@ -45,8 +45,7 @@ public class VideoLayerManager {
      * @return VideoView
      */
     public static boolean isCurrentFloor(VideoView videoView) {
-        return getCurrentFloor() != null
-                && getCurrentFloor() == videoView;
+        return getCurrentFloor() != null && getCurrentFloor().equals(videoView) ;
     }
 
     public static AbsControlPanel getCurrentControlPanel() {

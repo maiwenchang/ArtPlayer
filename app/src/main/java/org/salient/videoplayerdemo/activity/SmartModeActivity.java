@@ -26,6 +26,9 @@ public class SmartModeActivity extends BaseActivity {
             case R.id.recyclerView:
                 startActivity(new Intent(this,SmartModeRecyclerViewActivity.class));
                 break;
+                case R.id.listView:
+                startActivity(new Intent(this,ListViewActivity.class));
+                break;
         }
     }
 }

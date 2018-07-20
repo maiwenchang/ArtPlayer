@@ -2,6 +2,7 @@ package org.salient.videoplayerdemo.adapter;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +10,8 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
-import org.salient.ControlPanel;
 import org.salient.VideoView;
+import org.salient.videoplayerdemo.ControlPanel;
 import org.salient.videoplayerdemo.R;
 import org.salient.videoplayerdemo.bean.VideoBean;
 
@@ -56,18 +57,24 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull VideoViewHolder holder, int position) {
+        Log.d("testt", "onBindViewHolder position:" + position + "hashCode : " + holder.videoView.hashCode());
         VideoBean videoBean = mList.get(holder.getAdapterPosition());
-        holder.videoView.setUp(videoBean.getUrl(),
-                VideoView.WindowType.NORMAL,
-                videoBean.getTitle());
-        holder.videoView.setControlPanel(new ControlPanel(holder.videoView.getContext()));
-        ControlPanel controlPanel = (ControlPanel) holder.videoView.getControlPanel();
-        if (controlPanel != null) {
-            ImageView coverView = controlPanel.getCoverView();
-            Glide.with(coverView.getContext())
-                    .load(videoBean.getImage())
-                    .into(coverView);
-        }
+
+        holder.videoView.setUp(videoBean.getUrl(), videoBean);
+
+        ImageView coverView = ((ControlPanel) holder.videoView.getControlPanel()).getCoverView();
+
+        Glide.with(holder.videoView.getContext()).load(videoBean.getImage()).into(coverView);
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(@NonNull VideoViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+    }
+
+    @Override
+    public void onViewAttachedToWindow(@NonNull VideoViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
     }
 
     @Override
@@ -83,11 +90,17 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public class VideoViewHolder extends RecyclerView.ViewHolder {
 
-        VideoView videoView;
+        VideoView<VideoBean> videoView;
 
         public VideoViewHolder(View itemView) {
             super(itemView);
             videoView = itemView.findViewById(R.id.videoView);
+            ControlPanel controlPanel = new ControlPanel(videoView.getContext());
+            videoView.setControlPanel(controlPanel);
+
+            //Specify the Detach Action which would be called when the VideoView has been detached from its window.
+            //videoView.setDetachStrategy(VideoView.DetachAction.PAUSE);
+
         }
     }
 

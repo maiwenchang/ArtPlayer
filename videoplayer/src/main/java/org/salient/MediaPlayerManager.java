@@ -35,17 +35,17 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
                     Log.d("AudioFocusChange", "AUDIOFOCUS_GAIN [" + this.hashCode() + "]");
                     break;
                 case AudioManager.AUDIOFOCUS_LOSS://声音失去焦点
-                    instance().releaseAllVideos();
+                    //instance().releaseAllVideos();
                     Log.d("AudioFocusChange", "AUDIOFOCUS_LOSS [" + this.hashCode() + "]");
                     break;
                 case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT://声音短暂失去焦点
                     Log.d("AudioFocusChange", "AUDIOFOCUS_LOSS_TRANSIENT [" + this.hashCode() + "]");
-                    instance().pause();
+                    //instance().pause();
 
                     break;
                 case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT:
                     Log.d("AudioFocusChange", "AUDIOFOCUS_GAIN_TRANSIENT [" + this.hashCode() + "]");
-                    instance().start();
+                    //instance().start();
 
                     break;
                 case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
@@ -59,7 +59,6 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     public ResizeTextureView textureView;
     public SurfaceTexture surfaceTexture;
     public Surface surface;
-    public int positionInList = -1;
     public int currentVideoWidth = 0;
     public int currentVideoHeight = 0;
     public long mClickFullScreenTime = 0;
@@ -130,7 +129,6 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
         if ((System.currentTimeMillis() - mClickFullScreenTime) > FULL_SCREEN_NORMAL_DELAY) {
             Log.d(TAG, "releaseAllVideos");
             VideoLayerManager.completeAll();
-            MediaPlayerManager.instance().positionInList = -1;
             MediaPlayerManager.instance().releaseMediaPlayer();
         }
     }
@@ -203,7 +201,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
         if (VideoLayerManager.getCurrentFloor() == null) return;
-        Log.i(TAG, "onSurfaceTextureAvailable [" + VideoLayerManager.getCurrentFloor().hashCode() + "] ");
+        Log.i("testt", "onSurfaceTextureAvailable [" + VideoLayerManager.getCurrentFloor().hashCode() + "] ");
         if (MediaPlayerManager.instance().surfaceTexture == null) {
             MediaPlayerManager.instance().surfaceTexture = surfaceTexture;
             prepare();
@@ -214,17 +212,18 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
 
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i1) {
-
+        Log.i("testt", "onSurfaceTextureSizeChanged [" + VideoLayerManager.getCurrentFloor().hashCode() + "] ");
     }
 
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
+        Log.i("testt", "onSurfaceTextureDestroyed [" + VideoLayerManager.getCurrentFloor().hashCode() + "] ");
         return MediaPlayerManager.instance().surfaceTexture == null;
     }
 
     @Override
     public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
-
+        //Log.i("testt", "onSurfaceTextureUpdated [" + VideoLayerManager.getCurrentFloor().hashCode() + "] ");
     }
 
     public void setMediaPlayer(AbsMediaPlayer mediaPlayer) {

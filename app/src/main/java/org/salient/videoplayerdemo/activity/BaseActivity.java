@@ -29,6 +29,17 @@ public abstract class BaseActivity extends AppCompatActivity {
         mMovieData = BaseApplication.getMovieData();
     }
 
+    public List<VideoBean> getAllComing() {
+        List<VideoBean> list = new ArrayList<>();
+        for (MovieData.MoviecomingsBean moviecomingsBean : mMovieData.getMoviecomings()) {
+            List<VideoBean> videos = moviecomingsBean.getVideos();
+            if (videos != null && videos.size() > 0) {
+                list.add(videos.get(0));
+            }
+        }
+        return list;
+    }
+
     public List<VideoBean> getAllAttention() {
         List<VideoBean> list = new ArrayList<>();
         for (MovieData.AttentionBean attentionBean : mMovieData.getAttention()) {

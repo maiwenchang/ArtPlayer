@@ -11,10 +11,6 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintDimensionRatio="16:9">
-
-        <org.salient.ControlPanel
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
     </org.salient.VideoView>
 
 </android.support.constraint.ConstraintLayout>

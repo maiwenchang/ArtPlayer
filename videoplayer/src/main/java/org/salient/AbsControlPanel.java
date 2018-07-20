@@ -41,16 +41,16 @@ public abstract class AbsControlPanel extends FrameLayout implements MediaStateL
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
-        if (mTarget == null) {
-            ViewParent viewParent = getParent();
-            if (viewParent != null) {
-                ViewGroup parent = (ViewGroup) viewParent;
-                if (parent instanceof VideoView) {
-                    VideoView videoView = (VideoView) parent;
-                    videoView.setControlPanel(this);
-                }
-            }
-        }
+//        if (mTarget == null) {
+//            ViewParent viewParent = getParent();
+//            if (viewParent != null) {
+//                ViewGroup parent = (ViewGroup) viewParent;
+//                if (parent instanceof VideoView) {
+//                    VideoView videoView = (VideoView) parent;
+//                    videoView.setControlPanel(this);
+//                }
+//            }
+//        }
     }
 
     public void notifyStateChange() {

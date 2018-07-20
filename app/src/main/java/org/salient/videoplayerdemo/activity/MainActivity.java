@@ -3,17 +3,14 @@ package org.salient.videoplayerdemo.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
-import org.salient.ControlPanel;
 import org.salient.MediaPlayerManager;
 import org.salient.VideoView;
+import org.salient.videoplayerdemo.ControlPanel;
 import org.salient.videoplayerdemo.R;
 import org.salient.videoplayerdemo.bean.VideoBean;
-
-import java.util.Random;
 
 public class MainActivity extends BaseActivity {
 
@@ -25,17 +22,17 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
 
         videoView = findViewById(R.id.salientVideoView);
-
+        final ControlPanel controlPanel = new ControlPanel(this);
+        videoView.setControlPanel(controlPanel);
         videoView.post(new Runnable() {
             @Override
             public void run() {
                 if (mMovieData != null) {
                     VideoBean videoBean = getRandomVideo();
-                    videoView.setUp(videoBean.getUrl(), VideoView.WindowType.NORMAL);
-                    ImageView coverView = ((ControlPanel) videoView.getControlPanel()).getCoverView();
+                    videoView.setUp(videoBean.getUrl());
                     Glide.with(MainActivity.this)
                             .load(videoBean.getImage())
-                            .into(coverView);
+                            .into(controlPanel.getCoverView());
                 }
             }
         });
