@@ -141,7 +141,7 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
         start.setChecked(false);
         hideUI(layout_bottom,loading);
         showUI(video_cover, start);
-        if (mTarget.mWindowType == VideoView.WindowType.FULLSCREEN) {
+        if (mTarget.getWindowType() == VideoView.WindowType.FULLSCREEN) {
             showUI(layout_top);
         }
     }
@@ -252,14 +252,14 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
             if (!VideoLayerManager.instance().isCurrentPlaying(mTarget)) {
                 return;
             }
-            if (mTarget.mWindowType == VideoView.WindowType.NORMAL && MediaPlayerManager.instance().getCurrentState() == MediaPlayerManager.PlayerState.PLAYING) {
+            if (mTarget.getWindowType() == VideoView.WindowType.NORMAL && MediaPlayerManager.instance().getCurrentState() == MediaPlayerManager.PlayerState.PLAYING) {
                 //mTarget.startWindowFullscreen(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
                 if (layout_bottom.getVisibility() != VISIBLE) {
                     showUI(layout_bottom, layout_top, start);
                 } else {
                     hideUI(layout_top, layout_bottom, start);
                 }
-            } else if (mTarget.mWindowType == VideoView.WindowType.FULLSCREEN && MediaPlayerManager.instance().getCurrentState() == MediaPlayerManager.PlayerState.PLAYING) {
+            } else if (mTarget.getWindowType() == VideoView.WindowType.FULLSCREEN && MediaPlayerManager.instance().getCurrentState() == MediaPlayerManager.PlayerState.PLAYING) {
                 if (layout_bottom.getVisibility() != VISIBLE) {
                     showUI(layout_top, layout_bottom, start);
                 } else {
@@ -269,13 +269,13 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
 
         } else if (id == R.id.back) {
             if (mTarget == null) return;
-            if (mTarget.mWindowType == VideoView.WindowType.FULLSCREEN) {
+            if (mTarget.getWindowType() == VideoView.WindowType.FULLSCREEN) {
                 MediaPlayerManager.instance().backPress(getContext());
             }
 
         } else if (id == R.id.ivFullscreen) {
             if (mTarget == null) return;
-            if (mTarget.mWindowType != VideoView.WindowType.FULLSCREEN) {
+            if (mTarget.getWindowType() != VideoView.WindowType.FULLSCREEN) {
                 mTarget.startWindowFullscreen(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
             }
 

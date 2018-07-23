@@ -2,7 +2,10 @@ package org.salient;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
+import android.media.AudioFocusRequest;
 import android.media.AudioManager;
+import android.os.Build;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Surface;
 import android.view.TextureView;
@@ -192,7 +195,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
 
     @Override
     public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
-        //Log.i("testt", "onSurfaceTextureUpdated [" + VideoLayerManager.instance().getCurrentFloor().hashCode() + "] ");
+        //Log.i(TAG, "onSurfaceTextureUpdated [" + VideoLayerManager.instance().getCurrentFloor().hashCode() + "] ");
     }
 
     public void setMediaPlayer(AbsMediaPlayer mediaPlayer) {
@@ -216,28 +219,10 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     /**
      * 直接开启全屏(单个视频)
      *
-     * @param context Context
-     * @param clazz   VideoView.class
-     * @param url     视频Url
-     * @param headers 标题
      */
-    public void startFullscreen(Context context, Class<AbsControlPanel> clazz, String url, int screenRotation, Object... headers) {
-        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-        //map.put(URL_KEY_DEFAULT, url);
-        Object[] dataSourceObjects = new Object[1];
-        dataSourceObjects[0] = map;
-        startFullscreen(context, clazz, dataSourceObjects, 0, screenRotation, headers);
-    }
-
-    /**
-     * 直接开启全屏
-     *
-     * @param context           Context
-     * @param clazz             VideoView.class
-     * @param dataSourceObjects 视频dataSourceObjects
-     * @param headers           标题
-     */
-    public void startFullscreen(Context context, Class<AbsControlPanel> clazz, Object[] dataSourceObjects, int screenRotation, Object... headers) {
+    public void startFullscreen(@NonNull VideoView videoView, int screenRotation) {
+        Context context = videoView.getContext();
+        videoView.setWindowType(VideoView.WindowType.FULLSCREEN);
         Utils.hideSupportActionBar(context);
         Utils.setRequestedOrientation(context, screenRotation);
         ViewGroup vp = (Utils.scanForActivity(context)).findViewById(Window.ID_ANDROID_CONTENT);
@@ -247,31 +232,26 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
         }
         try {
             //初始化一个VideoView
-            VideoView fullScreenVideoView = new VideoView(context);
-            fullScreenVideoView.setId(R.id.salient_video_fullscreen_id);
+            videoView.setId(R.id.salient_video_fullscreen_id);
             FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            vp.addView(fullScreenVideoView, lp);
-            fullScreenVideoView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN);
-            fullScreenVideoView.setUp(dataSourceObjects, VideoView.WindowType.FULLSCREEN, headers);
+            vp.addView(videoView, lp);
 
-            fullScreenVideoView.addTextureView();
-
-            //添加控制面板
-            //参数类型
-            Class<?>[] params = {Context.class};
-            //参数值
-            Object[] values = {context};
-            Constructor<? extends AbsControlPanel> constructor = clazz.getDeclaredConstructor(params);
-            AbsControlPanel absControlPanel = constructor.newInstance(values);
-            fullScreenVideoView.setControlPanel(absControlPanel);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                videoView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN);
+            } else {
+                videoView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN);
+            }
 
             MediaPlayerManager.instance().mClickFullScreenTime = System.currentTimeMillis();
-            start();
+
+            videoView.start();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     /**
@@ -282,18 +262,12 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
         if ((System.currentTimeMillis() - mClickFullScreenTime) < FULL_SCREEN_NORMAL_DELAY) {
             return false;
         }
-
         if (VideoLayerManager.instance().getSecondFloor() != null) {//退出全屏，返回常规窗口
             mClickFullScreenTime = System.currentTimeMillis();
-            if (true/*Utils.dataSourceObjectsContainsUri(VideoLayerManager.instance().getFirstFloor().getDataSourceObject(), instance().getCurrentDataSource())*/) {
-                VideoLayerManager.instance().getFirstFloor().closeWindowFullScreen();
-            } else {
-                quitFullscreenOrTinyWindow(context);
-            }
+            VideoLayerManager.instance().getFirstFloor().closeWindowFullScreen();
             return true;
-        } else if (VideoLayerManager.instance().getFirstFloor() != null &&
-                (VideoLayerManager.instance().getFirstFloor().mWindowType == VideoView.WindowType.FULLSCREEN ||
-                        VideoLayerManager.instance().getFirstFloor().mWindowType == VideoView.WindowType.TINY)) {//退出全屏（直接开启的全屏，只有一层，没有常规窗口）,或退出小屏
+        } else if (VideoLayerManager.instance().getFirstFloor() != null && VideoLayerManager.instance().getFirstFloor().getWindowType() == VideoView.WindowType.FULLSCREEN) {
+            //退出全屏（直接开启的全屏，只有一层，没有常规窗口）
             mClickFullScreenTime = System.currentTimeMillis();
             quitFullscreenOrTinyWindow(context);
             return true;

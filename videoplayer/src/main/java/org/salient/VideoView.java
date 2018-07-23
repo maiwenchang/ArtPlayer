@@ -31,7 +31,7 @@ public class VideoView<T> extends FrameLayout {
     private final String TAG = VideoView.class.getSimpleName();
     private final int ROOT_VIEW_POSITION = -1;
     private final int CONTROL_PANEL_POSITION = 1;
-    public WindowType mWindowType = WindowType.NORMAL;
+    private WindowType mWindowType = WindowType.NORMAL;
     public int widthRatio = 0;
     public int heightRatio = 0;
 
@@ -193,9 +193,11 @@ public class VideoView<T> extends FrameLayout {
                     break;
                 case PLAYBACK_COMPLETED: // 重播
                     MediaPlayerManager.instance().start();
+                    MediaPlayerManager.instance().setOnAudioFocusChangeListener(getContext());
                     break;
                 case PAUSED://从暂停状态恢复播放
                     MediaPlayerManager.instance().start();
+                    MediaPlayerManager.instance().setOnAudioFocusChangeListener(getContext());
                     break;
             }
         } else {
@@ -374,6 +376,14 @@ public class VideoView<T> extends FrameLayout {
         return textureViewContainer;
     }
 
+    public WindowType getWindowType() {
+        return mWindowType;
+    }
+
+    public void setWindowType(WindowType mWindowType) {
+        this.mWindowType = mWindowType;
+    }
+
     public void completeVideo() {
         Log.i(TAG, "completeVideo " + " [" + this.hashCode() + "] ");
         MediaPlayerManager mediaPlayerManager = MediaPlayerManager.instance();
@@ -484,7 +494,6 @@ public class VideoView<T> extends FrameLayout {
 
     public enum WindowType {
         NORMAL,
-        LIST,
         FULLSCREEN,
         TINY
     }

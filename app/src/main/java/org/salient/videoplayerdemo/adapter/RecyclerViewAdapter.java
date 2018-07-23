@@ -99,7 +99,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             videoView.setControlPanel(controlPanel);
 
             //Specify the Detach Action which would be called when the VideoView has been detached from its window.
-            //videoView.setDetachStrategy(VideoView.DetachAction.PAUSE);
+            videoView.setDetachStrategy(VideoView.DetachAction.PAUSE);
 
         }
     }

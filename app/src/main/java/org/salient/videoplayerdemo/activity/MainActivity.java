@@ -33,14 +33,6 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-
-
-
-    }
-
-    @Override
     public void onBackPressed() {
         if (MediaPlayerManager.instance().backPress(this)) {
             return;
