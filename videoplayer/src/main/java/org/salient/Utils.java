@@ -4,13 +4,17 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
 import android.view.Window;
 import android.view.WindowManager;
 
+import java.util.Formatter;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 
 /**
  * > Created by Mai on 2018/7/10
@@ -19,6 +23,43 @@ import java.util.LinkedHashMap;
  * *
  */
 public class Utils {
+
+    public static String stringForTime(long timeMs) {
+        if (timeMs <= 0 || timeMs >= 24 * 60 * 60 * 1000) {
+            return "00:00";
+        }
+        long totalSeconds = timeMs / 1000;
+        int seconds = (int) (totalSeconds % 60);
+        int minutes = (int) ((totalSeconds / 60) % 60);
+        int hours = (int) (totalSeconds / 3600);
+        StringBuilder stringBuilder = new StringBuilder();
+        Formatter mFormatter = new Formatter(stringBuilder, Locale.getDefault());
+        if (hours > 0) {
+            return mFormatter.format("%d:%02d:%02d", hours, minutes, seconds).toString();
+        } else {
+            return mFormatter.format("%02d:%02d", minutes, seconds).toString();
+        }
+    }
+
+    public static boolean isNetConnected(Context context) {
+        ConnectivityManager connectivity = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivity != null) {
+            NetworkInfo info = connectivity.getActiveNetworkInfo();
+            if (info != null && info.isConnected()) {
+                return info.getState() == NetworkInfo.State.CONNECTED;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isWifiConnected(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            NetworkInfo wifiNetworkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            return wifiNetworkInfo.isConnected();
+        }
+        return false;
+    }
 
     /**
      * Get activity from context object
@@ -68,51 +109,6 @@ public class Utils {
         } else {
             return scanForActivity(context).getWindow();
         }
-    }
-
-    public static Object getCurrentFromDataSource(Object[] dataSourceObjects, int index) {
-        if (dataSourceObjects == null || dataSourceObjects[0] == null || !(dataSourceObjects[0] instanceof LinkedHashMap)) {
-            return null;
-        }
-        LinkedHashMap<String, Object> map = (LinkedHashMap) dataSourceObjects[0];
-        if (map.size() > 0) {
-            return getValueFromLinkedMap(map, index);
-        }
-        return null;
-    }
-
-    public static Object getValueFromLinkedMap(LinkedHashMap<String, Object> map, int index) {
-        int currentIndex = 0;
-        for (String key : map.keySet()) {
-            if (currentIndex == index) {
-                return map.get(key);
-            }
-            currentIndex++;
-        }
-        return null;
-    }
-
-    public static boolean dataSourceObjectsContainsUri(Object[] dataSourceObjects, Object object) {
-        if (dataSourceObjects == null || dataSourceObjects[0] == null || !(dataSourceObjects[0] instanceof LinkedHashMap)) {
-            return false;
-        }
-        LinkedHashMap map = (LinkedHashMap) dataSourceObjects[0];
-        return object != null && map.containsValue(object);
-    }
-
-    public static String getKeyFromDataSource(Object[] dataSourceObjects, int index) {
-        if (dataSourceObjects == null || dataSourceObjects[0] == null || !(dataSourceObjects[0] instanceof LinkedHashMap)) {
-            return null;
-        }
-        LinkedHashMap<String, Object> map = (LinkedHashMap) dataSourceObjects[0];
-        int currentIndex = 0;
-        for (String key : map.keySet()) {
-            if (currentIndex == index) {
-                return key;
-            }
-            currentIndex++;
-        }
-        return null;
     }
 
     @SuppressLint("RestrictedApi")

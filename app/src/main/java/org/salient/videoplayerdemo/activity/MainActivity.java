@@ -6,11 +6,10 @@ import android.view.View;
 
 import com.bumptech.glide.Glide;
 
+import org.salient.ControlPanel;
 import org.salient.MediaPlayerManager;
 import org.salient.VideoView;
-import org.salient.videoplayerdemo.ControlPanel;
 import org.salient.videoplayerdemo.R;
-import org.salient.videoplayerdemo.bean.VideoBean;
 
 public class MainActivity extends BaseActivity {
 

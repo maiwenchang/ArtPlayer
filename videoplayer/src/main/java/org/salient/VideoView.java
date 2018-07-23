@@ -86,7 +86,7 @@ public class VideoView<T> extends FrameLayout {
      * @return boolean
      */
     public boolean isCurrentPlay() {
-        return VideoLayerManager.instance().isCurrentPlaying(this);//不仅正在播放的url不能一样，并且各个清晰度也不能一样
+        return VideoLayerManager.instance().isCurrentPlaying(this);
     }
 
     public void setUp(String url) {

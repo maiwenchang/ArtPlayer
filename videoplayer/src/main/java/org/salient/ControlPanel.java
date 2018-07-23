@@ -1,4 +1,4 @@
-package org.salient.videoplayerdemo;
+package org.salient;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -14,13 +14,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-
-import org.salient.AbsControlPanel;
-import org.salient.MediaPlayerManager;
-import org.salient.VideoView;
-import org.salient.videoplayerdemo.bean.VideoBean;
 
 /**
  * > Created by Mai on 2018/7/10
@@ -94,7 +87,7 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
 
     @Override
     public void onStateError() {
-        hideUI(start, layout_top, layout_bottom);
+        hideUI(start, layout_top, layout_bottom,loading);
         showUI(llAlert);
         tvAlert.setText("oops~~ unknown error");
         tvConfirm.setText("retry");
@@ -111,7 +104,7 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
 
     @Override
     public void onStateIdle() {
-        hideUI(layout_bottom, layout_top);
+        hideUI(layout_bottom, layout_top,loading);
         showUI(video_cover, start);
         start.setChecked(false);
         //if (mTarget!=null && mTarget.get)
@@ -132,7 +125,7 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
     public void onStatePlaying() {
         start.setChecked(true);
         showUI(layout_bottom, layout_top);
-        hideUI(video_cover);
+        hideUI(video_cover,loading);
         startDismissTask();
     }
 
@@ -140,13 +133,13 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
     public void onStatePaused() {
         start.setChecked(false);
         showUI(start, layout_bottom);
-        hideUI(video_cover);
+        hideUI(video_cover,loading);
     }
 
     @Override
     public void onStatePlaybackCompleted() {
         start.setChecked(false);
-        hideUI(layout_bottom);
+        hideUI(layout_bottom,loading);
         showUI(video_cover, start);
         if (mTarget.mWindowType == VideoView.WindowType.FULLSCREEN) {
             showUI(layout_top);
@@ -235,7 +228,7 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
     //显示WiFi状态提醒
     public void showWifiAlert() {
         MediaPlayerManager.instance().releaseAllVideos();
-        hideUI(start, layout_bottom, layout_top);
+        hideUI(start, layout_bottom, layout_top,loading);
         showUI(llAlert);
         tvAlert.setText("Is in non-WIFI");
         tvConfirm.setText("continue");
@@ -254,67 +247,66 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
     public void onClick(View v) {
         cancelDismissTask();
         int id = v.getId();
-        switch (id) {
-            case R.id.surface_container:
-                if (mTarget == null) return;
-                if (!mTarget.isCurrentPlay()) {
+        if (id == R.id.surface_container) {
+            if (mTarget == null) return;
+            if (!mTarget.isCurrentPlay()) {
+                return;
+            }
+            if (mTarget.mWindowType == VideoView.WindowType.NORMAL && MediaPlayerManager.instance().getCurrentState() == MediaPlayerManager.PlayerState.PLAYING) {
+                //mTarget.startWindowFullscreen(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+                if (layout_bottom.getVisibility() != VISIBLE) {
+                    showUI(layout_bottom, layout_top, start);
+                } else {
+                    hideUI(layout_top, layout_bottom, start);
+                }
+            } else if (mTarget.mWindowType == VideoView.WindowType.FULLSCREEN && MediaPlayerManager.instance().getCurrentState() == MediaPlayerManager.PlayerState.PLAYING) {
+                if (layout_bottom.getVisibility() != VISIBLE) {
+                    showUI(layout_top, layout_bottom, start);
+                } else {
+                    hideUI(layout_top, layout_bottom, start);
+                }
+            }
+
+        } else if (id == R.id.back) {
+            if (mTarget == null) return;
+            if (mTarget.mWindowType == VideoView.WindowType.FULLSCREEN) {
+                MediaPlayerManager.instance().backPress(getContext());
+            }
+
+        } else if (id == R.id.ivFullscreen) {
+            if (mTarget == null) return;
+            if (mTarget.mWindowType != VideoView.WindowType.FULLSCREEN) {
+                mTarget.startWindowFullscreen(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+            }
+
+        } else if (id == R.id.ivVolume) {
+            if (ivVolume.isChecked()) {
+                MediaPlayerManager.instance().mute(false);
+            } else {
+                MediaPlayerManager.instance().mute(true);
+            }
+
+        } else if (id == R.id.start) {
+            if (mTarget == null) {
+                return;
+            }
+            if (start.isChecked()) {
+                if (mTarget.isCurrentPlay() && MediaPlayerManager.instance().isPlaying()) {
                     return;
                 }
-                if (mTarget.mWindowType == VideoView.WindowType.NORMAL && MediaPlayerManager.instance().getCurrentState() == MediaPlayerManager.PlayerState.PLAYING) {
-                    //mTarget.startWindowFullscreen(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-                    if (layout_bottom.getVisibility() != VISIBLE) {
-                        showUI(layout_bottom, layout_top, start);
-                    } else {
-                        hideUI(layout_top, layout_bottom, start);
-                    }
-                } else if (mTarget.mWindowType == VideoView.WindowType.FULLSCREEN && MediaPlayerManager.instance().getCurrentState() == MediaPlayerManager.PlayerState.PLAYING) {
-                    if (layout_bottom.getVisibility() != VISIBLE) {
-                        showUI(layout_top, layout_bottom, start);
-                    } else {
-                        hideUI(layout_top, layout_bottom, start);
-                    }
-                }
-                break;
-            case R.id.back:
-                if (mTarget == null) return;
-                if (mTarget.mWindowType == VideoView.WindowType.FULLSCREEN) {
-                    MediaPlayerManager.instance().backPress(getContext());
-                }
-                break;
-            case R.id.ivFullscreen:
-                if (mTarget == null) return;
-                if (mTarget.mWindowType != VideoView.WindowType.FULLSCREEN) {
-                    mTarget.startWindowFullscreen(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-                }
-                break;
-            case R.id.ivVolume:
-                if (ivVolume.isChecked()) {
-                    MediaPlayerManager.instance().mute(false);
-                } else {
-                    MediaPlayerManager.instance().mute(true);
-                }
-                break;
-            case R.id.start:
-                if (mTarget == null) {
+                if (!Utils.isNetConnected(getContext())) {
+                    onStateError();
                     return;
                 }
-                if (start.isChecked()) {
-                    if (mTarget.isCurrentPlay() && MediaPlayerManager.instance().isPlaying()) {
-                        return;
-                    }
-                    if (!Utils.isNetConnected(getContext())) {
-                        onStateError();
-                        return;
-                    }
-                    if (!Utils.isWifiConnected(getContext())) {
-                        showWifiAlert();
-                        return;
-                    }
-                    mTarget.start();
-                } else {
-                    mTarget.pause();
+                if (!Utils.isWifiConnected(getContext())) {
+                    showWifiAlert();
+                    return;
                 }
-                break;
+                mTarget.start();
+            } else {
+                mTarget.pause();
+            }
+
         }
         startDismissTask();
     }
@@ -362,7 +354,6 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
     private Runnable mDismissTask = new Runnable() {
         @Override
         public void run() {
-            Log.d(TAG, "task run : " + System.currentTimeMillis());
             if (mTarget != null && mTarget.isCurrentPlay() && MediaPlayerManager.instance().isPlaying()) {
                 hideUI(layout_bottom, layout_top, start);
             }

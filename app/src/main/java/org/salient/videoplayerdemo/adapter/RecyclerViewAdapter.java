@@ -10,14 +10,12 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
-import org.salient.VideoLayerManager;
 import org.salient.VideoView;
-import org.salient.videoplayerdemo.ControlPanel;
+import org.salient.ControlPanel;
 import org.salient.videoplayerdemo.R;
 import org.salient.videoplayerdemo.bean.VideoBean;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**

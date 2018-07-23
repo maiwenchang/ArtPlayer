@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide;
 
 import org.salient.VideoLayerManager;
 import org.salient.VideoView;
-import org.salient.videoplayerdemo.ControlPanel;
+import org.salient.ControlPanel;
 import org.salient.videoplayerdemo.R;
 import org.salient.videoplayerdemo.bean.VideoBean;
 
