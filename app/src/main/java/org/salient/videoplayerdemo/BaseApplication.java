@@ -1,6 +1,7 @@
 package org.salient.videoplayerdemo;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.google.gson.Gson;
 
@@ -24,7 +25,11 @@ public class BaseApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+    }
 
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
         Executors.newSingleThreadExecutor().submit(new Runnable() {
             @Override
             public void run() {

@@ -71,20 +71,6 @@ public class ListViewAdapter extends BaseAdapter {
         return convertView;
     }
 
-    private Comparator<VideoView> mComparator = new Comparator<VideoView>() {
-        @Override
-        public int compare(VideoView self, VideoView current) {
-            if (self.getData() instanceof VideoBean
-                    && VideoLayerManager.instance().getCurrentData() instanceof VideoBean
-                    && ((VideoBean) self.getData()).getListPosition() == ((VideoBean) VideoLayerManager.instance().getCurrentData()).getListPosition()) {
-                //We use video ID to distinguish whether it is the same video.
-                // If is, return 0.
-                return 0;
-            }
-            return -1;
-        }
-    };
-
     @Override
     public void registerDataSetObserver(DataSetObserver observer) {
         super.registerDataSetObserver(observer);
@@ -100,4 +86,19 @@ public class ListViewAdapter extends BaseAdapter {
             videoView.setComparator(mComparator);
         }
     }
+
+    private Comparator<VideoView> mComparator = new Comparator<VideoView>() {
+        @Override
+        public int compare(VideoView self, VideoView current) {
+            if (self.getData() instanceof VideoBean
+                    && VideoLayerManager.instance().getCurrentData() instanceof VideoBean
+                    && self.getData() == VideoLayerManager.instance().getCurrentData()
+                    && ((VideoBean) self.getData()).getListPosition() == ((VideoBean) VideoLayerManager.instance().getCurrentData()).getListPosition()) {
+                //We use the ListPosition of video to distinguish whether it is the same video.
+                // If is, return 0.
+                return 0;
+            }
+            return -1;
+        }
+    };
 }

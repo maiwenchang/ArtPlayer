@@ -225,8 +225,7 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
     @Override
     public boolean onInfo(MediaPlayer mediaPlayer, final int what, final int extra) {
         if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
-            if (MediaPlayerManager.instance().getCurrentState() == MediaPlayerManager.PlayerState.PREPARING
-                    || MediaPlayerManager.instance().getCurrentState() == MediaPlayerManager.PlayerState.PREPARING_CHANGING_URL) {
+            if (MediaPlayerManager.instance().getCurrentState() == MediaPlayerManager.PlayerState.PREPARING) {
                 MediaPlayerManager.instance().updateState(MediaPlayerManager.PlayerState.PREPARED);
             }
         } else {

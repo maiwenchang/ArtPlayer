@@ -99,28 +99,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             videoView = itemView.findViewById(R.id.videoView);
             ControlPanel controlPanel = new ControlPanel(videoView.getContext());
             videoView.setControlPanel(controlPanel);
-            //videoView.setComparator(mComparator);
 
             //Specify the Detach Action which would be called when the VideoView has been detached from its window.
             //videoView.setDetachStrategy(VideoView.DetachAction.PAUSE);
 
         }
     }
-
-    private Comparator<VideoView> mComparator = new Comparator<VideoView>() {
-        @Override
-        public int compare(VideoView self, VideoView current) {
-            if (self.getData() instanceof VideoBean
-                    && VideoLayerManager.instance().getCurrentData() instanceof VideoBean
-                    && ((VideoBean) self.getData()).getListPosition() == ((VideoBean) VideoLayerManager.instance().getCurrentData()).getListPosition()) {
-                //We use the position on the list to distinguish whether it is the same video.
-                // If is, return 0.
-                return 0;
-            }
-            return -1;
-        }
-    };
-
-
 
 }

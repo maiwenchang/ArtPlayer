@@ -20,22 +20,25 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         videoView = findViewById(R.id.salientVideoView);
+
         final ControlPanel controlPanel = new ControlPanel(this);
         videoView.setControlPanel(controlPanel);
-        videoView.post(new Runnable() {
-            @Override
-            public void run() {
-                if (mMovieData != null) {
-                    VideoBean videoBean = getRandomVideo();
-                    videoView.setUp(videoBean.getUrl());
-                    Glide.with(MainActivity.this)
-                            .load(videoBean.getImage())
-                            .into(controlPanel.getCoverView());
-                }
-            }
-        });
+
+        videoView.setUp("http://vfx.mtime.cn/Video/2018/06/27/mp4/180627094726195356.mp4");
+        //videoView.start();
+
+        Glide.with(MainActivity.this)
+                .load("http://img5.mtime.cn/mg/2018/06/27/094527.12278962.jpg")
+                .into(controlPanel.getCoverView());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+
     }
 
     @Override

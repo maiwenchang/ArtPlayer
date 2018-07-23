@@ -16,44 +16,16 @@ import java.util.LinkedHashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static org.salient.VideoView.URL_KEY_DEFAULT;
-
 /**
  * > Created by Mai on 2018/7/10
  * *
  * > Description: 视频播放器管理类
  * *
  */
-public class MediaPlayerManager<T> implements TextureView.SurfaceTextureListener {
+public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
 
     private PlayerState mCurrentState = PlayerState.IDLE;
-    private AudioManager.OnAudioFocusChangeListener onAudioFocusChangeListener = new AudioManager.OnAudioFocusChangeListener() {
-        @Override
-        public void onAudioFocusChange(int focusChange) {
-            switch (focusChange) {
-                case AudioManager.AUDIOFOCUS_GAIN://获得焦点
-                    Log.d("AudioFocusChange", "AUDIOFOCUS_GAIN [" + this.hashCode() + "]");
-                    break;
-                case AudioManager.AUDIOFOCUS_LOSS://声音失去焦点
-                    //instance().releaseAllVideos();
-                    Log.d("AudioFocusChange", "AUDIOFOCUS_LOSS [" + this.hashCode() + "]");
-                    break;
-                case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT://声音短暂失去焦点
-                    Log.d("AudioFocusChange", "AUDIOFOCUS_LOSS_TRANSIENT [" + this.hashCode() + "]");
-                    //instance().pause();
-
-                    break;
-                case AudioManager.AUDIOFOCUS_GAIN_TRANSIENT:
-                    Log.d("AudioFocusChange", "AUDIOFOCUS_GAIN_TRANSIENT [" + this.hashCode() + "]");
-                    //instance().start();
-
-                    break;
-                case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK:
-                    Log.d("AudioFocusChange", "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK [" + this.hashCode() + "]");
-                    break;
-            }
-        }
-    };
+    private AudioManager.OnAudioFocusChangeListener onAudioFocusChangeListener;
     private final String TAG = MediaPlayerManager.class.getSimpleName();
     private final int FULL_SCREEN_NORMAL_DELAY = 300;
     public ResizeTextureView textureView;
@@ -71,6 +43,7 @@ public class MediaPlayerManager<T> implements TextureView.SurfaceTextureListener
     private MediaPlayerManager() {
         if (mediaPlayer == null) {
             mediaPlayer = new SystemMediaPlayer();
+            onAudioFocusChangeListener = new AudioFocusManager();
         }
     }
 
@@ -157,6 +130,10 @@ public class MediaPlayerManager<T> implements TextureView.SurfaceTextureListener
         }
     }
 
+    public void setAudioFocusManager(AudioManager.OnAudioFocusChangeListener onAudioFocusChangeListener) {
+        this.onAudioFocusChangeListener = onAudioFocusChangeListener;
+    }
+
     public void updateState(PlayerState playerState) {
         Log.i(TAG, "updateState [" + playerState.name() + "] ");
         mCurrentState = playerState;
@@ -193,7 +170,7 @@ public class MediaPlayerManager<T> implements TextureView.SurfaceTextureListener
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
         if (VideoLayerManager.instance().getCurrentFloor() == null) return;
-        Log.i("testt", "onSurfaceTextureAvailable [" + VideoLayerManager.instance().getCurrentFloor().hashCode() + "] ");
+        Log.i(TAG, "onSurfaceTextureAvailable [" + VideoLayerManager.instance().getCurrentFloor().hashCode() + "] ");
         if (MediaPlayerManager.instance().surfaceTexture == null) {
             MediaPlayerManager.instance().surfaceTexture = surfaceTexture;
             prepare();
@@ -204,12 +181,12 @@ public class MediaPlayerManager<T> implements TextureView.SurfaceTextureListener
 
     @Override
     public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i1) {
-        Log.i("testt", "onSurfaceTextureSizeChanged [" + VideoLayerManager.instance().getCurrentFloor().hashCode() + "] ");
+        Log.i(TAG, "onSurfaceTextureSizeChanged [" + VideoLayerManager.instance().getCurrentFloor().hashCode() + "] ");
     }
 
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
-        Log.i("testt", "onSurfaceTextureDestroyed [" + VideoLayerManager.instance().getCurrentFloor().hashCode() + "] ");
+        Log.i(TAG, "onSurfaceTextureDestroyed [" + VideoLayerManager.instance().getCurrentFloor().hashCode() + "] ");
         return MediaPlayerManager.instance().surfaceTexture == null;
     }
 
@@ -246,7 +223,7 @@ public class MediaPlayerManager<T> implements TextureView.SurfaceTextureListener
      */
     public void startFullscreen(Context context, Class<AbsControlPanel> clazz, String url, int screenRotation, Object... headers) {
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-        map.put(URL_KEY_DEFAULT, url);
+        //map.put(URL_KEY_DEFAULT, url);
         Object[] dataSourceObjects = new Object[1];
         dataSourceObjects[0] = map;
         startFullscreen(context, clazz, dataSourceObjects, 0, screenRotation, headers);
@@ -395,8 +372,7 @@ public class MediaPlayerManager<T> implements TextureView.SurfaceTextureListener
         PREPARED,
         PLAYING,
         PAUSED,
-        PLAYBACK_COMPLETED,
-        PREPARING_CHANGING_URL
+        PLAYBACK_COMPLETED
     }
 
     //内部类实现单例模式

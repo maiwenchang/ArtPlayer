@@ -74,7 +74,7 @@ public class VideoLayerManager {
      * @return VideoView
      */
     public boolean isCurrentPlaying(@NonNull VideoView videoView) {
-        return getCurrentFloor() != null && getCurrentFloor().equals(videoView);
+        return getCurrentFloor() != null && videoView.equals(getCurrentFloor());
     }
 
     public AbsControlPanel getCurrentControlPanel() {

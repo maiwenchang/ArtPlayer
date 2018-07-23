@@ -2,6 +2,7 @@ package org.salient;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -27,7 +28,6 @@ import java.util.Comparator;
  */
 public class VideoView<T> extends FrameLayout {
 
-    public static final String URL_KEY_DEFAULT = "url_default_key";//当播放的地址只有一个的时候的key
     private final String TAG = VideoView.class.getSimpleName();
     private final int ROOT_VIEW_POSITION = -1;
     private final int CONTROL_PANEL_POSITION = 1;
@@ -227,7 +227,7 @@ public class VideoView<T> extends FrameLayout {
         }
     }
 
-    public void startVideo() {
+    protected void startVideo() {
         VideoLayerManager.instance().completeAll();
         Log.d(TAG, "startVideo [" + this.hashCode() + "] ");
 
@@ -256,7 +256,7 @@ public class VideoView<T> extends FrameLayout {
      * 进入全屏模式
      * <p>
      * 注意：这里会重新创建一个VideoView实例，
-     * 动态添加到{@link android.view.Window#ID_ANDROID_CONTENT }所指的ContentView中
+     * 动态添加到{@link Window#ID_ANDROID_CONTENT }所指的ContentView中
      */
     public void startWindowFullscreen(int screenOrientation) {
         Log.i(TAG, "startWindowFullscreen " + " [" + this.hashCode() + "] ");
@@ -270,13 +270,19 @@ public class VideoView<T> extends FrameLayout {
         textureViewContainer.removeView(MediaPlayerManager.instance().textureView);
 
         try {
-            VideoView fullScreenVideoView = new VideoView(getContext());
+            VideoView<T> fullScreenVideoView = new VideoView<>(getContext());
             fullScreenVideoView.setId(R.id.salient_video_fullscreen_id);
-            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+            LayoutParams lp = new LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             vp.addView(fullScreenVideoView, lp);
-            fullScreenVideoView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                fullScreenVideoView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN);
+            } else {
+                fullScreenVideoView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN);
+            }
+
             fullScreenVideoView.setUp(dataSourceObjects, WindowType.FULLSCREEN, mData);
 
             fullScreenVideoView.addTextureView();
@@ -459,7 +465,7 @@ public class VideoView<T> extends FrameLayout {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof VideoView && mComparator.compare((VideoView) obj, this) == 0;
+        return obj instanceof VideoView && mComparator.compare(this,(VideoView) obj) == 0;
     }
 
     public void setComparator(@NonNull Comparator<VideoView> mComparator) {
