@@ -249,7 +249,7 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
         int id = v.getId();
         if (id == R.id.surface_container) {
             if (mTarget == null) return;
-            if (!mTarget.isCurrentPlay()) {
+            if (!VideoLayerManager.instance().isCurrentPlaying(mTarget)) {
                 return;
             }
             if (mTarget.mWindowType == VideoView.WindowType.NORMAL && MediaPlayerManager.instance().getCurrentState() == MediaPlayerManager.PlayerState.PLAYING) {
@@ -291,7 +291,7 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
                 return;
             }
             if (start.isChecked()) {
-                if (mTarget.isCurrentPlay() && MediaPlayerManager.instance().isPlaying()) {
+                if (VideoLayerManager.instance().isCurrentPlaying(mTarget) && MediaPlayerManager.instance().isPlaying()) {
                     return;
                 }
                 if (!Utils.isNetConnected(getContext())) {
@@ -354,7 +354,7 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
     private Runnable mDismissTask = new Runnable() {
         @Override
         public void run() {
-            if (mTarget != null && mTarget.isCurrentPlay() && MediaPlayerManager.instance().isPlaying()) {
+            if (VideoLayerManager.instance().isCurrentView(mTarget) && MediaPlayerManager.instance().isPlaying()) {
                 hideUI(layout_bottom, layout_top, start);
             }
         }

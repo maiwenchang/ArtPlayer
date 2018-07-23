@@ -2,6 +2,8 @@ package org.salient;
 
 import android.support.annotation.NonNull;
 
+import java.util.Comparator;
+
 /**
  * > Created by Mai on 2018/57/10
  * *
@@ -69,12 +71,24 @@ public class VideoLayerManager {
     }
 
     /**
-     * 是否正在播放的VideoView
+     * 判断VideoView 与 正在播放的多媒体资源是否匹配;
+     * 匹配规则可以通过{@link VideoView#setComparator(Comparator)} 设置;
+     * 默认比较{@link VideoView#dataSourceObject} 和 {@link AbsMediaPlayer#currentDataSource}
+     * See{@link VideoView#mComparator }
      *
      * @return VideoView
      */
     public boolean isCurrentPlaying(@NonNull VideoView videoView) {
         return getCurrentFloor() != null && videoView.equals(getCurrentFloor());
+    }
+
+    /**
+     * 判断VideoView与CurrentFloor是否同一个对象
+     *
+     * @return VideoView
+     */
+    public boolean isCurrentView(@NonNull VideoView videoView) {
+        return getCurrentFloor() != null && videoView == getCurrentFloor();
     }
 
     public AbsControlPanel getCurrentControlPanel() {

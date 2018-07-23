@@ -285,7 +285,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
 
         if (VideoLayerManager.instance().getSecondFloor() != null) {//退出全屏，返回常规窗口
             mClickFullScreenTime = System.currentTimeMillis();
-            if (true/*Utils.dataSourceObjectsContainsUri(VideoLayerManager.instance().getFirstFloor().getDataSourceObjects(), instance().getCurrentDataSource())*/) {
+            if (true/*Utils.dataSourceObjectsContainsUri(VideoLayerManager.instance().getFirstFloor().getDataSourceObject(), instance().getCurrentDataSource())*/) {
                 VideoLayerManager.instance().getFirstFloor().closeWindowFullScreen();
             } else {
                 quitFullscreenOrTinyWindow(context);

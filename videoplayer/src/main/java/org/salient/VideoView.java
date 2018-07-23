@@ -37,7 +37,7 @@ public class VideoView<T> extends FrameLayout {
 
     // settable by the client
     private T mData = null;
-    private Object dataSourceObjects;
+    private Object dataSourceObject;
     private int mScreenOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
     private AbsControlPanel mControlPanel;
     private FrameLayout textureViewContainer;
@@ -67,9 +67,7 @@ public class VideoView<T> extends FrameLayout {
         textureViewContainer = findViewById(R.id.surface_container);
 
         try {
-            if (isCurrentPlay()) {
-                mScreenOrientation = ((AppCompatActivity) context).getRequestedOrientation();
-            }
+            mScreenOrientation = ((AppCompatActivity) context).getRequestedOrientation();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -78,15 +76,6 @@ public class VideoView<T> extends FrameLayout {
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
-    }
-
-    /**
-     * 是否当前播放地址
-     *
-     * @return boolean
-     */
-    public boolean isCurrentPlay() {
-        return VideoLayerManager.instance().isCurrentPlaying(this);
     }
 
     public void setUp(String url) {
@@ -102,7 +91,7 @@ public class VideoView<T> extends FrameLayout {
     }
 
     public void setUp(Object dataSourceObjects, WindowType windowType, T data) {
-        this.dataSourceObjects = dataSourceObjects;
+        this.dataSourceObject = dataSourceObjects;
         this.mWindowType = windowType;
         this.mData = data;
         if (mSmartMode) {
@@ -138,7 +127,8 @@ public class VideoView<T> extends FrameLayout {
                     mControlPanel.notifyStateChange();
                 }
             }
-        } else {
+        } else if (VideoLayerManager.instance().isCurrentView(this)){
+            removeTextureView();
             if (mControlPanel != null) {
                 mControlPanel.onStateIdle();
             }
@@ -191,18 +181,17 @@ public class VideoView<T> extends FrameLayout {
     public void start() {
         Log.d(TAG, "start [" + this.hashCode() + "] ");
 
-        if (dataSourceObjects == null) {
+        if (dataSourceObject == null) {
             Toast.makeText(getContext(), "No Url", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (isCurrentPlay()) {
+        if (VideoLayerManager.instance().isCurrentPlaying(this)) {
             switch (MediaPlayerManager.instance().getCurrentState()) {
                 case IDLE://从初始状态开始播放
                     startVideo();
                     break;
-                case PLAYBACK_COMPLETED: // 重播:
-                    //startVideo();
+                case PLAYBACK_COMPLETED: // 重播
                     MediaPlayerManager.instance().start();
                     break;
                 case PAUSED://从暂停状态恢复播放
@@ -219,7 +208,7 @@ public class VideoView<T> extends FrameLayout {
      * 暂停
      */
     public void pause() {
-        if (isCurrentPlay()) {
+        if (VideoLayerManager.instance().isCurrentPlaying(this)) {
             if (MediaPlayerManager.instance().getCurrentState() == MediaPlayerManager.PlayerState.PLAYING) {
                 Log.d(TAG, "pause [" + this.hashCode() + "] ");
                 MediaPlayerManager.instance().pause();
@@ -238,18 +227,18 @@ public class VideoView<T> extends FrameLayout {
 
         Utils.scanForActivity(getContext()).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
-        MediaPlayerManager.instance().setCurrentDataSource(dataSourceObjects);
+        MediaPlayerManager.instance().setCurrentDataSource(dataSourceObject);
 
         VideoLayerManager.instance().setFirstFloor(this);
 
     }
 
-    public Object getDataSourceObjects() {
-        return dataSourceObjects;
+    public Object getDataSourceObject() {
+        return dataSourceObject;
     }
 
-    public void setDataSourceObjects(Object dataSourceObjects) {
-        this.dataSourceObjects = dataSourceObjects;
+    public void setDataSourceObject(Object dataSourceObject) {
+        this.dataSourceObject = dataSourceObject;
     }
 
     /**
@@ -283,7 +272,7 @@ public class VideoView<T> extends FrameLayout {
                 fullScreenVideoView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN);
             }
 
-            fullScreenVideoView.setUp(dataSourceObjects, WindowType.FULLSCREEN, mData);
+            fullScreenVideoView.setUp(dataSourceObject, WindowType.FULLSCREEN, mData);
 
             fullScreenVideoView.addTextureView();
 
@@ -391,7 +380,7 @@ public class VideoView<T> extends FrameLayout {
         if (MediaPlayerManager.instance().getCurrentState() == MediaPlayerManager.PlayerState.PLAYING
                 || MediaPlayerManager.instance().getCurrentState() == MediaPlayerManager.PlayerState.PAUSED) {//保存进度
             long position = mediaPlayerManager.getCurrentPositionWhenPlaying();
-            //Utils.saveProgress(getContext(), Utils.getCurrentFromDataSource(dataSourceObjects, currentUrlMapIndex), position);
+            //Utils.saveProgress(getContext(), Utils.getCurrentFromDataSource(dataSourceObject, currentUrlMapIndex), position);
         }
         MediaPlayerManager.instance().updateState(MediaPlayerManager.PlayerState.IDLE);
         if (mControlPanel != null) {
@@ -444,8 +433,7 @@ public class VideoView<T> extends FrameLayout {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        if (isCurrentPlay()) {
-            Log.d(getClass().getSimpleName(), "onDetachedFromWindow : " + hashCode());
+        if (VideoLayerManager.instance().isCurrentPlaying(this)) {
             switch (mDetachAction) {
                 case NOTHING:
                     break;
@@ -480,7 +468,7 @@ public class VideoView<T> extends FrameLayout {
 
         @Override
         public int compare(VideoView self, VideoView currentFloor) {
-            if (self == currentFloor && self.getDataSourceObjects() == MediaPlayerManager.instance().getCurrentDataSource()) {
+            if (self == currentFloor && self.getDataSourceObject() == MediaPlayerManager.instance().getCurrentDataSource()) {
                 return 0;
             }
             return -1;

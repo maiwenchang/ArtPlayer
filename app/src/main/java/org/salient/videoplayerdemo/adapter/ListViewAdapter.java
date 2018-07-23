@@ -50,7 +50,6 @@ public class ListViewAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         final ViewHolder viewHolder;
-        //Log.d(getClass().getSimpleName(), "getView : " + position);
         if (convertView == null) {
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_video_view, parent, false);
             viewHolder = new ViewHolder(convertView);
@@ -64,23 +63,15 @@ public class ListViewAdapter extends BaseAdapter {
             VideoView<VideoBean> videoView = viewHolder.videoView;
             videoView.setUp(item.getUrl(), item);
             ControlPanel controlPanel = (ControlPanel) videoView.getControlPanel();
-            Glide.with(videoView.getContext())
-                    .load(item.getImage())
-                    .into(controlPanel.getCoverView());
+            Glide.with(videoView.getContext()).load(item.getImage()).into(controlPanel.getCoverView());
         }
         return convertView;
-    }
-
-    @Override
-    public void registerDataSetObserver(DataSetObserver observer) {
-        super.registerDataSetObserver(observer);
     }
 
     public class ViewHolder {
         VideoView<VideoBean> videoView;
 
         ViewHolder(View convertView) {
-            Log.d(getClass().getSimpleName(), "new ViewHolder");
             videoView = convertView.findViewById(R.id.videoView);
             videoView.setControlPanel(new ControlPanel(convertView.getContext()));
             videoView.setComparator(mComparator);
