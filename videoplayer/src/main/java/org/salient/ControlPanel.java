@@ -249,7 +249,7 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
         int id = v.getId();
         if (id == R.id.surface_container) {
             if (mTarget == null) return;
-            if (!VideoLayerManager.instance().isCurrentPlaying(mTarget)) {
+            if (!mTarget.isCurrentPlaying()) {
                 return;
             }
             if (mTarget.getWindowType() == VideoView.WindowType.NORMAL && MediaPlayerManager.instance().getCurrentState() == MediaPlayerManager.PlayerState.PLAYING) {
@@ -291,7 +291,7 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
                 return;
             }
             if (start.isChecked()) {
-                if (VideoLayerManager.instance().isCurrentPlaying(mTarget) && MediaPlayerManager.instance().isPlaying()) {
+                if (mTarget.isCurrentPlaying() && MediaPlayerManager.instance().isPlaying()) {
                     return;
                 }
                 if (!Utils.isNetConnected(getContext())) {

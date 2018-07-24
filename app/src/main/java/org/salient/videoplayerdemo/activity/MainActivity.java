@@ -1,6 +1,7 @@
 package org.salient.videoplayerdemo.activity;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
 
@@ -56,6 +57,12 @@ public class MainActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.smartMode:
                 startActivity(new Intent(this, SmartModeActivity.class));
+                break;
+                case R.id.fullWindow:
+                    VideoView videoView = new VideoView(this);
+                    videoView.setUp("http://vfx.mtime.cn/Video/2018/07/17/mp4/180717165732273647.mp4");
+                    videoView.setControlPanel( new ControlPanel(this));
+                    MediaPlayerManager.instance().startFullscreen(videoView, ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
                 break;
         }
     }

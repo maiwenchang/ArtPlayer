@@ -1,7 +1,5 @@
 package org.salient.videoplayerdemo.adapter;
 
-import android.database.DataSetObserver;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,13 +7,13 @@ import android.widget.BaseAdapter;
 
 import com.bumptech.glide.Glide;
 
+import org.salient.ControlPanel;
 import org.salient.VideoLayerManager;
 import org.salient.VideoView;
-import org.salient.ControlPanel;
+import org.salient.VideoView.Comparator;
 import org.salient.videoplayerdemo.R;
 import org.salient.videoplayerdemo.bean.VideoBean;
 
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -60,7 +58,7 @@ public class ListViewAdapter extends BaseAdapter {
         final VideoBean item = getItem(position);
         if (item != null) {
             item.setListPosition(position);
-            VideoView<VideoBean> videoView = viewHolder.videoView;
+            VideoView videoView = viewHolder.videoView;
             videoView.setUp(item.getUrl(), item);
             ControlPanel controlPanel = (ControlPanel) videoView.getControlPanel();
             Glide.with(videoView.getContext()).load(item.getImage()).into(controlPanel.getCoverView());
@@ -68,8 +66,8 @@ public class ListViewAdapter extends BaseAdapter {
         return convertView;
     }
 
-    public class ViewHolder {
-        VideoView<VideoBean> videoView;
+    class ViewHolder {
+        VideoView videoView;
 
         ViewHolder(View convertView) {
             videoView = convertView.findViewById(R.id.videoView);
@@ -78,18 +76,21 @@ public class ListViewAdapter extends BaseAdapter {
         }
     }
 
-    private Comparator<VideoView> mComparator = new Comparator<VideoView>() {
+
+    // We use the ListPosition of video to distinguish whether it is the same video.
+    // If is, return 0.
+    private Comparator mComparator = new Comparator() {
         @Override
-        public int compare(VideoView self, VideoView current) {
-            if (self.getData() instanceof VideoBean
-                    && VideoLayerManager.instance().getCurrentData() instanceof VideoBean
-                    && self.getData() == VideoLayerManager.instance().getCurrentData()
-                    && ((VideoBean) self.getData()).getListPosition() == ((VideoBean) VideoLayerManager.instance().getCurrentData()).getListPosition()) {
-                //We use the ListPosition of video to distinguish whether it is the same video.
-                // If is, return 0.
-                return 0;
+        public boolean compare(VideoView videoView) {
+            try {
+                return videoView.getData() instanceof VideoBean
+                        && VideoLayerManager.instance().getCurrentData() instanceof VideoBean
+                        && videoView.getData() == VideoLayerManager.instance().getCurrentData()
+                        && ((VideoBean) videoView.getData()).getListPosition() == ((VideoBean) VideoLayerManager.instance().getCurrentData()).getListPosition();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            return -1;
+            return false;
         }
     };
 }

@@ -88,11 +88,11 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
-    public class VideoViewHolder extends RecyclerView.ViewHolder {
+    class VideoViewHolder extends RecyclerView.ViewHolder {
 
-        VideoView<VideoBean> videoView;
+        VideoView videoView;
 
-        public VideoViewHolder(View itemView) {
+        VideoViewHolder(View itemView) {
             super(itemView);
             videoView = itemView.findViewById(R.id.videoView);
             ControlPanel controlPanel = new ControlPanel(videoView.getContext());

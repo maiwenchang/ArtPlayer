@@ -152,7 +152,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
                 break;
         }
         VideoView currentFloor = VideoLayerManager.instance().getCurrentFloor();
-        if (currentFloor != null && VideoLayerManager.instance().isCurrentPlaying(currentFloor)) {
+        if (currentFloor != null && currentFloor.isCurrentPlaying()) {
             AbsControlPanel controlPanel = currentFloor.getControlPanel();
             if (controlPanel != null) {
                 controlPanel.notifyStateChange();//通知当前的控制面板改变布局
@@ -172,7 +172,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
-        if (VideoLayerManager.instance().getCurrentFloor() == null) return;
+        //if (VideoLayerManager.instance().getCurrentFloor() == null) return;
         Log.i(TAG, "onSurfaceTextureAvailable [" + VideoLayerManager.instance().getCurrentFloor().hashCode() + "] ");
         if (MediaPlayerManager.instance().surfaceTexture == null) {
             MediaPlayerManager.instance().surfaceTexture = surfaceTexture;
@@ -220,18 +220,20 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
      * 直接开启全屏(单个视频)
      *
      */
-    public void startFullscreen(@NonNull VideoView videoView, int screenRotation) {
+    public void startFullscreen(@NonNull VideoView videoView, int screenOrientation) {
         Context context = videoView.getContext();
         videoView.setWindowType(VideoView.WindowType.FULLSCREEN);
+        VideoLayerManager.instance().setSecondFloor(videoView);
+        videoView.start();
+
         Utils.hideSupportActionBar(context);
-        Utils.setRequestedOrientation(context, screenRotation);
         ViewGroup vp = (Utils.scanForActivity(context)).findViewById(Window.ID_ANDROID_CONTENT);
         View old = vp.findViewById(R.id.salient_video_fullscreen_id);
         if (old != null) {
             vp.removeView(old);
         }
+
         try {
-            //初始化一个VideoView
             videoView.setId(R.id.salient_video_fullscreen_id);
             FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -244,9 +246,20 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
                 videoView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN);
             }
 
+            videoView.removeTextureView();
+            videoView.addTextureView();
+
+            AbsControlPanel controlPanel = videoView.getControlPanel();
+            if (controlPanel != null) {
+                controlPanel.onEnterFullScreen();
+            }
+
+            Utils.setRequestedOrientation(context, screenOrientation);
+
             MediaPlayerManager.instance().mClickFullScreenTime = System.currentTimeMillis();
 
-            videoView.start();
+            MediaPlayerManager.instance().updateState(MediaPlayerManager.instance().getCurrentState());
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -262,12 +275,13 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
         if ((System.currentTimeMillis() - mClickFullScreenTime) < FULL_SCREEN_NORMAL_DELAY) {
             return false;
         }
-        if (VideoLayerManager.instance().getSecondFloor() != null) {//退出全屏，返回常规窗口
+        if (VideoLayerManager.instance().getFirstFloor() != null && VideoLayerManager.instance().getSecondFloor() != null) {
+            //退出全屏或小屏，返回常规窗口
             mClickFullScreenTime = System.currentTimeMillis();
             VideoLayerManager.instance().getFirstFloor().closeWindowFullScreen();
             return true;
-        } else if (VideoLayerManager.instance().getFirstFloor() != null && VideoLayerManager.instance().getFirstFloor().getWindowType() == VideoView.WindowType.FULLSCREEN) {
-            //退出全屏（直接开启的全屏，只有一层，没有常规窗口）
+        } else if (VideoLayerManager.instance().getFirstFloor() == null && VideoLayerManager.instance().getSecondFloor() != null) {
+            //退出全屏或小屏（直接开启的全屏，只有一层，没有常规窗口）
             mClickFullScreenTime = System.currentTimeMillis();
             quitFullscreenOrTinyWindow(context);
             return true;

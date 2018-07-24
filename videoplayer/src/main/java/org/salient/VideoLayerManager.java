@@ -12,8 +12,6 @@ import java.util.Comparator;
  */
 public class VideoLayerManager {
 
-    private Object currentData;
-
     private VideoView firstFloor;
     private VideoView secondFloor;
 
@@ -26,16 +24,11 @@ public class VideoLayerManager {
         private static final VideoLayerManager INSTANCE = new VideoLayerManager();
     }
 
-    public <T> T getCurrentData() {
-        try {
-            return (T) currentData;
-        } catch (Exception e) {
-            throw new ClassCastException();
+    public Object getCurrentData() {
+        if (getCurrentFloor() != null) {
+            return getCurrentFloor().getData();
         }
-    }
-
-    public <T> void setCurrentData(T currentData) {
-        this.currentData = currentData;
+        return null;
     }
 
     public VideoView getFirstFloor() {
@@ -44,9 +37,6 @@ public class VideoLayerManager {
 
     public void setFirstFloor(VideoView firstFloor) {
         this.firstFloor = firstFloor;
-        if (firstFloor != null) {
-            this.currentData = firstFloor.getData();
-        }
     }
 
     public VideoView getSecondFloor() {
@@ -55,7 +45,14 @@ public class VideoLayerManager {
 
     public void setSecondFloor(VideoView secondFloor) {
         this.secondFloor = secondFloor;
+    }
 
+    public void setCurrentFloor(VideoView currentFloor){
+        if (getSecondFloor() != null) {
+            setSecondFloor(currentFloor);
+        } else {
+            setFirstFloor(currentFloor);
+        }
     }
 
     /**
@@ -68,18 +65,6 @@ public class VideoLayerManager {
             return getSecondFloor();
         }
         return getFirstFloor();
-    }
-
-    /**
-     * 判断VideoView 与 正在播放的多媒体资源是否匹配;
-     * 匹配规则可以通过{@link VideoView#setComparator(Comparator)} 设置;
-     * 默认比较{@link VideoView#dataSourceObject} 和 {@link AbsMediaPlayer#currentDataSource}
-     * See{@link VideoView#mComparator }
-     *
-     * @return VideoView
-     */
-    public boolean isCurrentPlaying(@NonNull VideoView videoView) {
-        return getCurrentFloor() != null && videoView.equals(getCurrentFloor());
     }
 
     /**
@@ -111,9 +96,6 @@ public class VideoLayerManager {
         if (firstFloor != null) {
             firstFloor.completeVideo();
             firstFloor = null;
-        }
-        if (currentData != null) {
-            currentData = null;
         }
     }
 
