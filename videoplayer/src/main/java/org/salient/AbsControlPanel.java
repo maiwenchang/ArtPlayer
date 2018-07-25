@@ -3,8 +3,6 @@ package org.salient;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.FrameLayout;
 
 /**
@@ -54,7 +52,7 @@ public abstract class AbsControlPanel extends FrameLayout implements MediaStateL
     }
 
     public void notifyStateChange() {
-        switch (MediaPlayerManager.instance().getCurrentState()) {
+        switch (MediaPlayerManager.instance().getPlayerState()) {
             case ERROR:
                 onStateError();
                 break;

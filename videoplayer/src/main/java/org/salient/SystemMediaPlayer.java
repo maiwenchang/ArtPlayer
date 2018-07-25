@@ -6,9 +6,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.view.Surface;
 
-import java.lang.reflect.Method;
-import java.util.Map;
-
 /**
  * > Created by Mai on 2018/7/10
  * *
@@ -27,7 +24,6 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
             if (mediaPlayer != null) {
                 mediaPlayer.start();
                 MediaPlayerManager.instance().updateState(MediaPlayerManager.PlayerState.PLAYING);
-                mute(MediaPlayerManager.instance().isMute);
             }
         } catch (IllegalStateException e) {
             e.printStackTrace();
@@ -51,8 +47,9 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
             mediaPlayer.setOnErrorListener(this);
             mediaPlayer.setOnInfoListener(this);
             mediaPlayer.setOnVideoSizeChangedListener(this);
-            mediaPlayer.setDataSource(currentDataSource.toString());
+            mediaPlayer.setDataSource(dataSource.toString());
             mediaPlayer.prepareAsync();
+            mute(MediaPlayerManager.instance().isMute());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -156,7 +153,7 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
     public void OpenVolume() {
         try {
             if (mediaPlayer != null) {
-                VideoView currentFloor = VideoLayerManager.instance().getCurrentFloor();
+                VideoView currentFloor = MediaPlayerManager.instance().getCurrentVideoView();
                 if (currentFloor == null) return;
                 Context context = currentFloor.getContext();
                 if (context == null) return;
@@ -204,15 +201,15 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
 
     @Override
     public void onBufferingUpdate(MediaPlayer mediaPlayer, final int percent) {
-        if (VideoLayerManager.instance().getCurrentControlPanel() != null) {
-            VideoLayerManager.instance().getCurrentControlPanel().onBufferingUpdate(percent);
+        if (MediaPlayerManager.instance().getCurrentControlPanel() != null) {
+            MediaPlayerManager.instance().getCurrentControlPanel().onBufferingUpdate(percent);
         }
     }
 
     @Override
     public void onSeekComplete(MediaPlayer mediaPlayer) {
-        if (VideoLayerManager.instance().getCurrentControlPanel() != null) {
-            VideoLayerManager.instance().getCurrentControlPanel().onSeekComplete();
+        if (MediaPlayerManager.instance().getCurrentControlPanel() != null) {
+            MediaPlayerManager.instance().getCurrentControlPanel().onSeekComplete();
         }
     }
 
@@ -225,12 +222,12 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
     @Override
     public boolean onInfo(MediaPlayer mediaPlayer, final int what, final int extra) {
         if (what == MediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START) {
-            if (MediaPlayerManager.instance().getCurrentState() == MediaPlayerManager.PlayerState.PREPARING) {
+            if (MediaPlayerManager.instance().getPlayerState() == MediaPlayerManager.PlayerState.PREPARING) {
                 MediaPlayerManager.instance().updateState(MediaPlayerManager.PlayerState.PREPARED);
             }
         } else {
-            if (VideoLayerManager.instance().getCurrentControlPanel() != null) {
-                VideoLayerManager.instance().getCurrentControlPanel().onInfo(what, extra);
+            if (MediaPlayerManager.instance().getCurrentControlPanel() != null) {
+                MediaPlayerManager.instance().getCurrentControlPanel().onInfo(what, extra);
             }
         }
         return false;
@@ -238,10 +235,6 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
 
     @Override
     public void onVideoSizeChanged(MediaPlayer mediaPlayer, int width, int height) {
-        MediaPlayerManager.instance().currentVideoWidth = width;
-        MediaPlayerManager.instance().currentVideoHeight = height;
-
-        MediaPlayerManager.instance().onVideoSizeChanged();
-
+        MediaPlayerManager.instance().onVideoSizeChanged(width,height);
     }
 }

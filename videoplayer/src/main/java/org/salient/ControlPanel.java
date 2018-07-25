@@ -87,8 +87,9 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
 
     @Override
     public void onStateError() {
-        hideUI(start, layout_top, layout_bottom,loading);
+        hideUI(start, layout_top, layout_bottom, loading);
         showUI(llAlert);
+        //MediaPlayerManager.instance().releaseMediaPlayer();
         tvAlert.setText("oops~~ unknown error");
         tvConfirm.setText("retry");
         tvConfirm.setOnClickListener(new OnClickListener() {
@@ -104,7 +105,7 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
 
     @Override
     public void onStateIdle() {
-        hideUI(layout_bottom, layout_top,loading);
+        hideUI(layout_bottom, layout_top, loading, llAlert);
         showUI(video_cover, start);
         start.setChecked(false);
         //if (mTarget!=null && mTarget.get)
@@ -125,7 +126,7 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
     public void onStatePlaying() {
         start.setChecked(true);
         showUI(layout_bottom, layout_top);
-        hideUI(video_cover,loading);
+        hideUI(video_cover, loading);
         startDismissTask();
     }
 
@@ -133,13 +134,13 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
     public void onStatePaused() {
         start.setChecked(false);
         showUI(start, layout_bottom);
-        hideUI(video_cover,loading);
+        hideUI(video_cover, loading);
     }
 
     @Override
     public void onStatePlaybackCompleted() {
         start.setChecked(false);
-        hideUI(layout_bottom,loading);
+        hideUI(layout_bottom, loading);
         showUI(video_cover, start);
         if (mTarget.getWindowType() == VideoView.WindowType.FULLSCREEN) {
             showUI(layout_top);
@@ -185,6 +186,7 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
         hideUI(back);
         showUI(ivFullscreen);
         SynchronizeViewState();
+        //MediaPlayerManager.instance().playAt(mTarget);
     }
 
     @Override
@@ -209,8 +211,8 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
             vpup.requestDisallowInterceptTouchEvent(false);
             vpup = vpup.getParent();
         }
-        if (MediaPlayerManager.instance().getCurrentState() != MediaPlayerManager.PlayerState.PLAYING &&
-                MediaPlayerManager.instance().getCurrentState() != MediaPlayerManager.PlayerState.PAUSED)
+        if (MediaPlayerManager.instance().getPlayerState() != MediaPlayerManager.PlayerState.PLAYING &&
+                MediaPlayerManager.instance().getPlayerState() != MediaPlayerManager.PlayerState.PAUSED)
             return;
         long time = seekBar.getProgress() * MediaPlayerManager.instance().getDuration() / 100;
         MediaPlayerManager.instance().seekTo(time);
@@ -227,8 +229,7 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
 
     //显示WiFi状态提醒
     public void showWifiAlert() {
-        MediaPlayerManager.instance().releaseAllVideos();
-        hideUI(start, layout_bottom, layout_top,loading);
+        hideUI(start, layout_bottom, layout_top, loading);
         showUI(llAlert);
         tvAlert.setText("Is in non-WIFI");
         tvConfirm.setText("continue");
@@ -252,14 +253,14 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
             if (!mTarget.isCurrentPlaying()) {
                 return;
             }
-            if (mTarget.getWindowType() == VideoView.WindowType.NORMAL && MediaPlayerManager.instance().getCurrentState() == MediaPlayerManager.PlayerState.PLAYING) {
+            if (mTarget.getWindowType() == VideoView.WindowType.NORMAL && MediaPlayerManager.instance().getPlayerState() == MediaPlayerManager.PlayerState.PLAYING) {
                 //mTarget.startWindowFullscreen(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
                 if (layout_bottom.getVisibility() != VISIBLE) {
                     showUI(layout_bottom, layout_top, start);
                 } else {
                     hideUI(layout_top, layout_bottom, start);
                 }
-            } else if (mTarget.getWindowType() == VideoView.WindowType.FULLSCREEN && MediaPlayerManager.instance().getCurrentState() == MediaPlayerManager.PlayerState.PLAYING) {
+            } else if (mTarget.getWindowType() == VideoView.WindowType.FULLSCREEN && MediaPlayerManager.instance().getPlayerState() == MediaPlayerManager.PlayerState.PLAYING) {
                 if (layout_bottom.getVisibility() != VISIBLE) {
                     showUI(layout_top, layout_bottom, start);
                 } else {
@@ -276,14 +277,22 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
         } else if (id == R.id.ivFullscreen) {
             if (mTarget == null) return;
             if (mTarget.getWindowType() != VideoView.WindowType.FULLSCREEN) {
-                mTarget.startWindowFullscreen(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+                //new a VideoView
+                VideoView videoView = new VideoView(getContext());
+                videoView.setParentVideoView(mTarget);
+                videoView.setUp(mTarget.getDataSourceObject(), VideoView.WindowType.FULLSCREEN, mTarget.getData());
+                videoView.setControlPanel(new ControlPanel(getContext()));
+                //start fullscreen
+                MediaPlayerManager.instance().startFullscreen(videoView, ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+
+                //mTarget.startWindowFullscreen(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
             }
 
         } else if (id == R.id.ivVolume) {
             if (ivVolume.isChecked()) {
-                MediaPlayerManager.instance().mute(false);
+                MediaPlayerManager.instance().setMute(false);
             } else {
-                MediaPlayerManager.instance().mute(true);
+                MediaPlayerManager.instance().setMute(true);
             }
 
         } else if (id == R.id.start) {
@@ -326,7 +335,7 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
 
     //同步跟MediaPlayer状态无关的视图
     public void SynchronizeViewState() {
-        if (MediaPlayerManager.instance().isMute) {
+        if (MediaPlayerManager.instance().isMute()) {
             ivVolume.setChecked(false);
         } else {
             ivVolume.setChecked(true);
@@ -354,7 +363,7 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
     private Runnable mDismissTask = new Runnable() {
         @Override
         public void run() {
-            if (VideoLayerManager.instance().isCurrentView(mTarget) && MediaPlayerManager.instance().isPlaying()) {
+            if (MediaPlayerManager.instance().getCurrentVideoView() == mTarget && MediaPlayerManager.instance().isPlaying()) {
                 hideUI(layout_bottom, layout_top, start);
             }
         }

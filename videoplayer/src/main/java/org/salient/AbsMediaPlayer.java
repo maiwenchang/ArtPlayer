@@ -10,7 +10,7 @@ import android.view.Surface;
  */
 public abstract class AbsMediaPlayer {
 
-    protected Object currentDataSource;//正在播放的当前url或uri
+    protected Object dataSource;//正在播放的当前url或uri
 
     public abstract void start();
 
@@ -34,11 +34,11 @@ public abstract class AbsMediaPlayer {
 
     public abstract void mute(boolean isMute);
 
-    public Object getCurrentDataSource() {
-        return currentDataSource;
+    public Object getDataSource() {
+        return dataSource;
     }
 
-    public void setCurrentDataSource(Object currentDataSource) {
-        this.currentDataSource = currentDataSource;
+    public void setDataSource(Object dataSource) {
+        this.dataSource = dataSource;
     }
 }

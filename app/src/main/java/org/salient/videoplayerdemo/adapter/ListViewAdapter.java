@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import com.bumptech.glide.Glide;
 
 import org.salient.ControlPanel;
+import org.salient.MediaPlayerManager;
 import org.salient.VideoLayerManager;
 import org.salient.VideoView;
 import org.salient.VideoView.Comparator;
@@ -84,9 +85,10 @@ public class ListViewAdapter extends BaseAdapter {
         public boolean compare(VideoView videoView) {
             try {
                 return videoView.getData() instanceof VideoBean
-                        && VideoLayerManager.instance().getCurrentData() instanceof VideoBean
-                        && videoView.getData() == VideoLayerManager.instance().getCurrentData()
-                        && ((VideoBean) videoView.getData()).getListPosition() == ((VideoBean) VideoLayerManager.instance().getCurrentData()).getListPosition();
+                        && MediaPlayerManager.instance().getCurrentVideoView().getData() instanceof VideoBean
+                        && videoView.getData() == MediaPlayerManager.instance().getCurrentData()
+                        && ((VideoBean) videoView.getData()).getListPosition()
+                             == ((VideoBean) MediaPlayerManager.instance().getCurrentData()).getListPosition();
             } catch (Exception e) {
                 e.printStackTrace();
             }

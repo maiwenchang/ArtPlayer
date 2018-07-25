@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ListView;
 
+import org.salient.videoplayerdemo.R;
 import org.salient.videoplayerdemo.adapter.ListViewAdapter;
 import org.salient.videoplayerdemo.bean.VideoBean;
 
@@ -29,6 +30,7 @@ public class ListViewActivity extends BaseActivity {
         setContentView(listView,new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
         ListViewAdapter listViewAdapter = new ListViewAdapter();
         listView.setAdapter(listViewAdapter);
+        listView.setDividerHeight(30);
         List<VideoBean> list = new ArrayList<>();
         list.addAll(getAllAttention());
         list.addAll(getAllComing());

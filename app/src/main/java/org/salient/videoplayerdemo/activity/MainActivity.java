@@ -11,6 +11,7 @@ import org.salient.ControlPanel;
 import org.salient.MediaPlayerManager;
 import org.salient.VideoView;
 import org.salient.videoplayerdemo.R;
+import org.salient.videoplayerdemo.bean.VideoBean;
 
 public class MainActivity extends BaseActivity {
 
@@ -50,7 +51,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        MediaPlayerManager.instance().releaseAllVideos();
+        MediaPlayerManager.instance().releasePlayerAndView(this);
     }
 
     public void onClick(View view) {
