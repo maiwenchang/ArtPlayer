@@ -41,7 +41,15 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:onClick="onClick"
-                android:text="fullWindow" />
+                android:text="fullScreen" />
+
+            <Button
+                android:id="@+id/tinyWindow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:onClick="onClick"
+                android:text="tinyWindow" />
 
         </LinearLayout>
 

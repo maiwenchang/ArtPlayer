@@ -89,15 +89,23 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
 
     public void play(@NonNull VideoView videoView) {
         Log.d(TAG, "play [" + videoView.hashCode() + "] ");
-
         //check data source
         if (videoView.getDataSourceObject() == null) {
             return;
         }
-        // reset state to IDLE
-        updateState(MediaPlayerManager.PlayerState.IDLE);
         //get context
         Context context = videoView.getContext();
+        //clear videoView open before
+        VideoView currentVideoView = getCurrentVideoView();
+        if (currentVideoView != null && currentVideoView != videoView) {
+            if (videoView.getWindowType() != VideoView.WindowType.TINY) {
+                clearTinyLayout(context);
+            } else if (videoView.getWindowType() != VideoView.WindowType.FULLSCREEN) {
+                clearFullscreenLayout(context);
+            }
+        }
+        // reset state to IDLE
+        updateState(MediaPlayerManager.PlayerState.IDLE);
         //pass data to MediaPlayer
         setDataSource(videoView.getDataSourceObject());
         mCurrentData = videoView.getData();
@@ -120,6 +128,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
         if (target == null) return;
         removeTextureView();
         target.addTextureView();
+
     }
 
     public boolean isPlaying() {
@@ -131,8 +140,10 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
             Log.d(TAG, "release");
             if (context != null) {
                 clearFullscreenLayout(context);
+                clearTinyLayout(context);
                 Utils.scanForActivity(context).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 abandonAudioFocus(context);
+                Utils.showSupportActionBar(context);
             }
             releaseMediaPlayer();
             removeTextureView();
@@ -147,17 +158,22 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
         }
     }
 
-    private void clearFullscreenLayout(Context context) {
+    public void clearFullscreenLayout(Context context) {
         ViewGroup vp = (Utils.scanForActivity(context)).findViewById(Window.ID_ANDROID_CONTENT);
         View oldF = vp.findViewById(R.id.salient_video_fullscreen_id);
-        View oldT = vp.findViewById(R.id.salient_video_tiny_id);
         if (oldF != null) {
             vp.removeView(oldF);
+            oldF = null;
         }
+    }
+
+    public void clearTinyLayout(Context context) {
+        ViewGroup vp = (Utils.scanForActivity(context)).findViewById(Window.ID_ANDROID_CONTENT);
+        View oldT = vp.findViewById(R.id.salient_video_tiny_id);
         if (oldT != null) {
             vp.removeView(oldT);
+            oldT = null;
         }
-        Utils.showSupportActionBar(context);
     }
 
     public void releaseMediaPlayer() {
@@ -292,58 +308,102 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     }
 
     /**
-     * 开启全屏(单个视频)
+     * 进入全屏模式
+     * <p>
+     * 注意：这里把一个VideoView动态添加到{@link Window#ID_ANDROID_CONTENT }所指的View中
      */
     public void startFullscreen(@NonNull VideoView videoView, int screenOrientation) {
-
         if (videoView.getParent() != null) {
             throw new IllegalStateException("The specified VideoView already has a parent. " +
                     "You must call removeView() on the VideoView's parent first.");
         }
-
         Context context = videoView.getContext();
         videoView.setWindowType(VideoView.WindowType.FULLSCREEN);
-
-        videoView.start();
-
         Utils.hideSupportActionBar(context);
+        // add to window
         ViewGroup vp = (Utils.scanForActivity(context)).findViewById(Window.ID_ANDROID_CONTENT);
         View old = vp.findViewById(R.id.salient_video_fullscreen_id);
         if (old != null) {
             vp.removeView(old);
         }
-
-        try {
-            videoView.setId(R.id.salient_video_fullscreen_id);
-            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-            vp.addView(videoView, lp);
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                videoView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN);
-            } else {
-                videoView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN);
-            }
-
-            //videoView.removeTextureView();
-            videoView.addTextureView();
-
-            AbsControlPanel controlPanel = videoView.getControlPanel();
-            if (controlPanel != null) {
-                controlPanel.onEnterFullScreen();
-            }
-
-            Utils.setRequestedOrientation(context, screenOrientation);
-
-            MediaPlayerManager.instance().mClickFullScreenTime = System.currentTimeMillis();
-
-            MediaPlayerManager.instance().updateState(MediaPlayerManager.instance().getPlayerState());
-
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        videoView.setId(R.id.salient_video_fullscreen_id);
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        vp.addView(videoView, lp);
+        //add TextureView
+        removeTextureView();
+        videoView.addTextureView();
+        //update ControlPanel State
+        AbsControlPanel controlPanel = videoView.getControlPanel();
+        if (controlPanel != null) {
+            controlPanel.onEnterSecondScreen();
         }
+        //update Parent ControlPanel State
+        VideoView parentVideoView = videoView.getParentVideoView();
+        if (parentVideoView != null) {
+            AbsControlPanel parentControlPanel = parentVideoView.getControlPanel();
+            if (parentControlPanel != null) {
+                parentControlPanel.onEnterSecondScreen();
+            }
+        }
+        //Rotate window an enter fullscreen
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            videoView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN);
+        } else {
+            videoView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN);
+        }
+        Utils.setRequestedOrientation(context, screenOrientation);
+
+        MediaPlayerManager.instance().mClickFullScreenTime = System.currentTimeMillis();
+
+        MediaPlayerManager.instance().updateState(MediaPlayerManager.instance().getPlayerState());
+
+        //videoView.start();
+    }
+
+    /**
+     * 进入小屏模式
+     * <p>
+     * 注意：这里把一个VideoView动态添加到{@link Window#ID_ANDROID_CONTENT }所指的View中
+     */
+    public void startTinyWindow(@NonNull VideoView videoView, FrameLayout.LayoutParams lp) {
+        Log.i(TAG, "startWindowTiny " + " [" + this.hashCode() + "] ");
+        if (videoView.getParent() != null) {
+            throw new IllegalStateException("The specified VideoView already has a parent. " +
+                    "You must call removeView() on the VideoView's parent first.");
+        }
+        Context context = videoView.getContext();
+        videoView.setWindowType(VideoView.WindowType.TINY);
+
+        // add to window
+        ViewGroup vp = (Utils.scanForActivity(context)).findViewById(Window.ID_ANDROID_CONTENT);
+        View old = vp.findViewById(R.id.salient_video_tiny_id);
+        if (old != null) {
+            vp.removeView(old);
+        }
+        videoView.setId(R.id.salient_video_tiny_id);
+//        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(400, 400);
+//        lp.gravity = Gravity.RIGHT | Gravity.BOTTOM;
+        vp.addView(videoView, lp);
+        //add TextureView
+        removeTextureView();
+        videoView.addTextureView();
+        //update ControlPanel State
+        AbsControlPanel controlPanel = videoView.getControlPanel();
+        if (controlPanel != null) {
+            controlPanel.onEnterSecondScreen();
+        }
+        //update Parent ControlPanel State
+        VideoView parentVideoView = videoView.getParentVideoView();
+        if (parentVideoView != null) {
+            AbsControlPanel parentControlPanel = parentVideoView.getControlPanel();
+            if (parentControlPanel != null) {
+                parentControlPanel.onEnterSecondScreen();
+            }
+        }
+
+        MediaPlayerManager.instance().updateState(MediaPlayerManager.instance().getPlayerState());
     }
 
     /**
@@ -357,20 +417,21 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
         try {
             VideoView currentVideoView = getCurrentVideoView();
             if (currentVideoView != null && currentVideoView.getWindowType() == VideoView.WindowType.FULLSCREEN) {//退出全屏
-                mClickFullScreenTime = System.currentTimeMillis();
                 Utils.setRequestedOrientation(currentVideoView.getContext(), currentVideoView.getScreenOrientation());
                 clearFullscreenLayout(currentVideoView.getContext());
+                Utils.showSupportActionBar(context);
                 VideoView parent = currentVideoView.getParentVideoView();
                 if (parent != null) {//在常规窗口继续播放
                     playAt(parent);
                     AbsControlPanel controlPanel = parent.getControlPanel();
                     if (controlPanel != null) {
                         controlPanel.notifyStateChange();
-                        controlPanel.onExitFullScreen();
+                        controlPanel.onExitSecondScreen();
                     }
                 } else {//直接开启的全屏，只有一层，没有常规窗口
                     releasePlayerAndView(currentVideoView.getContext());
                 }
+                mClickFullScreenTime = System.currentTimeMillis();
                 return true;
             }
         } catch (Exception e) {

@@ -39,7 +39,7 @@ public interface MediaStateListener {
 
     void onProgressUpdate(int progress, long position, long duration);
 
-    void onEnterFullScreen();
+    void onEnterSecondScreen();
 
-    void onExitFullScreen();
+    void onExitSecondScreen();
 }

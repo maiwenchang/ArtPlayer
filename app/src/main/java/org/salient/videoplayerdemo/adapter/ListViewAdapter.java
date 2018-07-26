@@ -7,11 +7,10 @@ import android.widget.BaseAdapter;
 
 import com.bumptech.glide.Glide;
 
+import org.salient.Comparator;
 import org.salient.ControlPanel;
 import org.salient.MediaPlayerManager;
-import org.salient.VideoLayerManager;
 import org.salient.VideoView;
-import org.salient.VideoView.Comparator;
 import org.salient.videoplayerdemo.R;
 import org.salient.videoplayerdemo.bean.VideoBean;
 
@@ -73,7 +72,7 @@ public class ListViewAdapter extends BaseAdapter {
         ViewHolder(View convertView) {
             videoView = convertView.findViewById(R.id.videoView);
             videoView.setControlPanel(new ControlPanel(convertView.getContext()));
-            videoView.setComparator(mComparator);
+            //videoView.setComparator(mComparator);
         }
     }
 
@@ -84,11 +83,18 @@ public class ListViewAdapter extends BaseAdapter {
         @Override
         public boolean compare(VideoView videoView) {
             try {
-                return videoView.getData() instanceof VideoBean
-                        && MediaPlayerManager.instance().getCurrentVideoView().getData() instanceof VideoBean
-                        && videoView.getData() == MediaPlayerManager.instance().getCurrentData()
-                        && ((VideoBean) videoView.getData()).getListPosition()
-                             == ((VideoBean) MediaPlayerManager.instance().getCurrentData()).getListPosition();
+                Object data = videoView.getData();
+                Object currentData = MediaPlayerManager.instance().getCurrentVideoView().getData();
+                if (data != null && currentData != null && data instanceof VideoBean && currentData instanceof VideoBean) {
+                    if (((VideoBean) data).getListPosition() == ((VideoBean) currentData).getListPosition()) {
+                        return true;
+                    }
+                }
+//                return videoView.getData() instanceof VideoBean
+//                        && MediaPlayerManager.instance().getCurrentVideoView().getData() instanceof VideoBean
+//                        && videoView.getData() == MediaPlayerManager.instance().getCurrentData()
+//                        && ((VideoBean) videoView.getData()).getListPosition()
+//                             == ((VideoBean) MediaPlayerManager.instance().getCurrentData()).getListPosition();
             } catch (Exception e) {
                 e.printStackTrace();
             }

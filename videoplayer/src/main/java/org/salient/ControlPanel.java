@@ -175,14 +175,14 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
     }
 
     @Override
-    public void onEnterFullScreen() {
+    public void onEnterSecondScreen() {
         showUI(back);
         hideUI(ivFullscreen);
         SynchronizeViewState();
     }
 
     @Override
-    public void onExitFullScreen() {
+    public void onExitSecondScreen() {
         hideUI(back);
         showUI(ivFullscreen);
         SynchronizeViewState();
@@ -253,7 +253,8 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
             if (!mTarget.isCurrentPlaying()) {
                 return;
             }
-            if (mTarget.getWindowType() == VideoView.WindowType.NORMAL && MediaPlayerManager.instance().getPlayerState() == MediaPlayerManager.PlayerState.PLAYING) {
+            if ((mTarget.getWindowType() == VideoView.WindowType.NORMAL || mTarget.getWindowType() == VideoView.WindowType.TINY)
+                    && MediaPlayerManager.instance().getPlayerState() == MediaPlayerManager.PlayerState.PLAYING) {
                 //mTarget.startWindowFullscreen(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
                 if (layout_bottom.getVisibility() != VISIBLE) {
                     showUI(layout_bottom, layout_top, start);

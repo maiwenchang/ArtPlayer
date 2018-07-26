@@ -3,13 +3,17 @@ package org.salient.videoplayerdemo.adapter;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
+import org.salient.MediaPlayerManager;
+import org.salient.OnWindowDetachedListener;
 import org.salient.VideoView;
 import org.salient.ControlPanel;
 import org.salient.videoplayerdemo.R;
@@ -99,7 +103,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             videoView.setControlPanel(controlPanel);
 
             //Specify the Detach Action which would be called when the VideoView has been detached from its window.
-            videoView.setDetachStrategy(VideoView.DetachAction.PAUSE);
+            videoView.setOnWindowDetachedListener(new OnWindowDetachedListener() {
+                @Override
+                public void onDetached(VideoView videoView) {
+                    if (videoView.isCurrentPlaying()) {
+//                        VideoView tinyVideoView = new VideoView(videoView.getContext());
+//                        tinyVideoView.setUp(videoView.getDataSourceObject(), VideoView.WindowType.TINY, videoView.getData());
+//                        tinyVideoView.setControlPanel(new ControlPanel(videoView.getContext()));
+//                        tinyVideoView.setParentVideoView(videoView);
+//                        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(16 * 40, 9 * 40);
+//                        layoutParams.gravity = Gravity.BOTTOM | Gravity.RIGHT;
+//                        layoutParams.setMargins(0, 0, 30, 100);
+//                        MediaPlayerManager.instance().startTinyWindow(tinyVideoView, layoutParams);
+                    }
+                }
+            });
 
         }
     }
