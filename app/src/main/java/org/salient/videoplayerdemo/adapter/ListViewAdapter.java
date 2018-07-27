@@ -76,6 +76,8 @@ public class ListViewAdapter extends BaseAdapter {
         ViewHolder(View convertView) {
             videoView = convertView.findViewById(R.id.videoView);
             videoView.setControlPanel(new ControlPanel(convertView.getContext()));
+
+
             //videoView.setComparator(mComparator);
 
 //            videoView.setOnWindowDetachedListener(new OnWindowDetachedListener() {
