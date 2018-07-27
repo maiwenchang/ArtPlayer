@@ -75,7 +75,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         ImageView coverView = ((ControlPanel) holder.videoView.getControlPanel()).getCoverView();
 
-        Glide.with(holder.videoView.getContext()).load(videoBean.getImage()).into(coverView);
+        //Glide.with(holder.videoView.getContext()).load(videoBean.getImage()).into(coverView);
     }
 
     @Override

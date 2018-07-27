@@ -1,16 +1,19 @@
 package org.salient.videoplayerdemo.adapter;
 
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 
 import com.bumptech.glide.Glide;
 
 import org.salient.Comparator;
 import org.salient.ControlPanel;
 import org.salient.MediaPlayerManager;
+import org.salient.OnWindowDetachedListener;
 import org.salient.VideoView;
 import org.salient.videoplayerdemo.R;
 import org.salient.videoplayerdemo.bean.VideoBean;
@@ -73,7 +76,24 @@ public class ListViewAdapter extends BaseAdapter {
         ViewHolder(View convertView) {
             videoView = convertView.findViewById(R.id.videoView);
             videoView.setControlPanel(new ControlPanel(convertView.getContext()));
-            videoView.setComparator(mComparator);
+            //videoView.setComparator(mComparator);
+
+            videoView.setOnWindowDetachedListener(new OnWindowDetachedListener() {
+                @Override
+                public void onDetached(VideoView videoView) {
+                    if (videoView.isCurrentPlaying()  && videoView == MediaPlayerManager.instance().getCurrentVideoView()) {
+                        //开启小窗
+                        VideoView tinyVideoView = new VideoView(videoView.getContext());
+                        tinyVideoView.setUp(videoView.getDataSourceObject(), VideoView.WindowType.TINY, videoView.getData());
+                        tinyVideoView.setControlPanel(new ControlPanel(videoView.getContext()));
+                        tinyVideoView.setParentVideoView(videoView);
+                        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(16 * 40, 9 * 40);
+                        layoutParams.gravity = Gravity.BOTTOM | Gravity.RIGHT;
+                        layoutParams.setMargins(0, 0, 30, 100);
+                        MediaPlayerManager.instance().startTinyWindow(tinyVideoView);
+                    }
+                }
+            });
         }
     }
 
