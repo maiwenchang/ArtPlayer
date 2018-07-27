@@ -65,7 +65,7 @@ public class ListViewAdapter extends BaseAdapter {
             VideoView videoView = viewHolder.videoView;
             videoView.setUp(item.getUrl(), item);
             ControlPanel controlPanel = (ControlPanel) videoView.getControlPanel();
-            //Glide.with(videoView.getContext()).load(item.getImage()).into(controlPanel.getCoverView());
+            Glide.with(videoView.getContext()).load(item.getImage()).into(controlPanel.getCoverView());
         }
         return convertView;
     }
