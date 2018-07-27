@@ -24,9 +24,9 @@ public class VideoView extends FrameLayout {
     private final String TAG = VideoView.class.getSimpleName();
     private final int ROOT_VIEW_POSITION = -1;
     private final int CONTROL_PANEL_POSITION = 1;
-    private WindowType mWindowType = WindowType.NORMAL;
     public int widthRatio = 0;
     public int heightRatio = 0;
+    private WindowType mWindowType = WindowType.NORMAL;
     private FrameLayout textureViewContainer;
     private int mScreenOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
 
@@ -90,9 +90,7 @@ public class VideoView extends FrameLayout {
         this.mWindowType = windowType;
         this.mData = data;
         if (mSmartMode) {
-            //autoMatch();
-        } else if (mControlPanel != null) {
-            //mControlPanel.onStateIdle();
+            autoMatch();
         }
     }
 
@@ -108,10 +106,10 @@ public class VideoView extends FrameLayout {
         if (mWindowType != WindowType.NORMAL) {
             return;
         }
-        VideoView currentPlaying = MediaPlayerManager.instance().getCurrentVideoView();
+        VideoView currentVideoView = MediaPlayerManager.instance().getCurrentVideoView();
         if (isCurrentPlaying()) {
             //quit tiny window
-            if (currentPlaying != null && currentPlaying.getWindowType() == WindowType.TINY) {
+            if (currentVideoView != null && currentVideoView.getWindowType() == WindowType.TINY) {
                 //play at this video view
                 MediaPlayerManager.instance().playAt(this);
                 //自动退出小窗
@@ -120,7 +118,7 @@ public class VideoView extends FrameLayout {
                     mControlPanel.onExitSecondScreen();
                     mControlPanel.notifyStateChange();
                 }
-            } else if (currentPlaying != null && currentPlaying.getWindowType() == WindowType.FULLSCREEN) {
+            } else if (currentVideoView != null && currentVideoView.getWindowType() == WindowType.FULLSCREEN) {
                 if (mControlPanel != null) {
                     mControlPanel.onStateIdle();
                 }
@@ -131,7 +129,7 @@ public class VideoView extends FrameLayout {
                     mControlPanel.notifyStateChange();
                 }
             }
-        } else if (currentPlaying == this) {
+        } else if (currentVideoView == this) {
             MediaPlayerManager.instance().removeTextureView();
             if (mControlPanel != null) {
                 mControlPanel.onStateIdle();
@@ -146,17 +144,19 @@ public class VideoView extends FrameLayout {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        if (mSmartMode) {
-            autoMatch();
-        }
-    }
-
-    public void setData(Object data) {
-        mData = data;
+//        if (mSmartMode) {
+//            //autoMatch();
+//        } else {
+//
+//        }
     }
 
     public Object getData() {
         return mData;
+    }
+
+    public void setData(Object data) {
+        mData = data;
     }
 
     @Override
@@ -177,7 +177,6 @@ public class VideoView extends FrameLayout {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         }
     }
-
 
     public int getScreenOrientation() {
         return mScreenOrientation;
@@ -311,12 +310,12 @@ public class VideoView extends FrameLayout {
         return obj instanceof VideoView && mComparator.compare(this);
     }
 
-    public void setComparator(@NonNull Comparator mComparator) {
-        this.mComparator = mComparator;
-    }
-
     public Comparator getComparator() {
         return mComparator;
+    }
+
+    public void setComparator(@NonNull Comparator mComparator) {
+        this.mComparator = mComparator;
     }
 
     /**
@@ -331,7 +330,6 @@ public class VideoView extends FrameLayout {
         return mComparator.compare(this);
     }
 
-
     public VideoView getParentVideoView() {
         return mParentVideoView;
     }
@@ -345,22 +343,16 @@ public class VideoView extends FrameLayout {
         public boolean compare(VideoView videoView) {
             VideoView currentVideoView = MediaPlayerManager.instance().getCurrentVideoView();
             Object dataSource = MediaPlayerManager.instance().getDataSource();
-            if (currentVideoView != null && videoView != null) {
-                if (currentVideoView.getWindowType() == WindowType.TINY) {
-                    return (videoView == currentVideoView ||
-                            videoView == currentVideoView.getParentVideoView())
-                            && videoView.getDataSourceObject() == dataSource;
-                } else {
-                    return videoView == currentVideoView
-                            && videoView.getDataSourceObject() == dataSource;
-                }
-            } else if (dataSource != null && videoView != null) {
-               return videoView.getDataSourceObject() == dataSource;
+
+            if (dataSource != null && videoView != null) {
+                boolean b = dataSource == videoView.getDataSourceObject();
+                Log.d(TAG, "Comparator : " + b + "");
+                return dataSource == videoView.getDataSourceObject();
             }
+
             return false;
         }
     };
-
 
     public enum WindowType {
         NORMAL,

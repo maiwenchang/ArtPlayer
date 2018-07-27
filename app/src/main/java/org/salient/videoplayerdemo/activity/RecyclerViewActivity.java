@@ -3,8 +3,10 @@ package org.salient.videoplayerdemo.activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
 import org.salient.videoplayerdemo.R;
@@ -20,7 +22,7 @@ import java.util.List;
  * > Description:
  * *
  */
-public class SmartModeRecyclerViewActivity extends BaseActivity {
+public class RecyclerViewActivity extends BaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,7 +32,13 @@ public class SmartModeRecyclerViewActivity extends BaseActivity {
         RecyclerView recycler_view = findViewById(R.id.recycler_view);
         ViewCompat.setNestedScrollingEnabled(recycler_view, false);
         RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter();
-        recycler_view.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        //GridLayoutManager layoutManager = new GridLayoutManager(this, 3);
+
+        //StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+
+        recycler_view.setLayoutManager(layoutManager);
+
         recycler_view.setAdapter(recyclerViewAdapter);
         List<VideoBean> list = new ArrayList<>();
         list.addAll(getAllComing());

@@ -10,12 +10,11 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-
+import org.salient.Comparator;
+import org.salient.ControlPanel;
 import org.salient.MediaPlayerManager;
 import org.salient.OnWindowDetachedListener;
 import org.salient.VideoView;
-import org.salient.ControlPanel;
 import org.salient.videoplayerdemo.R;
 import org.salient.videoplayerdemo.bean.VideoBean;
 
@@ -66,9 +65,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         videoBean.setListPosition(position);
         holder.videoView.setUp(videoBean.getUrl(), videoBean);
 
+        //手动更改高度，不同位置的高度有所不同
+        //ViewGroup.LayoutParams layoutParams = holder.videoView.getLayoutParams();
+        //layoutParams.width = 16 * 40;
+        //layoutParams.height = (int) (9 * 40 + Math.sin((position + 1) * Math.PI / 2) * 5);
+        //holder.videoView.setLayoutParams(layoutParams);
+
         ImageView coverView = ((ControlPanel) holder.videoView.getControlPanel()).getCoverView();
 
-        Glide.with(holder.videoView.getContext()).load(videoBean.getImage()).into(coverView);
+        //Glide.with(holder.videoView.getContext()).load(videoBean.getImage()).into(coverView);
     }
 
     @Override
@@ -101,25 +106,44 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             videoView = itemView.findViewById(R.id.videoView);
             ControlPanel controlPanel = new ControlPanel(videoView.getContext());
             videoView.setControlPanel(controlPanel);
-
+            videoView.setComparator(mComparator);
             //Specify the Detach Action which would be called when the VideoView has been detached from its window.
             videoView.setOnWindowDetachedListener(new OnWindowDetachedListener() {
                 @Override
                 public void onDetached(VideoView videoView) {
                     if (videoView.isCurrentPlaying()) {
-//                        VideoView tinyVideoView = new VideoView(videoView.getContext());
-//                        tinyVideoView.setUp(videoView.getDataSourceObject(), VideoView.WindowType.TINY, videoView.getData());
-//                        tinyVideoView.setControlPanel(new ControlPanel(videoView.getContext()));
-//                        tinyVideoView.setParentVideoView(videoView);
-//                        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(16 * 40, 9 * 40);
-//                        layoutParams.gravity = Gravity.BOTTOM | Gravity.RIGHT;
-//                        layoutParams.setMargins(0, 0, 30, 100);
-//                        MediaPlayerManager.instance().startTinyWindow(tinyVideoView, layoutParams);
+                        //videoView.pause();
+
+                        VideoView tinyVideoView = new VideoView(videoView.getContext());
+                        tinyVideoView.setUp(videoView.getDataSourceObject(), VideoView.WindowType.TINY, videoView.getData());
+                        tinyVideoView.setControlPanel(new ControlPanel(videoView.getContext()));
+                        tinyVideoView.setParentVideoView(videoView);
+                        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(16 * 40, 9 * 40);
+                        layoutParams.gravity = Gravity.BOTTOM | Gravity.RIGHT;
+                        layoutParams.setMargins(0, 0, 30, 100);
+                        MediaPlayerManager.instance().startTinyWindow(tinyVideoView, layoutParams);
                     }
                 }
             });
 
         }
     }
+
+    private Comparator mComparator = new Comparator() {
+        @Override
+        public boolean compare(VideoView videoView) {
+            try {
+                Object dataSource = MediaPlayerManager.instance().getDataSource();
+                if (dataSource != null && videoView != null) {
+                    boolean b = dataSource == videoView.getDataSourceObject();
+                    Log.d("ListViewAdapter", "Comparator : " + b + " Position : " + ((VideoBean) videoView.getData()).getListPosition());
+                    return dataSource == videoView.getDataSourceObject();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+    };
 
 }

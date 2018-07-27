@@ -27,7 +27,7 @@
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.SmartModeRecyclerViewActivity"
+            android:name=".activity.RecyclerViewActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity

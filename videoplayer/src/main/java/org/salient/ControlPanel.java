@@ -42,6 +42,14 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
     private LinearLayout llAlert;
     private TextView tvAlert;
     private TextView tvConfirm;
+    private Runnable mDismissTask = new Runnable() {
+        @Override
+        public void run() {
+            if (MediaPlayerManager.instance().getCurrentVideoView() == mTarget && MediaPlayerManager.instance().isPlaying()) {
+                hideUI(layout_bottom, layout_top, start);
+            }
+        }
+    };
 
     public ControlPanel(Context context) {
         super(context);
@@ -360,15 +368,6 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
             handler.removeCallbacks(mDismissTask);
         }
     }
-
-    private Runnable mDismissTask = new Runnable() {
-        @Override
-        public void run() {
-            if (MediaPlayerManager.instance().getCurrentVideoView() == mTarget && MediaPlayerManager.instance().isPlaying()) {
-                hideUI(layout_bottom, layout_top, start);
-            }
-        }
-    };
 
     public ImageView getCoverView() {
         return video_cover;

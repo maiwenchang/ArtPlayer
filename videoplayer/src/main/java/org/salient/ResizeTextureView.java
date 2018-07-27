@@ -18,6 +18,7 @@ public class ResizeTextureView extends TextureView {
     public int currentVideoHeight = 0;
     //todo 应该写在attrs declare-styleable 中
     private VideoImageDisplayType mDisplayType = VideoImageDisplayType.ADAPT;
+
     public ResizeTextureView(Context context) {
         super(context);
         currentVideoWidth = 0;

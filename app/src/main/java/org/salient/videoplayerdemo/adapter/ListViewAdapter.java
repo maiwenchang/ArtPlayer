@@ -1,5 +1,6 @@
 package org.salient.videoplayerdemo.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,7 +62,7 @@ public class ListViewAdapter extends BaseAdapter {
             VideoView videoView = viewHolder.videoView;
             videoView.setUp(item.getUrl(), item);
             ControlPanel controlPanel = (ControlPanel) videoView.getControlPanel();
-            Glide.with(videoView.getContext()).load(item.getImage()).into(controlPanel.getCoverView());
+            //Glide.with(videoView.getContext()).load(item.getImage()).into(controlPanel.getCoverView());
         }
         return convertView;
     }
@@ -72,7 +73,7 @@ public class ListViewAdapter extends BaseAdapter {
         ViewHolder(View convertView) {
             videoView = convertView.findViewById(R.id.videoView);
             videoView.setControlPanel(new ControlPanel(convertView.getContext()));
-            //videoView.setComparator(mComparator);
+            videoView.setComparator(mComparator);
         }
     }
 
@@ -83,18 +84,12 @@ public class ListViewAdapter extends BaseAdapter {
         @Override
         public boolean compare(VideoView videoView) {
             try {
-                Object data = videoView.getData();
-                Object currentData = MediaPlayerManager.instance().getCurrentVideoView().getData();
-                if (data != null && currentData != null && data instanceof VideoBean && currentData instanceof VideoBean) {
-                    if (((VideoBean) data).getListPosition() == ((VideoBean) currentData).getListPosition()) {
-                        return true;
-                    }
+                Object dataSource = MediaPlayerManager.instance().getDataSource();
+                if (dataSource != null && videoView != null) {
+                    boolean b = dataSource == videoView.getDataSourceObject();
+                    Log.d("ListViewAdapter",  "Comparator : " + b+ " Position : " + ((VideoBean) videoView.getData()).getListPosition());
+                    return dataSource == videoView.getDataSourceObject();
                 }
-//                return videoView.getData() instanceof VideoBean
-//                        && MediaPlayerManager.instance().getCurrentVideoView().getData() instanceof VideoBean
-//                        && videoView.getData() == MediaPlayerManager.instance().getCurrentData()
-//                        && ((VideoBean) videoView.getData()).getListPosition()
-//                             == ((VideoBean) MediaPlayerManager.instance().getCurrentData()).getListPosition();
             } catch (Exception e) {
                 e.printStackTrace();
             }

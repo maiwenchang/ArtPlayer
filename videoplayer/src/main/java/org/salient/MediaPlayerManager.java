@@ -293,6 +293,10 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
         MediaPlayerManager.instance().mediaPlayer = mediaPlayer;
     }
 
+    public boolean isMute() {
+        return isMute;
+    }
+
     /**
      * 设置静音
      *
@@ -301,10 +305,6 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     public void setMute(boolean mute) {
         this.isMute = mute;
         instance().mediaPlayer.mute(mute);
-    }
-
-    public boolean isMute() {
-        return isMute;
     }
 
     /**

@@ -235,6 +235,6 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
 
     @Override
     public void onVideoSizeChanged(MediaPlayer mediaPlayer, int width, int height) {
-        MediaPlayerManager.instance().onVideoSizeChanged(width,height);
+        MediaPlayerManager.instance().onVideoSizeChanged(width, height);
     }
 }
