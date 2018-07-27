@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+
 import org.salient.Comparator;
 import org.salient.ControlPanel;
 import org.salient.MediaPlayerManager;
@@ -65,7 +67,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         videoBean.setListPosition(position);
         holder.videoView.setUp(videoBean.getUrl(), videoBean);
 
-        //手动更改高度，不同位置的高度有所不同
+        // 瀑布流时，手动更改高度，不同位置的高度有所不同
         //ViewGroup.LayoutParams layoutParams = holder.videoView.getLayoutParams();
         //layoutParams.width = 16 * 40;
         //layoutParams.height = (int) (9 * 40 + Math.sin((position + 1) * Math.PI / 2) * 5);
@@ -73,7 +75,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         ImageView coverView = ((ControlPanel) holder.videoView.getControlPanel()).getCoverView();
 
-        //Glide.with(holder.videoView.getContext()).load(videoBean.getImage()).into(coverView);
+        Glide.with(holder.videoView.getContext()).load(videoBean.getImage()).into(coverView);
     }
 
     @Override
@@ -111,9 +113,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             videoView.setOnWindowDetachedListener(new OnWindowDetachedListener() {
                 @Override
                 public void onDetached(VideoView videoView) {
-                    if (videoView.isCurrentPlaying()) {
-                        //videoView.pause();
-
+                    if (videoView.isCurrentPlaying()  && videoView == MediaPlayerManager.instance().getCurrentVideoView()) {
+                        //开启小窗
                         VideoView tinyVideoView = new VideoView(videoView.getContext());
                         tinyVideoView.setUp(videoView.getDataSourceObject(), VideoView.WindowType.TINY, videoView.getData());
                         tinyVideoView.setControlPanel(new ControlPanel(videoView.getContext()));
@@ -121,7 +122,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(16 * 40, 9 * 40);
                         layoutParams.gravity = Gravity.BOTTOM | Gravity.RIGHT;
                         layoutParams.setMargins(0, 0, 30, 100);
-                        MediaPlayerManager.instance().startTinyWindow(tinyVideoView, layoutParams);
+                        MediaPlayerManager.instance().startTinyWindow(tinyVideoView);
                     }
                 }
             });

@@ -6,6 +6,7 @@ import android.media.AudioManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
@@ -29,9 +30,9 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     private final String TAG = getClass().getSimpleName();
     private final int FULL_SCREEN_NORMAL_DELAY = 300;
     //surface
-    public ResizeTextureView textureView;
-    public SurfaceTexture surfaceTexture;
-    public Surface surface;
+    private ResizeTextureView textureView;
+    private SurfaceTexture surfaceTexture;
+    private Surface surface;
 
     private PlayerState mPlayerState = PlayerState.IDLE;
     private Object mCurrentData;
@@ -112,10 +113,10 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
         //keep screen on
         Utils.scanForActivity(context).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         //bind {@link AudioManager#OnAudioFocusChangeListener}
-        MediaPlayerManager.instance().bindAudioFocus(context);
+        bindAudioFocus(context);
         //init TextureView, we will prepare and start the player when surfaceTextureAvailable.
         initTextureView(context);
-        videoView.addTextureView();
+        addTextureView(videoView);
     }
 
     /**
@@ -127,8 +128,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     public void playAt(VideoView target) {
         if (target == null) return;
         removeTextureView();
-        target.addTextureView();
-
+        addTextureView(target);
     }
 
     public boolean isPlaying() {
@@ -249,14 +249,27 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
 
     public void initTextureView(Context context) {
         removeTextureView();
-        MediaPlayerManager.instance().surfaceTexture = null;
-        MediaPlayerManager.instance().textureView = new ResizeTextureView(context);
-        MediaPlayerManager.instance().textureView.setSurfaceTextureListener(MediaPlayerManager.instance());
+        surfaceTexture = null;
+        textureView = new ResizeTextureView(context);
+        textureView.setSurfaceTextureListener(MediaPlayerManager.instance());
+    }
+
+    public void addTextureView(@NonNull VideoView videoView) {
+        if (textureView == null) {
+            return;
+        }
+        Log.d(TAG, "addTextureView [" + this.hashCode() + "] ");
+        FrameLayout.LayoutParams layoutParams =
+                new FrameLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        Gravity.CENTER);
+        videoView.getTextureViewContainer().addView(textureView, layoutParams);
     }
 
     public void removeTextureView() {
-        if (MediaPlayerManager.instance().textureView != null && MediaPlayerManager.instance().textureView.getParent() != null) {
-            ((ViewGroup) MediaPlayerManager.instance().textureView.getParent()).removeView(MediaPlayerManager.instance().textureView);
+        if (textureView != null && textureView.getParent() != null) {
+            ((ViewGroup) textureView.getParent()).removeView(textureView);
         }
     }
 
@@ -264,11 +277,11 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
         //if (VideoLayerManager.instance().getCurrentFloor() == null) return;
         Log.i(TAG, "onSurfaceTextureAvailable [" + "] ");
-        if (MediaPlayerManager.instance().surfaceTexture == null) {
-            MediaPlayerManager.instance().surfaceTexture = surfaceTexture;
+        if (this.surfaceTexture == null) {
+            this.surfaceTexture = surfaceTexture;
             prepare();
         } else {
-            textureView.setSurfaceTexture(MediaPlayerManager.instance().surfaceTexture);
+            textureView.setSurfaceTexture(this.surfaceTexture);
         }
     }
 
@@ -280,7 +293,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     @Override
     public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
         Log.i(TAG, "onSurfaceTextureDestroyed [" + "] ");
-        return MediaPlayerManager.instance().surfaceTexture == null;
+        return this.surfaceTexture == null;
     }
 
     @Override
@@ -290,7 +303,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     }
 
     public void setMediaPlayer(AbsMediaPlayer mediaPlayer) {
-        MediaPlayerManager.instance().mediaPlayer = mediaPlayer;
+        this.mediaPlayer = mediaPlayer;
     }
 
     public boolean isMute() {
@@ -332,7 +345,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
         vp.addView(videoView, lp);
         //add TextureView
         removeTextureView();
-        videoView.addTextureView();
+        addTextureView(videoView);
         //update ControlPanel State
         AbsControlPanel controlPanel = videoView.getControlPanel();
         if (controlPanel != null) {
@@ -355,11 +368,22 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
         }
         Utils.setRequestedOrientation(context, screenOrientation);
 
-        MediaPlayerManager.instance().mClickFullScreenTime = System.currentTimeMillis();
+        mClickFullScreenTime = System.currentTimeMillis();
 
-        MediaPlayerManager.instance().updateState(MediaPlayerManager.instance().getPlayerState());
+        updateState(getPlayerState());
 
-        //videoView.start();
+    }
+
+    /**
+     * 进入小屏模式
+     * <p>
+     * 注意：这里把一个VideoView动态添加到{@link Window#ID_ANDROID_CONTENT }所指的View中
+     */
+    public void startTinyWindow(@NonNull VideoView videoView) {
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(16 * 40, 9 * 40);
+        layoutParams.gravity = Gravity.BOTTOM | Gravity.RIGHT;
+        layoutParams.setMargins(0, 0, 30, 100);
+        startTinyWindow(videoView, layoutParams);
     }
 
     /**
@@ -383,12 +407,14 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
             vp.removeView(old);
         }
         videoView.setId(R.id.salient_video_tiny_id);
-//        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(400, 400);
-//        lp.gravity = Gravity.RIGHT | Gravity.BOTTOM;
-        vp.addView(videoView, lp);
+        if (lp != null) {
+            vp.addView(videoView, lp);
+        } else {
+            vp.addView(videoView);
+        }
         //add TextureView
         removeTextureView();
-        videoView.addTextureView();
+        addTextureView(videoView);
         //update ControlPanel State
         AbsControlPanel controlPanel = videoView.getControlPanel();
         if (controlPanel != null) {
@@ -403,7 +429,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
             }
         }
 
-        MediaPlayerManager.instance().updateState(MediaPlayerManager.instance().getPlayerState());
+        updateState(getPlayerState());
     }
 
     /**
@@ -475,8 +501,8 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
      * @return VideoView
      */
     public VideoView getCurrentVideoView() {
-        if (MediaPlayerManager.instance().textureView == null) return null;
-        ViewParent textureViewParent = MediaPlayerManager.instance().textureView.getParent();
+        if (textureView == null) return null;
+        ViewParent textureViewParent = textureView.getParent();
 
         if (textureViewParent == null) return null;
         ViewParent surfaceContainer = textureViewParent.getParent();

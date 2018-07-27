@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -89,7 +88,8 @@ public class VideoView extends FrameLayout {
         this.dataSourceObject = dataSourceObjects;
         this.mWindowType = windowType;
         this.mData = data;
-        if (mSmartMode) {
+        VideoView currentVideoView = MediaPlayerManager.instance().getCurrentVideoView();
+        if (mSmartMode && isCurrentPlaying() || currentVideoView == null || currentVideoView.getWindowType() == WindowType.TINY) {
             autoMatch();
         }
     }
@@ -120,7 +120,7 @@ public class VideoView extends FrameLayout {
                 }
             } else if (currentVideoView != null && currentVideoView.getWindowType() == WindowType.FULLSCREEN) {
                 if (mControlPanel != null) {
-                    mControlPanel.onStateIdle();
+                    //mControlPanel.onStateIdle();
                 }
             } else {
                 //play at this video view
@@ -144,11 +144,9 @@ public class VideoView extends FrameLayout {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-//        if (mSmartMode) {
-//            //autoMatch();
-//        } else {
-//
-//        }
+        if (mSmartMode) {
+            autoMatch();
+        }
     }
 
     public Object getData() {
@@ -229,19 +227,6 @@ public class VideoView extends FrameLayout {
 
     public void setDataSourceObject(Object dataSourceObject) {
         this.dataSourceObject = dataSourceObject;
-    }
-
-    public void addTextureView() {
-        if (MediaPlayerManager.instance().textureView == null) {
-            return;
-        }
-        Log.d(TAG, "addTextureView [" + this.hashCode() + "] ");
-        FrameLayout.LayoutParams layoutParams =
-                new FrameLayout.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        Gravity.CENTER);
-        textureViewContainer.addView(MediaPlayerManager.instance().textureView, layoutParams);
     }
 
     public AbsControlPanel getControlPanel() {
