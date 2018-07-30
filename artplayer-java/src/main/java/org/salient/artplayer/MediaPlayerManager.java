@@ -502,10 +502,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
      */
     public VideoView getCurrentVideoView() {
         if (textureView == null) return null;
-        ViewParent textureViewParent = textureView.getParent();
-
-        if (textureViewParent == null) return null;
-        ViewParent surfaceContainer = textureViewParent.getParent();
+        ViewParent surfaceContainer = textureView.getParent();
 
         if (surfaceContainer == null) return null;
         ViewParent parent = surfaceContainer.getParent();

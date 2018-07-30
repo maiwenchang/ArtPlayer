@@ -2,6 +2,7 @@ package org.salient.artplayer;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -59,11 +60,12 @@ public class VideoView extends FrameLayout {
 
     private void init(Context context) {
 
-        View view = View.inflate(context, R.layout.salient_layout_video_view, null);
-
-        addView(view, ROOT_VIEW_POSITION);
-
-        textureViewContainer = findViewById(R.id.surface_container);
+        textureViewContainer = new FrameLayout(getContext());
+        textureViewContainer.setBackgroundColor(Color.BLACK);
+        LayoutParams params = new LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        addView(textureViewContainer, ROOT_VIEW_POSITION, params);
 
         try {
             mScreenOrientation = ((AppCompatActivity) context).getRequestedOrientation();
