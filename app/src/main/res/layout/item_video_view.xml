@@ -6,11 +6,11 @@
     android:layout_marginBottom="5dp"
     android:layout_marginTop="5dp">
 
-    <org.salient.VideoView
+    <org.salient.artplayer.VideoView
         android:id="@+id/videoView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintDimensionRatio="16:9">
-    </org.salient.VideoView>
+    </org.salient.artplayer.VideoView>
 
 </android.support.constraint.ConstraintLayout>
