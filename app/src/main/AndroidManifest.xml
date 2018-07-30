@@ -34,6 +34,7 @@
             android:name=".activity.ListViewActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
+        <activity android:name=".activity.SmartModeRecyclerViewActivity" />
     </application>
 
 </manifest>

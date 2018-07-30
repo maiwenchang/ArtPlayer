@@ -9,11 +9,11 @@ import android.widget.BaseAdapter;
 import com.bumptech.glide.Glide;
 
 import org.salient.artplayer.Comparator;
-import org.salient.controlpanel.ControlPanel;
 import org.salient.artplayer.MediaPlayerManager;
 import org.salient.artplayer.VideoView;
 import org.salient.artvideoplayer.R;
 import org.salient.artvideoplayer.bean.VideoBean;
+import org.salient.controlpanel.ControlPanel;
 
 import java.util.List;
 
@@ -60,7 +60,7 @@ public class ListViewAdapter extends BaseAdapter {
         if (item != null) {
             item.setListPosition(position);
             VideoView videoView = viewHolder.videoView;
-            videoView.setUp(item.getUrl(), item);
+            videoView.setUp(item.getUrl(), VideoView.WindowType.LIST, item);
             ControlPanel controlPanel = (ControlPanel) videoView.getControlPanel();
             Glide.with(videoView.getContext()).load(item.getImage()).into(controlPanel.getCoverView());
         }
@@ -106,7 +106,7 @@ public class ListViewAdapter extends BaseAdapter {
                 Object dataSource = MediaPlayerManager.instance().getDataSource();
                 if (dataSource != null && videoView != null) {
                     boolean b = dataSource == videoView.getDataSourceObject();
-                    Log.d("ListViewAdapter",  "Comparator : " + b+ " Position : " + ((VideoBean) videoView.getData()).getListPosition());
+                    Log.d("ListViewAdapter", "Comparator : " + b + " Position : " + ((VideoBean) videoView.getData()).getListPosition());
                     return dataSource == videoView.getDataSourceObject();
                 }
             } catch (Exception e) {

@@ -6,9 +6,11 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
+import org.salient.artvideoplayer.bean.VideoBean;
 import org.salient.controlpanel.ControlPanel;
 import org.salient.artplayer.MediaPlayerManager;
 import org.salient.artplayer.VideoView;
@@ -69,10 +71,13 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.tinyWindow:
                 VideoView tinyVideoView = new VideoView(this);
-                tinyVideoView.setUp("http://vfx.mtime.cn/Video/2018/06/20/mp4/180620174238160209.mp4");
-                tinyVideoView.setControlPanel(new ControlPanel(this));
+                tinyVideoView.setUp("http://vfx.mtime.cn/Video/2018/06/06/mp4/180606101738263858.mp4", VideoView.WindowType.TINY);
+                ControlPanel controlPanel = new ControlPanel(this);
+                tinyVideoView.setControlPanel(controlPanel);
+                ImageView coverView = controlPanel.getCoverView();
+                Glide.with(controlPanel.getContext()).load("http://img5.mtime.cn/mg/2018/06/06/101658.92608147.jpg").into(coverView);
                 tinyVideoView.start();
-                FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(16 * 40, 9 * 40);
+                FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(16 * 50, 9 * 50);
                 layoutParams.gravity = Gravity.BOTTOM | Gravity.RIGHT;
                 layoutParams.setMargins(0, 0, 30, 100);
                 MediaPlayerManager.instance().startTinyWindow(tinyVideoView, layoutParams);

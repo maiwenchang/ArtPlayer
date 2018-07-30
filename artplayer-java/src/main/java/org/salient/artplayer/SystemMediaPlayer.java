@@ -48,13 +48,14 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
             mediaPlayer.setOnErrorListener(this);
             mediaPlayer.setOnInfoListener(this);
             mediaPlayer.setOnVideoSizeChangedListener(this);
-            if (dataSource != null && dataSource instanceof AssetFileDescriptor) {
-                AssetFileDescriptor fd = (AssetFileDescriptor) this.dataSource;
+            Object dataSource = getDataSource();
+            if (dataSource != null && dataSource instanceof AssetFileDescriptor) {//Android assets file
+                AssetFileDescriptor fd = (AssetFileDescriptor)dataSource;
                 mediaPlayer.setDataSource(fd.getFileDescriptor(), fd.getStartOffset(), fd.getLength());
-            } else if (dataSource != null && mHeaders != null) {
+            } else if (dataSource != null && getHeaders() != null) {//url with headers
                 Class<MediaPlayer> clazz = MediaPlayer.class;
                 Method method = clazz.getDeclaredMethod("setDataSource", String.class, Map.class);
-                method.invoke(mediaPlayer, dataSource.toString(), mHeaders);
+                method.invoke(mediaPlayer, dataSource.toString(), getHeaders());
             } else if (dataSource != null) {
                 mediaPlayer.setDataSource(dataSource.toString());
             }

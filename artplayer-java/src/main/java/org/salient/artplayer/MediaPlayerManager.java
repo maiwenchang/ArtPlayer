@@ -65,34 +65,30 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
 
     //正在播放的url或者uri
     public Object getDataSource() {
-        return instance().mediaPlayer.getDataSource();
+        return mediaPlayer.getDataSource();
     }
 
     private void setDataSource(Object dataSource, Map<String, String> headers) {
-        if (dataSource == null) return;
-        if (dataSource instanceof AssetFileDescriptor) {
-            instance().mediaPlayer.setDataSource((AssetFileDescriptor) dataSource);
-        } else {
-            instance().mediaPlayer.setDataSource(dataSource.toString(), headers);
-        }
+        mediaPlayer.setDataSource(dataSource.toString());
+        mediaPlayer.setHeaders(headers);
     }
 
     public long getDuration() {
-        return instance().mediaPlayer.getDuration();
+        return mediaPlayer.getDuration();
     }
 
     public void seekTo(long time) {
-        instance().mediaPlayer.seekTo(time);
+        mediaPlayer.seekTo(time);
     }
 
     public void pause() {
         if (isPlaying()) {
-            instance().mediaPlayer.pause();
+            mediaPlayer.pause();
         }
     }
 
     public void start() {
-        instance().mediaPlayer.start();
+        mediaPlayer.start();
     }
 
     public void play(@NonNull VideoView videoView) {
@@ -112,10 +108,9 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
                 clearFullscreenLayout(context);
             }
         }
-        // reset state to IDLE
-        updateState(MediaPlayerManager.PlayerState.IDLE);
+        // releaseMediaPlayer
+        releaseMediaPlayer();
         //pass data to MediaPlayer
-
         setDataSource(videoView.getDataSourceObject(),videoView.getHeaders());
 
         mCurrentData = videoView.getData();
@@ -141,7 +136,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     }
 
     public boolean isPlaying() {
-        return mPlayerState == PlayerState.PLAYING && instance().mediaPlayer.isPlaying();
+        return mPlayerState == PlayerState.PLAYING && mediaPlayer.isPlaying();
     }
 
     public void releasePlayerAndView(Context context) {
@@ -187,6 +182,9 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
 
     public void releaseMediaPlayer() {
         mediaPlayer.release();
+        mediaPlayer.setHeaders(null);
+        mediaPlayer.setDataSource(null);
+        mCurrentData = null;
         updateState(MediaPlayerManager.PlayerState.IDLE);
     }
 
@@ -194,7 +192,6 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
      * go into prepare and start
      */
     private void prepare() {
-        releaseMediaPlayer();//release first
         mediaPlayer.prepare();
         if (surfaceTexture != null) {
             if (surface != null) {
@@ -284,7 +281,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
-        //if (VideoLayerManager.instance().getCurrentFloor() == null) return;
+        //if (VideoLayerManager.getCurrentFloor() == null) return;
         Log.i(TAG, "onSurfaceTextureAvailable [" + "] ");
         if (this.surfaceTexture == null) {
             this.surfaceTexture = surfaceTexture;
@@ -307,7 +304,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
 
     @Override
     public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
-        //Log.i(TAG, "onSurfaceTextureUpdated [" + VideoLayerManager.instance().getCurrentFloor().hashCode() + "] ");
+        //Log.i(TAG, "onSurfaceTextureUpdated [" + VideoLayerManager.getCurrentFloor().hashCode() + "] ");
 
     }
 
@@ -326,7 +323,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
      */
     public void setMute(boolean mute) {
         this.isMute = mute;
-        instance().mediaPlayer.mute(mute);
+        mediaPlayer.mute(mute);
     }
 
     /**
@@ -496,7 +493,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
         long position = 0;
         if (mPlayerState == PlayerState.PLAYING || mPlayerState == PlayerState.PAUSED) {
             try {
-                position = instance().mediaPlayer.getCurrentPosition();
+                position = mediaPlayer.getCurrentPosition();
             } catch (IllegalStateException e) {
                 e.printStackTrace();
             }

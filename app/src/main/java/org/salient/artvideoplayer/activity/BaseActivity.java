@@ -82,4 +82,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         MediaPlayerManager.instance().pause();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MediaPlayerManager.instance().releasePlayerAndView(this);
+    }
 }

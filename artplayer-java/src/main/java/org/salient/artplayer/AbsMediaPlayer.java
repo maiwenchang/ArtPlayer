@@ -13,9 +13,9 @@ import java.util.Map;
  */
 public abstract class AbsMediaPlayer {
 
-    protected Object dataSource;//正在播放的当前url或uri
+    private Object dataSource;//正在播放的当前url或uri
 
-    protected Map<String, String> mHeaders;
+    private Map<String, String> mHeaders;
 
     public abstract void start();
 
@@ -45,18 +45,21 @@ public abstract class AbsMediaPlayer {
 
     /**
      * 设置播放地址
-     * @param path 播放地址
-     * @param headers 播放地址请求头
+     * @param dataSource 播放地址
      */
-    public void setDataSource(String path, Map<String, String> headers) {
-        this.dataSource = path;
-        this.mHeaders = headers;
+    public void setDataSource(Object dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public Map<String, String> getHeaders() {
+        return mHeaders;
     }
 
     /**
-     * 用于播放raw和asset里面的视频文件
+     * 设置请求头
+     * @param headers 播放地址请求头
      */
-    public void setDataSource(AssetFileDescriptor fd){
-        this.dataSource = fd;
+    public void setHeaders(Map<String, String> headers) {
+        this.mHeaders = mHeaders;
     }
 }

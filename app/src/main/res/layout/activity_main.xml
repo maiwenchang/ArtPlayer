@@ -28,20 +28,23 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/smartMode"
+                android:id="@+id/api"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:onClick="onClick"
-                android:text="SmartMode" />
+                android:textAllCaps="false"
+                android:text="Api" />
+
 
             <Button
                 android:id="@+id/fullWindow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
+                android:textAllCaps="false"
                 android:onClick="onClick"
-                android:text="fullScreen" />
+                android:text="FullScreen" />
 
             <Button
                 android:id="@+id/tinyWindow"
@@ -49,7 +52,26 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:onClick="onClick"
-                android:text="tinyWindow" />
+                android:textAllCaps="false"
+                android:text="TinyWindow" />
+
+            <Button
+                android:id="@+id/smartModeRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:onClick="onClick"
+                android:textAllCaps="false"
+                android:text="SmartMode\n--RecyclerView" />
+
+            <Button
+                android:id="@+id/smartModeListView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:onClick="onClick"
+                android:textAllCaps="false"
+                android:text="SmartMode\n--ListView" />
 
         </LinearLayout>
 

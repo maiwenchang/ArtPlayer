@@ -2,7 +2,6 @@ package org.salient.artplayer;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
-import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -38,7 +37,7 @@ public class VideoView extends FrameLayout {
 
     private Object dataSourceObject;// video dataSource (contains url) would be posted to MediaPlayer.
 
-    protected Map<String, String> mHeaders;
+    protected Map<String, String> mHeaders;//当前视频地址的请求头
 
     private AbsControlPanel mControlPanel;
 
@@ -96,7 +95,7 @@ public class VideoView extends FrameLayout {
         this.mWindowType = windowType;
         this.mData = data;
         VideoView currentVideoView = MediaPlayerManager.instance().getCurrentVideoView();
-        if (mSmartMode && isCurrentPlaying() || currentVideoView == null || currentVideoView.getWindowType() == WindowType.TINY) {
+        if (mSmartMode && mWindowType == WindowType.LIST && (isCurrentPlaying() || currentVideoView == null || currentVideoView.getWindowType() == WindowType.TINY)) {
             autoMatch();
         }
     }
@@ -117,8 +116,11 @@ public class VideoView extends FrameLayout {
         this.mSmartMode = mSmartMode;
     }
 
+    /**
+     * 列表匹配模式
+     */
     private void autoMatch() {
-        if (mWindowType != WindowType.NORMAL) {
+        if (!mSmartMode || mWindowType != WindowType.LIST) {
             return;
         }
         VideoView currentVideoView = MediaPlayerManager.instance().getCurrentVideoView();
@@ -341,21 +343,14 @@ public class VideoView extends FrameLayout {
     private Comparator mComparator = new Comparator() {
         @Override
         public boolean compare(VideoView videoView) {
-            VideoView currentVideoView = MediaPlayerManager.instance().getCurrentVideoView();
             Object dataSource = MediaPlayerManager.instance().getDataSource();
-
-            if (dataSource != null && videoView != null) {
-                boolean b = dataSource == videoView.getDataSourceObject();
-                Log.d(TAG, "Comparator : " + b + "");
-                return dataSource == videoView.getDataSourceObject();
-            }
-
-            return false;
+            return dataSource != null && videoView != null && dataSource == videoView.getDataSourceObject();
         }
     };
 
     public enum WindowType {
         NORMAL,
+        LIST,
         FULLSCREEN,
         TINY
     }
