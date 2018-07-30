@@ -59,7 +59,7 @@ public class MainActivity extends BaseActivity {
 
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.smartMode:
+            case R.id.smartModeRecyclerView:
                 startActivity(new Intent(this, SmartModeActivity.class));
                 break;
             case R.id.fullWindow:

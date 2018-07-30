@@ -50,9 +50,8 @@ public class RecyclerViewActivity extends BaseActivity {
 
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.smartMode:
 
-                break;
+
         }
     }
 }
