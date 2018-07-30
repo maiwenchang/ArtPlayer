@@ -1,4 +1,4 @@
-# SalientVideoPlayer
+# ArtVideoPlayer
 ###
 This is a flexible video player. MediaPlayer is completely separate from VideoView and can be replaced with other player kernels such as ExoPlayer and ijkPlayer. Developers can fully customize the player view, which we call the control panel. In addition, developers can use MediaPlayerManager to control playback behavior, such as full-screen mode, small screen mode, and smart matching modes in lists, such as in RecyclerView.
 
