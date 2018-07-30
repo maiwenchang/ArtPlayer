@@ -156,6 +156,7 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
     @Override
     public void onStatePrepared() {
         hideUI(loading);
+        MediaPlayerManager.instance().setMute(true);
     }
 
     @Override

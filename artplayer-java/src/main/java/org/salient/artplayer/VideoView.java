@@ -2,6 +2,7 @@ package org.salient.artplayer;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -12,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.FrameLayout;
+
+import java.util.Map;
 
 /**
  * > Created by Mai on 2018/7/10
@@ -34,6 +37,8 @@ public class VideoView extends FrameLayout {
     private Object mData = null;//video data like id, title, cover picture...
 
     private Object dataSourceObject;// video dataSource (contains url) would be posted to MediaPlayer.
+
+    protected Map<String, String> mHeaders;
 
     private AbsControlPanel mControlPanel;
 
@@ -94,6 +99,14 @@ public class VideoView extends FrameLayout {
         if (mSmartMode && isCurrentPlaying() || currentVideoView == null || currentVideoView.getWindowType() == WindowType.TINY) {
             autoMatch();
         }
+    }
+
+    public Map<String, String> getHeaders() {
+        return mHeaders;
+    }
+
+    public void setHeaders(Map<String, String> mHeaders) {
+        this.mHeaders = mHeaders;
     }
 
     public boolean isSmartMode() {

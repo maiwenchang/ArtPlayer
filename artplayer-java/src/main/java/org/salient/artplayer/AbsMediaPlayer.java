@@ -1,6 +1,9 @@
 package org.salient.artplayer;
 
+import android.content.res.AssetFileDescriptor;
 import android.view.Surface;
+
+import java.util.Map;
 
 /**
  * > Created by Mai on 2018/7/10
@@ -11,6 +14,8 @@ import android.view.Surface;
 public abstract class AbsMediaPlayer {
 
     protected Object dataSource;//正在播放的当前url或uri
+
+    protected Map<String, String> mHeaders;
 
     public abstract void start();
 
@@ -38,7 +43,20 @@ public abstract class AbsMediaPlayer {
         return dataSource;
     }
 
-    public void setDataSource(Object dataSource) {
-        this.dataSource = dataSource;
+    /**
+     * 设置播放地址
+     * @param path 播放地址
+     * @param headers 播放地址请求头
+     */
+    public void setDataSource(String path, Map<String, String> headers) {
+        this.dataSource = path;
+        this.mHeaders = headers;
+    }
+
+    /**
+     * 用于播放raw和asset里面的视频文件
+     */
+    public void setDataSource(AssetFileDescriptor fd){
+        this.dataSource = fd;
     }
 }

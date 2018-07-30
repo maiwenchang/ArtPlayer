@@ -1,6 +1,7 @@
 package org.salient.artplayer;
 
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.os.Build;
@@ -16,6 +17,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -66,8 +68,13 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
         return instance().mediaPlayer.getDataSource();
     }
 
-    private void setDataSource(Object dataSource) {
-        instance().mediaPlayer.setDataSource(dataSource);
+    private void setDataSource(Object dataSource, Map<String, String> headers) {
+        if (dataSource == null) return;
+        if (dataSource instanceof AssetFileDescriptor) {
+            instance().mediaPlayer.setDataSource((AssetFileDescriptor) dataSource);
+        } else {
+            instance().mediaPlayer.setDataSource(dataSource.toString(), headers);
+        }
     }
 
     public long getDuration() {
@@ -108,7 +115,9 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
         // reset state to IDLE
         updateState(MediaPlayerManager.PlayerState.IDLE);
         //pass data to MediaPlayer
-        setDataSource(videoView.getDataSourceObject());
+
+        setDataSource(videoView.getDataSourceObject(),videoView.getHeaders());
+
         mCurrentData = videoView.getData();
         //keep screen on
         Utils.scanForActivity(context).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);

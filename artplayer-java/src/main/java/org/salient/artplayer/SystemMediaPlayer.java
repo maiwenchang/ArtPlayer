@@ -2,9 +2,13 @@ package org.salient.artplayer;
 
 import android.app.Service;
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.view.Surface;
+
+import java.lang.reflect.Method;
+import java.util.Map;
 
 /**
  * > Created by Mai on 2018/7/10
@@ -36,9 +40,6 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
             MediaPlayerManager.instance().updateState(MediaPlayerManager.PlayerState.PREPARING);
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-//            if (dataSourceObjects.length > 1) {
-//                mediaPlayer.setLooping((boolean) dataSourceObjects[1]);
-//            }
             mediaPlayer.setOnPreparedListener(this);
             mediaPlayer.setOnCompletionListener(this);
             mediaPlayer.setOnBufferingUpdateListener(this);
@@ -47,11 +48,21 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
             mediaPlayer.setOnErrorListener(this);
             mediaPlayer.setOnInfoListener(this);
             mediaPlayer.setOnVideoSizeChangedListener(this);
-            mediaPlayer.setDataSource(dataSource.toString());
+            if (dataSource != null && dataSource instanceof AssetFileDescriptor) {
+                AssetFileDescriptor fd = (AssetFileDescriptor) this.dataSource;
+                mediaPlayer.setDataSource(fd.getFileDescriptor(), fd.getStartOffset(), fd.getLength());
+            } else if (dataSource != null && mHeaders != null) {
+                Class<MediaPlayer> clazz = MediaPlayer.class;
+                Method method = clazz.getDeclaredMethod("setDataSource", String.class, Map.class);
+                method.invoke(mediaPlayer, dataSource.toString(), mHeaders);
+            } else if (dataSource != null) {
+                mediaPlayer.setDataSource(dataSource.toString());
+            }
             mediaPlayer.prepareAsync();
-            mute(MediaPlayerManager.instance().isMute());
+            //mute(MediaPlayerManager.instance().isMute());
         } catch (Exception e) {
             e.printStackTrace();
+            MediaPlayerManager.instance().updateState(MediaPlayerManager.PlayerState.ERROR);
         }
     }
 
