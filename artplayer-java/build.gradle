@@ -26,9 +26,9 @@ android {
                     output ->
                         def outputFile = output.outputFile
                         if (outputFile.name.contains("release")) {
-                            outputFileName = new File("./", "salient-video-player-" + defaultConfig.versionName + ".aar")
+                            outputFileName = new File("../../../release/", "art-player-" + defaultConfig.versionName + ".aar")
                         } else if (outputFile.name.contains("debug")) {
-                            outputFileName = new File("./", "salient-video-player-debug-" + defaultConfig.versionName + ".aar")
+                            outputFileName = new File("./", "art-player-debug-" + defaultConfig.versionName + ".aar")
                         }
                 }
         }

@@ -148,7 +148,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                         //set LayoutParams
                         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(16 * 45, 9 * 45);
                         layoutParams.gravity = Gravity.BOTTOM | Gravity.RIGHT;
-                        layoutParams.setMargins(0, 100, 30, 0);
+                        layoutParams.setMargins(0, 0, 30, 100);
                         //start tiny window
                         tinyVideoView.startTinyWindow(layoutParams);
                     }

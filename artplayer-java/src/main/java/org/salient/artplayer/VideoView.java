@@ -27,27 +27,26 @@ import java.util.Map;
 public class VideoView extends FrameLayout {
 
     private final String TAG = VideoView.class.getSimpleName();
-    private final int ROOT_VIEW_POSITION = -1;
-    private final int CONTROL_PANEL_POSITION = 1;
-    public int widthRatio = 0;
-    public int heightRatio = 0;
-    protected Map<String, String> mHeaders;//当前视频地址的请求头
-    private WindowType mWindowType = WindowType.NORMAL;
+    private final int TEXTURE_VIEW_POSITION = 0;//视频播放视图层
+    private final int CONTROL_PANEL_POSITION = 1;//控制面板层
     private FrameLayout textureViewContainer;
     private int mScreenOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+
     // settable by the client
     private Object mData = null;//video data like id, title, cover picture...
     private Object dataSourceObject;// video dataSource (Http url or Android assets file) would be posted to MediaPlayer.
+    protected Map<String, String> mHeaders;//当前视频地址的请求头
+
     private AbsControlPanel mControlPanel;
-
+    private WindowType mWindowType = WindowType.NORMAL;
     private OnWindowDetachedListener mDetachedListener;
-
     private boolean mSmartMode = true;
-
     private VideoView mParentVideoView = null;
 
     //api attribute
     private boolean isMute = false;
+    public int widthRatio = 0;
+    public int heightRatio = 0;
 
     private Comparator mComparator = new Comparator() {
         @Override
@@ -79,7 +78,7 @@ public class VideoView extends FrameLayout {
         LayoutParams params = new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
-        addView(textureViewContainer, ROOT_VIEW_POSITION, params);
+        addView(textureViewContainer, TEXTURE_VIEW_POSITION, params);
 
         try {
             mScreenOrientation = ((AppCompatActivity) context).getRequestedOrientation();

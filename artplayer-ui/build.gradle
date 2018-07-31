@@ -2,22 +2,33 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 27
-
-
-
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 27
         versionCode 4
         versionName "0.4"
-
-
     }
 
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        android.libraryVariants.all {
+            variant ->
+                variant.outputs.all {
+                    output ->
+                        def outputFile = output.outputFile
+                        if (outputFile.name.contains("release")) {
+                            outputFileName = new File("../../../release/", "art-player-ui-" + defaultConfig.versionName + ".aar")
+                        } else if (outputFile.name.contains("debug")) {
+                            outputFileName = new File("./", "art-player-ui-debug-" + defaultConfig.versionName + ".aar")
+                        }
+                }
         }
     }
 
