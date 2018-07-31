@@ -11,9 +11,25 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        android.applicationVariants.all {
+            variant ->
+                variant.outputs.all {
+                    output ->
+                        def outputFile = output.outputFile
+                        if (outputFile.name.contains("release")) {
+                            outputFileName = new File("../../../../release/", "artplayer-release.apk")
+                        } else if (outputFile.name.contains("debug")) {
+                            outputFileName = new File("./", "artplayer-debug-" + defaultConfig.versionName + ".apk")
+                        }
+                }
         }
     }
 }
