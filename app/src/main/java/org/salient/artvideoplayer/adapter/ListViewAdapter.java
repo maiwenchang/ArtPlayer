@@ -26,6 +26,24 @@ import java.util.List;
 public class ListViewAdapter extends BaseAdapter {
 
     private List<VideoBean> mList;
+    // We use the ListPosition of video to distinguish whether it is the same video.
+    // If is, return 0.
+    private Comparator mComparator = new Comparator() {
+        @Override
+        public boolean compare(VideoView videoView) {
+            try {
+                Object dataSource = MediaPlayerManager.instance().getDataSource();
+                if (dataSource != null && videoView != null) {
+                    boolean b = dataSource == videoView.getDataSourceObject();
+                    Log.d("ListViewAdapter", "Comparator : " + b + " Position : " + ((VideoBean) videoView.getData()).getListPosition());
+                    return dataSource == videoView.getDataSourceObject();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+    };
 
     public void setList(List<VideoBean> mList) {
         this.mList = mList;
@@ -95,24 +113,4 @@ public class ListViewAdapter extends BaseAdapter {
 //            });
         }
     }
-
-
-    // We use the ListPosition of video to distinguish whether it is the same video.
-    // If is, return 0.
-    private Comparator mComparator = new Comparator() {
-        @Override
-        public boolean compare(VideoView videoView) {
-            try {
-                Object dataSource = MediaPlayerManager.instance().getDataSource();
-                if (dataSource != null && videoView != null) {
-                    boolean b = dataSource == videoView.getDataSourceObject();
-                    Log.d("ListViewAdapter", "Comparator : " + b + " Position : " + ((VideoBean) videoView.getData()).getListPosition());
-                    return dataSource == videoView.getDataSourceObject();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return false;
-        }
-    };
 }

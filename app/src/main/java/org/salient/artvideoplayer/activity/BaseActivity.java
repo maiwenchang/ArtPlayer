@@ -51,7 +51,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         return list;
     }
 
-    public VideoBean getRandomVideo(){
+    public VideoBean getRandomVideo() {
         if (mMovieData != null) {
             List<VideoBean> allAttention = getAllAttention();
             return allAttention.get(getRandomInt(0, allAttention.size()));

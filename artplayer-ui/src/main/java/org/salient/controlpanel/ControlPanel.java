@@ -158,7 +158,6 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
     @Override
     public void onStatePrepared() {
         hideUI(loading);
-        MediaPlayerManager.instance().setMute(true);
     }
 
     @Override
@@ -296,22 +295,22 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
         } else if (id == R.id.ivFullscreen) {
             if (mTarget == null) return;
             if (mTarget.getWindowType() != VideoView.WindowType.FULLSCREEN) {
-                //new a VideoView
+                //new VideoView
                 VideoView videoView = new VideoView(getContext());
+                //set parent
                 videoView.setParentVideoView(mTarget);
                 videoView.setUp(mTarget.getDataSourceObject(), VideoView.WindowType.FULLSCREEN, mTarget.getData());
                 videoView.setControlPanel(new ControlPanel(getContext()));
                 //start fullscreen
-                MediaPlayerManager.instance().startFullscreen(videoView, ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-
-                //mTarget.startWindowFullscreen(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+                videoView.startFullscreen(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+                //MediaPlayerManager.instance().startFullscreen(videoView, ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
             }
 
         } else if (id == R.id.ivVolume) {
             if (ivVolume.isChecked()) {
-                MediaPlayerManager.instance().setMute(false);
+                mTarget.setMute(false);
             } else {
-                MediaPlayerManager.instance().setMute(true);
+                mTarget.setMute(true);
             }
 
         } else if (id == R.id.start) {
@@ -354,7 +353,7 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
 
     //同步跟MediaPlayer状态无关的视图
     public void SynchronizeViewState() {
-        if (MediaPlayerManager.instance().isMute()) {
+        if (mTarget != null && mTarget.isMute()) {
             ivVolume.setChecked(false);
         } else {
             ivVolume.setChecked(true);

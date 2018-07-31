@@ -24,10 +24,10 @@ public class SmartModeActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.recyclerView:
-                startActivity(new Intent(this,RecyclerViewActivity.class));
+                startActivity(new Intent(this, RecyclerViewActivity.class));
                 break;
-                case R.id.listView:
-                startActivity(new Intent(this,ListViewActivity.class));
+            case R.id.listView:
+                startActivity(new Intent(this, ListViewActivity.class));
                 break;
         }
     }
