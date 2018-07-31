@@ -9,4 +9,4 @@ This is a flexible video player. MediaPlayer is completely separate from VideoVi
 ###
 The follow video is a operation of demo.
 以下是操作gif，录屏可能会有卡顿，请多见谅！
-![image]([http://recordit.co/07RGB7CpfN)
+![image](https://s3.amazonaws.com/img0.recordit.co/07RGB7CpfN.mp4?AWSAccessKeyId=AKIAINSRFOQXTN4DT46A&Expires=1533022354&Signature=rOQkkTzT23Fnyx%2FcSiscTupXkK8%3D)
