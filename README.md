@@ -9,4 +9,4 @@ This is a flexible video player. MediaPlayer is completely separate from VideoVi
 ###
 以下是操作gif，录屏可能会有卡顿，请多见谅！
 ###
-![image](https://github.com/maiwenchang/ArtVideoPlayer/blob/master/operation.gif)
+![image](https://github.com/maiwenchang/ArtVideoPlayer/blob/master/gif/operation.gif)
