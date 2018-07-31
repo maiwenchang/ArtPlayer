@@ -3,14 +3,17 @@ package org.salient.artplayer;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+import android.view.Window;
 import android.widget.FrameLayout;
 
 import java.util.Map;
@@ -28,17 +31,13 @@ public class VideoView extends FrameLayout {
     private final int CONTROL_PANEL_POSITION = 1;
     public int widthRatio = 0;
     public int heightRatio = 0;
+    protected Map<String, String> mHeaders;//当前视频地址的请求头
     private WindowType mWindowType = WindowType.NORMAL;
     private FrameLayout textureViewContainer;
     private int mScreenOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-
     // settable by the client
     private Object mData = null;//video data like id, title, cover picture...
-
-    private Object dataSourceObject;// video dataSource (contains url) would be posted to MediaPlayer.
-
-    protected Map<String, String> mHeaders;//当前视频地址的请求头
-
+    private Object dataSourceObject;// video dataSource (Http url or Android assets file) would be posted to MediaPlayer.
     private AbsControlPanel mControlPanel;
 
     private OnWindowDetachedListener mDetachedListener;
@@ -46,6 +45,17 @@ public class VideoView extends FrameLayout {
     private boolean mSmartMode = true;
 
     private VideoView mParentVideoView = null;
+
+    //api attribute
+    private boolean isMute = false;
+
+    private Comparator mComparator = new Comparator() {
+        @Override
+        public boolean compare(VideoView videoView) {
+            Object dataSource = MediaPlayerManager.instance().getDataSource();
+            return dataSource != null && videoView != null && dataSource == videoView.getDataSourceObject();
+        }
+    };
 
     public VideoView(@NonNull Context context) {
         super(context);
@@ -95,7 +105,9 @@ public class VideoView extends FrameLayout {
         this.mWindowType = windowType;
         this.mData = data;
         VideoView currentVideoView = MediaPlayerManager.instance().getCurrentVideoView();
-        if (mSmartMode && mWindowType == WindowType.LIST && (isCurrentPlaying() || currentVideoView == null || currentVideoView.getWindowType() == WindowType.TINY)) {
+        if (mSmartMode
+                && mWindowType == WindowType.LIST
+                && (isCurrentPlaying() || currentVideoView == null || currentVideoView.getWindowType() == WindowType.TINY)) {
             autoMatch();
         }
     }
@@ -223,7 +235,6 @@ public class VideoView extends FrameLayout {
         } else {
             MediaPlayerManager.instance().play(this);
         }
-
     }
 
     /**
@@ -262,16 +273,11 @@ public class VideoView extends FrameLayout {
             if (parent != null) {
                 ((ViewGroup) parent).removeView(mControlPanel);
             }
-            //textureViewContainer.setOnClickListener(mControlPanel);
-            //textureViewContainer.setOnTouchListener(mControlPanel);
         }
         this.mControlPanel = mControlPanel;
         View child = getChildAt(CONTROL_PANEL_POSITION);
         if (child != null) {
             removeViewAt(CONTROL_PANEL_POSITION);
-        }
-        if (this.mControlPanel != null) {
-            //getTextureViewContainer().setOnClickListener(this.mControlPanel);
         }
         addView(this.mControlPanel, CONTROL_PANEL_POSITION);
         if (this.mControlPanel != null) {
@@ -340,13 +346,128 @@ public class VideoView extends FrameLayout {
         this.mParentVideoView = mParentVideoView;
     }
 
-    private Comparator mComparator = new Comparator() {
-        @Override
-        public boolean compare(VideoView videoView) {
-            Object dataSource = MediaPlayerManager.instance().getDataSource();
-            return dataSource != null && videoView != null && dataSource == videoView.getDataSourceObject();
+    public boolean isMute() {
+        return isMute;
+    }
+
+    /**
+     * 设置静音
+     * @param mute
+     */
+    public void setMute(boolean mute) {
+        isMute = mute;
+        MediaPlayerManager.instance().mute(mute);
+    }
+
+    /**
+     * 进入全屏模式
+     * <p>
+     * 注意：这里把一个VideoView动态添加到{@link Window#ID_ANDROID_CONTENT }所指的View中
+     */
+    public void startFullscreen(int screenOrientation) {
+        if (getParent() != null) {
+            throw new IllegalStateException("The specified VideoView already has a parent. " +
+                    "You must call removeView() on the VideoView's parent first.");
         }
-    };
+        Context context = getContext();
+        setWindowType(VideoView.WindowType.FULLSCREEN);
+        Utils.hideSupportActionBar(context);
+        // add to window
+        ViewGroup vp = (Utils.scanForActivity(context)).findViewById(Window.ID_ANDROID_CONTENT);
+        View old = vp.findViewById(R.id.salient_video_fullscreen_id);
+        if (old != null) {
+            vp.removeView(old);
+        }
+        setId(R.id.salient_video_fullscreen_id);
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        vp.addView(this, lp);
+        //add TextureView
+        MediaPlayerManager.instance().removeTextureView();
+        MediaPlayerManager.instance().addTextureView(this);
+        //update ControlPanel State
+        AbsControlPanel controlPanel = getControlPanel();
+        if (controlPanel != null) {
+            controlPanel.onEnterSecondScreen();
+        }
+        //update Parent ControlPanel State
+        VideoView parentVideoView = getParentVideoView();
+        if (parentVideoView != null) {
+            AbsControlPanel parentControlPanel = parentVideoView.getControlPanel();
+            if (parentControlPanel != null) {
+                parentControlPanel.onEnterSecondScreen();
+            }
+        }
+        //Rotate window an enter fullscreen
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN);
+        } else {
+            setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN);
+        }
+        Utils.setRequestedOrientation(context, screenOrientation);
+
+        MediaPlayerManager.instance().updateState(MediaPlayerManager.instance().getPlayerState());
+
+    }
+
+    /**
+     * 进入小屏模式
+     * <p>
+     * 注意：这里把一个VideoView动态添加到{@link Window#ID_ANDROID_CONTENT }所指的View中
+     */
+    public void startTinyWindow() {
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(16 * 40, 9 * 40);
+        layoutParams.gravity = Gravity.BOTTOM | Gravity.RIGHT;
+        layoutParams.setMargins(0, 0, 30, 100);
+        startTinyWindow(layoutParams);
+    }
+
+    /**
+     * 进入小屏模式
+     * <p>
+     * 注意：这里把一个VideoView动态添加到{@link Window#ID_ANDROID_CONTENT }所指的View中
+     */
+    public void startTinyWindow(FrameLayout.LayoutParams lp) {
+        Log.i(TAG, "startWindowTiny " + " [" + this.hashCode() + "] ");
+        if (getParent() != null) {
+            throw new IllegalStateException("The specified VideoView already has a parent. " +
+                    "You must call removeView() on the VideoView's parent first.");
+        }
+        Context context = getContext();
+        setWindowType(VideoView.WindowType.TINY);
+
+        // add to window
+        ViewGroup vp = (Utils.scanForActivity(context)).findViewById(Window.ID_ANDROID_CONTENT);
+        View old = vp.findViewById(R.id.salient_video_tiny_id);
+        if (old != null) {
+            vp.removeView(old);
+        }
+        setId(R.id.salient_video_tiny_id);
+        if (lp != null) {
+            vp.addView(this, lp);
+        } else {
+            vp.addView(this);
+        }
+        //add TextureView
+        MediaPlayerManager.instance().removeTextureView();
+        MediaPlayerManager.instance().addTextureView(this);
+        //update ControlPanel State
+        AbsControlPanel controlPanel = getControlPanel();
+        if (controlPanel != null) {
+            controlPanel.onEnterSecondScreen();
+        }
+        //update Parent ControlPanel State
+        VideoView parentVideoView = getParentVideoView();
+        if (parentVideoView != null) {
+            AbsControlPanel parentControlPanel = parentVideoView.getControlPanel();
+            if (parentControlPanel != null) {
+                parentControlPanel.onEnterSecondScreen();
+            }
+        }
+
+        MediaPlayerManager.instance().updateState(MediaPlayerManager.instance().getPlayerState());
+    }
 
     public enum WindowType {
         NORMAL,

@@ -1,1 +1,1 @@
-include ':app', ':artplayer-ui',':artplayer-java'
+include ':app', ':artplayer-ui', ':artplayer-java'

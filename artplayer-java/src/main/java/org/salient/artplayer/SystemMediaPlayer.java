@@ -50,7 +50,7 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
             mediaPlayer.setOnVideoSizeChangedListener(this);
             Object dataSource = getDataSource();
             if (dataSource != null && dataSource instanceof AssetFileDescriptor) {//Android assets file
-                AssetFileDescriptor fd = (AssetFileDescriptor)dataSource;
+                AssetFileDescriptor fd = (AssetFileDescriptor) dataSource;
                 mediaPlayer.setDataSource(fd.getFileDescriptor(), fd.getStartOffset(), fd.getLength());
             } else if (dataSource != null && getHeaders() != null) {//url with headers
                 Class<MediaPlayer> clazz = MediaPlayer.class;
@@ -60,7 +60,6 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
                 mediaPlayer.setDataSource(dataSource.toString());
             }
             mediaPlayer.prepareAsync();
-            //mute(MediaPlayerManager.instance().isMute());
         } catch (Exception e) {
             e.printStackTrace();
             MediaPlayerManager.instance().updateState(MediaPlayerManager.PlayerState.ERROR);
@@ -162,7 +161,7 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
         }
     }
 
-    public void OpenVolume() {
+    private void OpenVolume() {
         try {
             if (mediaPlayer != null) {
                 VideoView currentFloor = MediaPlayerManager.instance().getCurrentVideoView();
@@ -181,7 +180,7 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
         }
     }
 
-    public void CloseVolume() {
+    private void CloseVolume() {
         try {
             if (mediaPlayer != null) {
                 mediaPlayer.setVolume(0, 0);

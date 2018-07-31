@@ -22,6 +22,10 @@ public class BaseApplication extends Application {
 
     private static MovieData mMovieData;
 
+    public static MovieData getMovieData() {
+        return mMovieData;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -39,12 +43,9 @@ public class BaseApplication extends Application {
         });
     }
 
-    public static MovieData getMovieData() {
-        return mMovieData;
-    }
-
     /**
      * 读取assets中的文件
+     *
      * @param path File Path
      * @return File Content String
      */

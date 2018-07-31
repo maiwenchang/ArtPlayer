@@ -1,10 +1,8 @@
 package org.salient.artplayer;
 
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
 import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
-import android.os.Build;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Gravity;
@@ -30,7 +28,7 @@ import java.util.TimerTask;
 public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
 
     private final String TAG = getClass().getSimpleName();
-    private final int FULL_SCREEN_NORMAL_DELAY = 300;
+    private final int CLICK_EVENT_SPAN = 300;
     //surface
     private ResizeTextureView textureView;
     private SurfaceTexture surfaceTexture;
@@ -38,15 +36,13 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
 
     private PlayerState mPlayerState = PlayerState.IDLE;
     private Object mCurrentData;
-    private long mClickFullScreenTime = 0;
+    private long mClickTime = 0;
     private Timer mProgressTimer;
     private ProgressTimerTask mProgressTimerTask;
 
     // settable by client
-    private boolean isMute = false;
     private AudioManager.OnAudioFocusChangeListener onAudioFocusChangeListener;
     private AbsMediaPlayer mediaPlayer;
-    //private int videoRotation = 0;
 
     private MediaPlayerManager() {
         if (mediaPlayer == null) {
@@ -111,7 +107,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
         // releaseMediaPlayer
         releaseMediaPlayer();
         //pass data to MediaPlayer
-        setDataSource(videoView.getDataSourceObject(),videoView.getHeaders());
+        setDataSource(videoView.getDataSourceObject(), videoView.getHeaders());
 
         mCurrentData = videoView.getData();
         //keep screen on
@@ -140,7 +136,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     }
 
     public void releasePlayerAndView(Context context) {
-        if ((System.currentTimeMillis() - mClickFullScreenTime) > FULL_SCREEN_NORMAL_DELAY) {
+        if ((System.currentTimeMillis() - mClickTime) > CLICK_EVENT_SPAN) {
             Log.d(TAG, "release");
             if (context != null) {
                 clearFullscreenLayout(context);
@@ -281,7 +277,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i1) {
-        //if (VideoLayerManager.getCurrentFloor() == null) return;
+        if (getCurrentVideoView() == null) return;
         Log.i(TAG, "onSurfaceTextureAvailable [" + "] ");
         if (this.surfaceTexture == null) {
             this.surfaceTexture = surfaceTexture;
@@ -305,137 +301,29 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     @Override
     public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
         //Log.i(TAG, "onSurfaceTextureUpdated [" + VideoLayerManager.getCurrentFloor().hashCode() + "] ");
-
     }
 
     public void setMediaPlayer(AbsMediaPlayer mediaPlayer) {
         this.mediaPlayer = mediaPlayer;
     }
 
-    public boolean isMute() {
-        return isMute;
-    }
-
     /**
      * 设置静音
      *
-     * @param mute boolean
+     * @param isMute boolean
      */
-    public void setMute(boolean mute) {
-        this.isMute = mute;
-        mediaPlayer.mute(mute);
+    public void mute(boolean isMute) {
+        mediaPlayer.mute(isMute);
     }
 
     /**
-     * 进入全屏模式
-     * <p>
-     * 注意：这里把一个VideoView动态添加到{@link Window#ID_ANDROID_CONTENT }所指的View中
+     * 设置音量
+     *
+     * @param leftVolume  左声道
+     * @param rightVolume 右声道
      */
-    public void startFullscreen(@NonNull VideoView videoView, int screenOrientation) {
-        if (videoView.getParent() != null) {
-            throw new IllegalStateException("The specified VideoView already has a parent. " +
-                    "You must call removeView() on the VideoView's parent first.");
-        }
-        Context context = videoView.getContext();
-        videoView.setWindowType(VideoView.WindowType.FULLSCREEN);
-        Utils.hideSupportActionBar(context);
-        // add to window
-        ViewGroup vp = (Utils.scanForActivity(context)).findViewById(Window.ID_ANDROID_CONTENT);
-        View old = vp.findViewById(R.id.salient_video_fullscreen_id);
-        if (old != null) {
-            vp.removeView(old);
-        }
-        videoView.setId(R.id.salient_video_fullscreen_id);
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        vp.addView(videoView, lp);
-        //add TextureView
-        removeTextureView();
-        addTextureView(videoView);
-        //update ControlPanel State
-        AbsControlPanel controlPanel = videoView.getControlPanel();
-        if (controlPanel != null) {
-            controlPanel.onEnterSecondScreen();
-        }
-        //update Parent ControlPanel State
-        VideoView parentVideoView = videoView.getParentVideoView();
-        if (parentVideoView != null) {
-            AbsControlPanel parentControlPanel = parentVideoView.getControlPanel();
-            if (parentControlPanel != null) {
-                parentControlPanel.onEnterSecondScreen();
-            }
-        }
-        //Rotate window an enter fullscreen
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            videoView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_FULLSCREEN);
-        } else {
-            videoView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN);
-        }
-        Utils.setRequestedOrientation(context, screenOrientation);
-
-        mClickFullScreenTime = System.currentTimeMillis();
-
-        updateState(getPlayerState());
-
-    }
-
-    /**
-     * 进入小屏模式
-     * <p>
-     * 注意：这里把一个VideoView动态添加到{@link Window#ID_ANDROID_CONTENT }所指的View中
-     */
-    public void startTinyWindow(@NonNull VideoView videoView) {
-        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(16 * 40, 9 * 40);
-        layoutParams.gravity = Gravity.BOTTOM | Gravity.RIGHT;
-        layoutParams.setMargins(0, 0, 30, 100);
-        startTinyWindow(videoView, layoutParams);
-    }
-
-    /**
-     * 进入小屏模式
-     * <p>
-     * 注意：这里把一个VideoView动态添加到{@link Window#ID_ANDROID_CONTENT }所指的View中
-     */
-    public void startTinyWindow(@NonNull VideoView videoView, FrameLayout.LayoutParams lp) {
-        Log.i(TAG, "startWindowTiny " + " [" + this.hashCode() + "] ");
-        if (videoView.getParent() != null) {
-            throw new IllegalStateException("The specified VideoView already has a parent. " +
-                    "You must call removeView() on the VideoView's parent first.");
-        }
-        Context context = videoView.getContext();
-        videoView.setWindowType(VideoView.WindowType.TINY);
-
-        // add to window
-        ViewGroup vp = (Utils.scanForActivity(context)).findViewById(Window.ID_ANDROID_CONTENT);
-        View old = vp.findViewById(R.id.salient_video_tiny_id);
-        if (old != null) {
-            vp.removeView(old);
-        }
-        videoView.setId(R.id.salient_video_tiny_id);
-        if (lp != null) {
-            vp.addView(videoView, lp);
-        } else {
-            vp.addView(videoView);
-        }
-        //add TextureView
-        removeTextureView();
-        addTextureView(videoView);
-        //update ControlPanel State
-        AbsControlPanel controlPanel = videoView.getControlPanel();
-        if (controlPanel != null) {
-            controlPanel.onEnterSecondScreen();
-        }
-        //update Parent ControlPanel State
-        VideoView parentVideoView = videoView.getParentVideoView();
-        if (parentVideoView != null) {
-            AbsControlPanel parentControlPanel = parentVideoView.getControlPanel();
-            if (parentControlPanel != null) {
-                parentControlPanel.onEnterSecondScreen();
-            }
-        }
-
-        updateState(getPlayerState());
+    public void setVolume(float leftVolume, float rightVolume) {
+        mediaPlayer.setVolume(leftVolume, rightVolume);
     }
 
     /**
@@ -443,7 +331,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
      */
     public boolean backPress(Context context) {
         Log.i(TAG, "backPress");
-        if ((System.currentTimeMillis() - mClickFullScreenTime) < FULL_SCREEN_NORMAL_DELAY) {
+        if ((System.currentTimeMillis() - mClickTime) < CLICK_EVENT_SPAN) {
             return false;
         }
         try {
@@ -463,7 +351,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
                 } else {//直接开启的全屏，只有一层，没有常规窗口
                     releasePlayerAndView(currentVideoView.getContext());
                 }
-                mClickFullScreenTime = System.currentTimeMillis();
+                mClickTime = System.currentTimeMillis();
                 return true;
             }
         } catch (Exception e) {

@@ -6,7 +6,7 @@ package org.salient.artvideoplayer.bean;
  * > Description:
  * *
  */
-public class VideoBean{
+public class VideoBean {
 
     /**
      * hightUrl :

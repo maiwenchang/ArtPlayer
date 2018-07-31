@@ -34,10 +34,25 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private List<VideoBean> mList = new ArrayList<>();
 
     private OnItemClickListener mOnItemClickListener = null;
-
-    public interface OnItemClickListener {
-        void onItemClick(View view, int position);
-    }
+    private Comparator mComparator = new Comparator() {
+        @Override
+        public boolean compare(VideoView videoView) {
+            try {
+                Object currentData = MediaPlayerManager.instance().getCurrentData();
+                //By comparing the position on the list to distinguish whether the same video
+                if (currentData != null && videoView != null) {
+                    Object data = videoView.getData();
+                    return data != null
+                            && currentData instanceof VideoBean
+                            && data instanceof VideoBean
+                            && ((VideoBean) currentData).getListPosition() == ((VideoBean) data).getListPosition();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return false;
+        }
+    };
 
     public void setList(List<VideoBean> mList) {
         this.mList = mList;
@@ -99,6 +114,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     }
 
+    public interface OnItemClickListener {
+        void onItemClick(View view, int position);
+    }
+
     class VideoViewHolder extends RecyclerView.ViewHolder {
 
         VideoView videoView;
@@ -116,40 +135,26 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     if (videoView.isCurrentPlaying() && videoView == MediaPlayerManager.instance().getCurrentVideoView()) {
                         //开启小窗
                         VideoView tinyVideoView = new VideoView(videoView.getContext());
+                        //set url and data
                         tinyVideoView.setUp(videoView.getDataSourceObject(), VideoView.WindowType.TINY, videoView.getData());
+                        //set control panel
                         ControlPanel controlPanel = new ControlPanel(videoView.getContext());
                         tinyVideoView.setControlPanel(controlPanel);
+                        //set cover
                         ImageView coverView = controlPanel.getCoverView();
                         Glide.with(controlPanel.getContext()).load(((VideoBean) videoView.getData()).getImage()).into(coverView);
+                        //set parent
                         tinyVideoView.setParentVideoView(videoView);
+                        //set LayoutParams
                         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(16 * 45, 9 * 45);
-                        layoutParams.gravity = Gravity.TOP | Gravity.RIGHT;
+                        layoutParams.gravity = Gravity.BOTTOM | Gravity.RIGHT;
                         layoutParams.setMargins(0, 100, 30, 0);
-                        MediaPlayerManager.instance().startTinyWindow(tinyVideoView,layoutParams);
+                        //start tiny window
+                        tinyVideoView.startTinyWindow(layoutParams);
                     }
                 }
             });
         }
     }
-
-    private Comparator mComparator = new Comparator() {
-        @Override
-        public boolean compare(VideoView videoView) {
-            try {
-                Object currentData = MediaPlayerManager.instance().getCurrentData();
-                //By comparing the position on the list to distinguish whether the same video
-                if (currentData != null && videoView != null) {
-                    Object data = videoView.getData();
-                    return data!=null
-                            && currentData instanceof VideoBean
-                            && data instanceof VideoBean
-                            && ((VideoBean) currentData).getListPosition() == ((VideoBean) data).getListPosition();
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return false;
-        }
-    };
 
 }

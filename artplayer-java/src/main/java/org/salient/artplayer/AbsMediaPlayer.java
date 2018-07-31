@@ -1,6 +1,5 @@
 package org.salient.artplayer;
 
-import android.content.res.AssetFileDescriptor;
 import android.view.Surface;
 
 import java.util.Map;
@@ -45,6 +44,7 @@ public abstract class AbsMediaPlayer {
 
     /**
      * 设置播放地址
+     *
      * @param dataSource 播放地址
      */
     public void setDataSource(Object dataSource) {
@@ -57,6 +57,7 @@ public abstract class AbsMediaPlayer {
 
     /**
      * 设置请求头
+     *
      * @param headers 播放地址请求头
      */
     public void setHeaders(Map<String, String> headers) {
