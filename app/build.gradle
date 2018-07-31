@@ -25,9 +25,9 @@ android {
                     output ->
                         def outputFile = output.outputFile
                         if (outputFile.name.contains("release")) {
-                            outputFileName = new File("../../../../release/", "artplayer-release.apk")
+                            outputFileName = new File("./", "artplayer-release.apk")
                         } else if (outputFile.name.contains("debug")) {
-                            outputFileName = new File("./", "artplayer-debug-" + defaultConfig.versionName + ".apk")
+                            outputFileName = new File("./", "artplayer-debug.apk")
                         }
                 }
         }
