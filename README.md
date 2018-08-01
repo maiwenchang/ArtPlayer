@@ -51,6 +51,10 @@ dependencies {
  	android:id="@+id/video_view"
  	android:layout_width="match_parent"
  	android:layout_height="200dp"/>
+
+ VideoView videoView = findViewById(R.id.salientVideoView);
+ videoView.setUp("http://vfx.mtime.cn/Video/2018/06/27/mp4/180627094726195356.mp4");
+ videoView.start();
  ```
 
 
@@ -59,7 +63,7 @@ dependencies {
 - 内部支持RecyclerView，ListView中播放
 - 自定义UI
 
-### NOT-ON-PLAN(不支持)
+### NOT-ON-PLAN(不在计划)
 - Multiple MediaPlayer playback
 - 多播放器播放
 
@@ -75,8 +79,9 @@ dependencies {
  - Gradle 3.1.2
 -
 
-### Latest Changes
-- 
+### Authors
+- [maiwenchang](https://github.com/maiwenchang)
+- [ironman6121](https://github.com/ironman6121)
 
 
 ### License
