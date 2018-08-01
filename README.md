@@ -13,7 +13,6 @@ This is a flexible video player. MediaPlayer is completely separate from VideoVi
 
 ### Download
 
-- Android:
  - [Demo Download](https://github.com/maiwenchang/ArtVideoPlayer/raw/master/app/debug/artplayer-debug.apk)
  - ![image](https://github.com/maiwenchang/ArtVideoPlayer/blob/master/pic/apkqrcode.png)
 
@@ -38,14 +37,29 @@ dependencies {
 ```
 
  - Sample
+ ``` java
+ import org.salient.artplayer.VideoView;
+
+ VideoView videoView = new VideoView(this);
+ videoView.setUp("http://vfx.mtime.cn/Video/2018/06/29/mp4/180629124637890547.mp4");
+ videoView.setControlPanel(new ControlPanel(this));
+ videoView.start();
  ```
+
+  ``` xml
+ <org.salient.artplayer.VideoView
+ 	android:id="@+id/video_view"
+ 	android:layout_width="match_parent"
+ 	android:layout_height="200dp"/>
  ```
 
 
 ### Features
-- 
+- 全屏，小屏播放
+- 内部支持RecyclerView，ListView中播放
+- 自定义UI
 
-### NOT-ON-PLAN
+### NOT-ON-PLAN(不支持)
 - Multiple MediaPlayer playback
 - 多播放器播放
 
@@ -59,6 +73,7 @@ dependencies {
 - Java
  - Android Studio 3.1.2
  - Gradle 3.1.2
+-
 
 ### Latest Changes
 - 
