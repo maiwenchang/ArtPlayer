@@ -11,6 +11,7 @@ import org.salient.artplayer.MediaPlayerManager;
 import org.salient.artplayer.VideoView;
 import org.salient.artvideoplayer.BaseActivity;
 import org.salient.artvideoplayer.R;
+import org.salient.artvideoplayer.activity.listview.ListViewActivity;
 import org.salient.artvideoplayer.activity.recyclerview.SmartModeActivity;
 import org.salient.controlpanel.ControlPanel;
 
@@ -76,6 +77,9 @@ public class MainActivity extends BaseActivity {
 //                Glide.with(controlPanel.getContext()).load("http://img5.mtime.cn/mg/2018/06/06/101658.92608147.jpg").into(coverView);
                 tinyVideoView.start();
                 tinyVideoView.startTinyWindow();
+                break;
+            case R.id.smartModeListView:
+                startActivity(new Intent(this, ListViewActivity.class));
                 break;
         }
     }

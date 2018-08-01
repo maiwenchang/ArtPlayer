@@ -13,10 +13,4 @@
         android:onClick="onClick"
         android:text="RecyclerView" />
 
-    <Button
-        android:id="@+id/listView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="onClick"
-        android:text="ListView" />
 </LinearLayout>
