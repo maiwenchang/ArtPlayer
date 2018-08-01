@@ -295,6 +295,15 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     }
 
     /**
+     * 设置循环播放
+     *
+     * @param isLoop  boolean
+     */
+    public void setLooping(boolean isLoop) {
+        mediaPlayer.setLooping(isLoop);
+    }
+
+    /**
      * 拦截返回键
      */
     public boolean backPress(Context context) {

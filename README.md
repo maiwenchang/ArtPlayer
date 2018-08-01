@@ -93,6 +93,7 @@ protected void onDestroy() {
 - 静音
 
 ### ON-PLAN
+- 上传到Maven
 - 循环播放
 - ijkPlayer支持
 - ExoPlayer支持

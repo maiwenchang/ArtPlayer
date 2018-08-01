@@ -200,6 +200,17 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
     }
 
     @Override
+    public void setLooping(boolean isLoop) {
+        try {
+            if (mediaPlayer != null) {
+                mediaPlayer.setLooping(isLoop);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
         MediaPlayerManager.instance().updateState(MediaPlayerManager.PlayerState.PREPARED);
         start();

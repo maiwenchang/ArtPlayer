@@ -38,6 +38,8 @@ public abstract class AbsMediaPlayer {
 
     public abstract void mute(boolean isMute);
 
+    public abstract void setLooping(boolean isLoop);
+
     public Object getDataSource() {
         return dataSource;
     }
