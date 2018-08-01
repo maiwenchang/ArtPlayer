@@ -37,6 +37,8 @@ dependencies {
 ```
 
  - Sample
+
+ java
  ``` java
  import org.salient.artplayer.VideoView;
 
@@ -46,8 +48,7 @@ dependencies {
  videoView.start();
  ```
 
- or
-
+ xml
   ``` xml
  <org.salient.artplayer.VideoView
  	android:id="@+id/video_view"
@@ -55,6 +56,36 @@ dependencies {
  	android:layout_height="200dp"/>
  ```
 
+AndroidManifest.xml
+  ``` xml
+<activity
+    android:name=".YourActivity"
+    android:configChanges="orientation|screenSize" /> <!-- required -->
+ ```
+
+Activity
+  ``` java
+@Override
+public void onBackPressed() {
+    if (MediaPlayerManager.instance().backPress(this)) {
+        return;
+    }
+    super.onBackPressed();
+}
+
+@Override
+protected void onPause() {
+    super.onPause();
+    MediaPlayerManager.instance().pause();
+}
+
+@Override
+protected void onDestroy() {
+    super.onDestroy();
+    MediaPlayerManager.instance().releasePlayerAndView(this);
+}
+ ```
+proguard-rules
 
 ### Features
 - 全屏，小屏播放
