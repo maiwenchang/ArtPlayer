@@ -24,19 +24,19 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.SmartModeActivity"
+            android:name=".activity.recyclerview.SmartModeActivity"
             android:configChanges="orientation|screenSize"
             android:label="SmartModeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.RecyclerViewActivity"
+            android:name=".activity.recyclerview.RecyclerViewActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.ListViewActivity"
+            android:name=".activity.listview.ListViewActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.SmartModeRecyclerViewActivity" />
+        <activity android:name=".activity.recyclerview.SmartModeRecyclerViewActivity" />
     </application>
 
 </manifest>

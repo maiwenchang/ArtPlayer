@@ -1,4 +1,4 @@
-package org.salient.artvideoplayer.activity;
+package org.salient.artvideoplayer.activity.recyclerview;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import org.salient.artvideoplayer.BaseActivity;
 import org.salient.artvideoplayer.R;
 import org.salient.artvideoplayer.adapter.RecyclerViewAdapter;
 import org.salient.artvideoplayer.bean.VideoBean;

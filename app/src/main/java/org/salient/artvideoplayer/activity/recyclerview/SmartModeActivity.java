@@ -1,11 +1,14 @@
-package org.salient.artvideoplayer.activity;
+package org.salient.artvideoplayer.activity.recyclerview;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 
+import org.salient.artvideoplayer.BaseActivity;
 import org.salient.artvideoplayer.R;
+import org.salient.artvideoplayer.activity.listview.ListViewActivity;
+import org.salient.artvideoplayer.activity.recyclerview.RecyclerViewActivity;
 
 /**
  * > Created by Mai on 2018/7/17

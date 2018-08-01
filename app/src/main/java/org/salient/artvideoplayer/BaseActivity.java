@@ -1,4 +1,4 @@
-package org.salient.artvideoplayer.activity;
+package org.salient.artvideoplayer;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

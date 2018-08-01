@@ -9,7 +9,9 @@ import com.bumptech.glide.Glide;
 
 import org.salient.artplayer.MediaPlayerManager;
 import org.salient.artplayer.VideoView;
+import org.salient.artvideoplayer.BaseActivity;
 import org.salient.artvideoplayer.R;
+import org.salient.artvideoplayer.activity.recyclerview.SmartModeActivity;
 import org.salient.controlpanel.ControlPanel;
 
 public class MainActivity extends BaseActivity {

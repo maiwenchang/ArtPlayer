@@ -1,10 +1,11 @@
-package org.salient.artvideoplayer.activity;
+package org.salient.artvideoplayer.activity.listview;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import org.salient.artvideoplayer.BaseActivity;
 import org.salient.artvideoplayer.adapter.ListViewAdapter;
 import org.salient.artvideoplayer.bean.VideoBean;
 
