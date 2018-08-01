@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import java.util.Map;
@@ -45,6 +46,7 @@ public class VideoView extends FrameLayout {
 
     //api attribute
     private boolean isMute = false;
+    private boolean isLoop = false;
     public int widthRatio = 0;
     public int heightRatio = 0;
 
@@ -223,7 +225,7 @@ public class VideoView extends FrameLayout {
             switch (MediaPlayerManager.instance().getPlayerState()) {
                 case IDLE://从初始状态开始播放
                 case ERROR:
-                    MediaPlayerManager.instance().play(this);
+                    play();
                     break;
                 case PREPARED:
                 case PLAYBACK_COMPLETED: // 重播
@@ -232,8 +234,39 @@ public class VideoView extends FrameLayout {
                     break;
             }
         } else {
-            MediaPlayerManager.instance().play(this);
+            play();
         }
+    }
+
+    protected void play() {
+        Log.d(TAG, "play [" + hashCode() + "] ");
+        //check data source
+        if (getDataSourceObject() == null) {
+            return;
+        }
+        //get context
+        Context context = getContext();
+        //clear videoView opened before
+        VideoView currentVideoView = MediaPlayerManager.instance().getCurrentVideoView();
+        if (currentVideoView != null && currentVideoView != this) {
+            if (getWindowType() != VideoView.WindowType.TINY) {
+                MediaPlayerManager.instance().clearTinyLayout(context);
+            } else if (getWindowType() != VideoView.WindowType.FULLSCREEN) {
+                MediaPlayerManager.instance().clearFullscreenLayout(context);
+            }
+        }
+        // releaseMediaPlayer
+        MediaPlayerManager.instance().releaseMediaPlayer();
+        //pass data to MediaPlayer
+        MediaPlayerManager.instance().setDataSource(getDataSourceObject(), getHeaders());
+        MediaPlayerManager.instance().setCurrentData(getData());
+        //keep screen on
+        Utils.scanForActivity(context).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        //bind {@link AudioManager#OnAudioFocusChangeListener}
+        MediaPlayerManager.instance().bindAudioFocus(context);
+        //init TextureView, we will prepare and start the player when surfaceTextureAvailable.
+        MediaPlayerManager.instance().initTextureView(context);
+        MediaPlayerManager.instance().addTextureView(this);
     }
 
     /**
@@ -356,6 +389,14 @@ public class VideoView extends FrameLayout {
     public void setMute(boolean mute) {
         isMute = mute;
         MediaPlayerManager.instance().mute(mute);
+    }
+
+    public boolean isLoop() {
+        return isLoop;
+    }
+
+    public void setLoop(boolean loop) {
+        isLoop = loop;
     }
 
     /**

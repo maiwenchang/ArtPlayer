@@ -29,10 +29,10 @@ allprojects {
 
 dependencies {
     # required
-    compile ''
+    implementation ''
 
     # Default control panel: optional
-    compile ''
+    implementation ''
 }
 ```
 
@@ -60,6 +60,12 @@ dependencies {
 - 全屏，小屏播放
 - 内部支持RecyclerView，ListView中播放
 - 自定义UI
+- 静音
+
+### ON-PLAN
+- 循环播放
+- ijkPlayer支持
+- ExoPlayer支持
 
 ### NOT-ON-PLAN(不在计划)
 - Multiple MediaPlayer playback
@@ -72,10 +78,9 @@ dependencies {
 
 
 ### My Build Environment
-- Java
- - Android Studio 3.1.2
- - Gradle 3.1.2
--
+- Java 1.7
+- Android Studio 3.1.2
+- Gradle 3.1.2
 
 ### Authors
 - [maiwenchang](https://github.com/maiwenchang)

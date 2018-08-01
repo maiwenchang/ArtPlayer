@@ -64,7 +64,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
         return mediaPlayer.getDataSource();
     }
 
-    private void setDataSource(Object dataSource, Map<String, String> headers) {
+    public void setDataSource(Object dataSource, Map<String, String> headers) {
         mediaPlayer.setDataSource(dataSource.toString());
         mediaPlayer.setHeaders(headers);
     }
@@ -85,38 +85,6 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
 
     public void start() {
         mediaPlayer.start();
-    }
-
-    public void play(@NonNull VideoView videoView) {
-        Log.d(TAG, "play [" + videoView.hashCode() + "] ");
-        //check data source
-        if (videoView.getDataSourceObject() == null) {
-            return;
-        }
-        //get context
-        Context context = videoView.getContext();
-        //clear videoView open before
-        VideoView currentVideoView = getCurrentVideoView();
-        if (currentVideoView != null && currentVideoView != videoView) {
-            if (videoView.getWindowType() != VideoView.WindowType.TINY) {
-                clearTinyLayout(context);
-            } else if (videoView.getWindowType() != VideoView.WindowType.FULLSCREEN) {
-                clearFullscreenLayout(context);
-            }
-        }
-        // releaseMediaPlayer
-        releaseMediaPlayer();
-        //pass data to MediaPlayer
-        setDataSource(videoView.getDataSourceObject(), videoView.getHeaders());
-
-        mCurrentData = videoView.getData();
-        //keep screen on
-        Utils.scanForActivity(context).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        //bind {@link AudioManager#OnAudioFocusChangeListener}
-        bindAudioFocus(context);
-        //init TextureView, we will prepare and start the player when surfaceTextureAvailable.
-        initTextureView(context);
-        addTextureView(videoView);
     }
 
     /**
@@ -348,7 +316,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
                         controlPanel.notifyStateChange();
                         controlPanel.onExitSecondScreen();
                     }
-                } else {//直接开启的全屏，只有一层，没有常规窗口
+                } else {//直接开启的全屏，没有常规窗口
                     releasePlayerAndView(currentVideoView.getContext());
                 }
                 mClickTime = System.currentTimeMillis();
@@ -415,6 +383,10 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
 
     public Object getCurrentData() {
         return mCurrentData;
+    }
+
+    public void setCurrentData(Object mCurrentData) {
+        this.mCurrentData = mCurrentData;
     }
 
     // all possible MediaPlayer states
