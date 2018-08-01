@@ -41,20 +41,18 @@ dependencies {
  import org.salient.artplayer.VideoView;
 
  VideoView videoView = new VideoView(this);
- videoView.setUp("http://vfx.mtime.cn/Video/2018/06/29/mp4/180629124637890547.mp4");
+ videoView.setUp("http://vfx.mtime.cn/Video/2018/06/27/mp4/180627094726195356.mp4");
  videoView.setControlPanel(new ControlPanel(this));
  videoView.start();
  ```
+
+ or
 
   ``` xml
  <org.salient.artplayer.VideoView
  	android:id="@+id/video_view"
  	android:layout_width="match_parent"
  	android:layout_height="200dp"/>
-
- VideoView videoView = findViewById(R.id.salientVideoView);
- videoView.setUp("http://vfx.mtime.cn/Video/2018/06/27/mp4/180627094726195356.mp4");
- videoView.start();
  ```
 
 
