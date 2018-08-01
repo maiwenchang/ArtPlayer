@@ -85,7 +85,6 @@ protected void onDestroy() {
     MediaPlayerManager.instance().releasePlayerAndView(this);
 }
  ```
-proguard-rules
 
 ### Features
 - 全屏，小屏播放
