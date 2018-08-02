@@ -17,8 +17,8 @@ This is a flexible video player. MediaPlayer is completely separate from VideoVi
  - ![image](https://github.com/maiwenchang/ArtVideoPlayer/blob/master/pic/apkqrcode.png)
 
 
-### Usage
- - Gradle
+### Getting started
+In your 'build.gradle':
 ```
 # required
 allprojects {
@@ -36,7 +36,7 @@ dependencies {
 }
 ```
 
- - Sample
+### Usage
 
  java
  ``` java
@@ -98,6 +98,7 @@ protected void onDestroy() {
 - 上传到Maven
 - ijkPlayer支持
 - ExoPlayer支持
+- 音频播放
 
 ### NOT-ON-PLAN(不在计划)
 - Multiple MediaPlayer playback

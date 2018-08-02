@@ -2,8 +2,10 @@ package org.salient.artvideoplayer;
 
 import android.app.Application;
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.google.gson.Gson;
+import com.squareup.leakcanary.LeakCanary;
 
 import org.salient.artvideoplayer.bean.MovieData;
 
@@ -20,25 +22,29 @@ import java.util.concurrent.Executors;
  */
 public class BaseApplication extends Application {
 
-    private static MovieData mMovieData;
+    private static String jsonString = "";
 
     public static MovieData getMovieData() {
-        return mMovieData;
+        if (TextUtils.isEmpty(jsonString)) {
+            return null;
+        } else {
+            return new Gson().fromJson(jsonString, MovieData.class);
+        }
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-    }
-
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        LeakCanary.install(this);
         Executors.newSingleThreadExecutor().submit(new Runnable() {
             @Override
             public void run() {
-                String json = readAssetsFile("video.json");
-                mMovieData = new Gson().fromJson(json, MovieData.class);
+                jsonString = readAssetsFile("video.json");
             }
         });
     }
