@@ -31,7 +31,7 @@ allprojects {
 }
 ```
 
-`build.gradle` of :
+`build.gradle` of module:
 ```
 dependencies {
     // required
