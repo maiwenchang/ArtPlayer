@@ -308,9 +308,9 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
 
         } else if (id == R.id.ivVolume) {
             if (ivVolume.isChecked()) {
-                mTarget.setMute(false);
+                MediaPlayerManager.instance().setMute(false);
             } else {
-                mTarget.setMute(true);
+                MediaPlayerManager.instance().setMute(true);
             }
 
         } else if (id == R.id.start) {
@@ -353,7 +353,7 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
 
     //同步跟MediaPlayer状态无关的视图
     public void SynchronizeViewState() {
-        if (mTarget != null && mTarget.isMute()) {
+        if (MediaPlayerManager.instance().isMute()) {
             ivVolume.setChecked(false);
         } else {
             ivVolume.setChecked(true);
