@@ -23,10 +23,10 @@ This is a flexible video player. MediaPlayer is completely separate from VideoVi
 ```
 dependencies {
     // required
-    implementation 'org.salient.artvideoplayer:artplayer-java:0.4'
+    implementation 'org.salient.artvideoplayer:artplayer-java:0.5'
 
     // optional:  Default control panel
-    implementation 'org.salient.artvideoplayer:artplayer-ui:0.4'
+    implementation 'org.salient.artvideoplayer:artplayer-ui:0.5'
 }
 ```
 
