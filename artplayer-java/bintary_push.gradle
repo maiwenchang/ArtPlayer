@@ -1,0 +1,10 @@
+apply plugin: 'com.novoda.bintray-release'
+
+publish {
+    userOrg = 'cv1948'//bintray.com用户名
+    groupId = 'org.salient.artvideoplayer'//jcenter上的路径
+    artifactId = 'artplayer-java'//项目名称
+    publishVersion = android.defaultConfig.versionName//版本号
+    desc = 'An android video player'//描述
+    website = 'https://github.com/maiwenchang/ArtVideoPlayer'//网站
+}

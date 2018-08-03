@@ -1,6 +1,7 @@
 # ArtVideoPlayer
 
 [![API](https://img.shields.io/badge/API-16%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=16)
+[![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)](https://github.com/maiwenchang/ArtVideoPlayer/blob/master/LICENSE)
 
 ###
 This is a flexible video player. MediaPlayer is completely separate from VideoView and can be replaced with other player kernels such as ExoPlayer and ijkPlayer. Developers can fully customize the player view, which we call the control panel. In addition, developers can use MediaPlayerManager to control playback behavior, such as full-screen mode, small screen mode, and smart matching modes in lists, such as in RecyclerView.
@@ -18,21 +19,26 @@ This is a flexible video player. MediaPlayer is completely separate from VideoVi
 
 
 ### Getting started
-In your 'build.gradle':
+`build.gradle` of project:
 ```
-# required
 allprojects {
     repositories {
-        jcenter()
+        //required
+        maven {
+            url "https://dl.bintray.com/cv1948/maven"
+        }
     }
 }
+```
 
+`build.gradle` of :
+```
 dependencies {
-    # required
-    implementation ''
+    // required
+    implementation 'org.salient.artvideoplayer:artplayer-java:0.4'
 
-    # Default control panel: optional
-    implementation ''
+    // optional:  Default control panel
+    implementation 'org.salient.artvideoplayer:artplayer-ui:0.4'
 }
 ```
 
@@ -95,7 +101,7 @@ protected void onDestroy() {
 - 循环播放
 
 ### ON-PLAN
-- 上传到Maven
+- 添加到JCenter（审核中）
 - ijkPlayer支持
 - ExoPlayer支持
 - 音频播放

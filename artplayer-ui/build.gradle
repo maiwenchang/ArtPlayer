@@ -18,18 +18,6 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        android.libraryVariants.all {
-            variant ->
-                variant.outputs.all {
-                    output ->
-                        def outputFile = output.outputFile
-                        if (outputFile.name.contains("release")) {
-                            outputFileName = new File("../../../release/", "art-player-ui-" + defaultConfig.versionName + ".aar")
-                        } else if (outputFile.name.contains("debug")) {
-                            outputFileName = new File("./", "art-player-ui-debug-" + defaultConfig.versionName + ".aar")
-                        }
-                }
-        }
     }
 
 }
@@ -40,3 +28,5 @@ dependencies {
     compileOnly 'com.android.support:appcompat-v7:27.1.1'
     compileOnly project(':artplayer-java')
 }
+
+apply from: './bintary_push.gradle'

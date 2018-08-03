@@ -20,18 +20,6 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        android.libraryVariants.all {
-            variant ->
-                variant.outputs.all {
-                    output ->
-                        def outputFile = output.outputFile
-                        if (outputFile.name.contains("release")) {
-                            outputFileName = new File("../../../release/", "art-player-" + defaultConfig.versionName + ".aar")
-                        } else if (outputFile.name.contains("debug")) {
-                            outputFileName = new File("./", "art-player-debug-" + defaultConfig.versionName + ".aar")
-                        }
-                }
-        }
     }
 
     compileOptions {
@@ -46,3 +34,5 @@ dependencies {
 
     compileOnly 'com.android.support:appcompat-v7:27.1.1'
 }
+
+apply from: './bintary_push.gradle'
