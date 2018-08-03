@@ -19,19 +19,7 @@ This is a flexible video player. MediaPlayer is completely separate from VideoVi
 
 
 ### Getting started
-`build.gradle` of project:
-```
-allprojects {
-    repositories {
-        //required
-        maven {
-            url "https://dl.bintray.com/cv1948/maven"
-        }
-    }
-}
-```
-
-`build.gradle` of module:
+`build.gradle`
 ```
 dependencies {
     // required
@@ -62,7 +50,7 @@ dependencies {
  	android:layout_height="200dp"/>
  ```
 
-AndroidManifest.xml
+`AndroidManifest.xml`
   ``` xml
 <activity
     android:name=".YourActivity"
@@ -101,10 +89,11 @@ protected void onDestroy() {
 - 循环播放
 
 ### ON-PLAN
-- 添加到JCenter（审核中）
+- 视频画面比例
 - ijkPlayer支持
 - ExoPlayer支持
 - 音频播放
+- Kotlin版本
 
 ### NOT-ON-PLAN(不在计划)
 - Multiple MediaPlayer playback

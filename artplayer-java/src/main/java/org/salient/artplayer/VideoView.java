@@ -45,8 +45,6 @@ public class VideoView extends FrameLayout {
     private VideoView mParentVideoView = null;
 
     //api attribute
-    private boolean isMute = false;
-    private boolean isLooping = false;
     public int widthRatio = 0;
     public int heightRatio = 0;
 
@@ -267,12 +265,6 @@ public class VideoView extends FrameLayout {
         //init TextureView, we will prepare and start the player when surfaceTextureAvailable.
         MediaPlayerManager.instance().initTextureView(context);
         MediaPlayerManager.instance().addTextureView(this);
-        if (isMute) {
-            MediaPlayerManager.instance().mute(true);
-        }
-        if (isLooping) {
-            MediaPlayerManager.instance().setLooping(true);
-        }
     }
 
     /**
@@ -382,27 +374,6 @@ public class VideoView extends FrameLayout {
 
     public void setParentVideoView(VideoView mParentVideoView) {
         this.mParentVideoView = mParentVideoView;
-    }
-
-    public boolean isMute() {
-        return isMute;
-    }
-
-    /**
-     * 设置静音
-     * @param mute
-     */
-    public void setMute(boolean mute) {
-        isMute = mute;
-        MediaPlayerManager.instance().mute(mute);
-    }
-
-    public boolean isLooping() {
-        return isLooping;
-    }
-
-    public void setLooping(boolean looping) {
-        isLooping = looping;
     }
 
     /**

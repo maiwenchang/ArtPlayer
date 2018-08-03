@@ -48,6 +48,12 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
             mediaPlayer.setOnErrorListener(this);
             mediaPlayer.setOnInfoListener(this);
             mediaPlayer.setOnVideoSizeChangedListener(this);
+            if (MediaPlayerManager.instance().isMute()) {
+                mute(true);
+            }
+            if (MediaPlayerManager.instance().isLooping()) {
+                setLooping(true);
+            }
             Object dataSource = getDataSource();
             if (dataSource != null && dataSource instanceof AssetFileDescriptor) {//Android assets file
                 AssetFileDescriptor fd = (AssetFileDescriptor) dataSource;
@@ -213,7 +219,7 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
         MediaPlayerManager.instance().updateState(MediaPlayerManager.PlayerState.PREPARED);
-        start();
+        MediaPlayerManager.instance().start();
     }
 
     @Override

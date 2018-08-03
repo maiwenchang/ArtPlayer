@@ -43,6 +43,8 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     // settable by client
     private AudioManager.OnAudioFocusChangeListener onAudioFocusChangeListener;
     private AbsMediaPlayer mediaPlayer;
+    private boolean isMute = false;
+    private boolean isLooping = false;
 
     private MediaPlayerManager() {
         if (mediaPlayer == null) {
@@ -85,6 +87,44 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
 
     public void start() {
         mediaPlayer.start();
+    }
+
+    public boolean isMute() {
+        return isMute;
+    }
+
+    /**
+     * 设置静音
+     * @param isMute boolean
+     */
+    public void setMute(boolean isMute) {
+        this.isMute = isMute;
+        mediaPlayer.mute(isMute);
+    }
+
+
+    /**
+     * 设置音量
+     *
+     * @param leftVolume  左声道
+     * @param rightVolume 右声道
+     */
+    public void setVolume(float leftVolume, float rightVolume) {
+        mediaPlayer.setVolume(leftVolume, rightVolume);
+    }
+
+    public boolean isLooping() {
+        return isLooping;
+    }
+
+    /**
+     * 设置循环播放
+     *
+     * @param isLooping  boolean
+     */
+    public void setLooping(boolean isLooping) {
+        this.isLooping = isLooping;
+        mediaPlayer.setLooping(isLooping);
     }
 
     /**
@@ -273,34 +313,6 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
 
     public void setMediaPlayer(AbsMediaPlayer mediaPlayer) {
         this.mediaPlayer = mediaPlayer;
-    }
-
-    /**
-     * 设置静音
-     *
-     * @param isMute boolean
-     */
-    public void mute(boolean isMute) {
-        mediaPlayer.mute(isMute);
-    }
-
-    /**
-     * 设置音量
-     *
-     * @param leftVolume  左声道
-     * @param rightVolume 右声道
-     */
-    public void setVolume(float leftVolume, float rightVolume) {
-        mediaPlayer.setVolume(leftVolume, rightVolume);
-    }
-
-    /**
-     * 设置循环播放
-     *
-     * @param isLoop  boolean
-     */
-    public void setLooping(boolean isLoop) {
-        mediaPlayer.setLooping(isLoop);
     }
 
     /**
