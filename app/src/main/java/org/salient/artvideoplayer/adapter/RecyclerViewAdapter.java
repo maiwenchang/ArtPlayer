@@ -3,11 +3,9 @@ package org.salient.artvideoplayer.adapter;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -32,6 +30,8 @@ import java.util.List;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.VideoViewHolder> {
 
     private List<VideoBean> mList = new ArrayList<>();
+
+    private boolean isStaggeredGridLayoutManager = false;
 
     private OnItemClickListener mOnItemClickListener = null;
     private Comparator mComparator = new Comparator() {
@@ -82,12 +82,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         videoBean.setListPosition(position);
         holder.videoView.setUp(videoBean.getUrl(), VideoView.WindowType.LIST, videoBean);
 
-        // 瀑布流时，手动更改高度，不同位置的高度有所不同
-        //ViewGroup.LayoutParams layoutParams = holder.videoView.getLayoutParams();
-        //layoutParams.width = 16 * 40;
-        //layoutParams.height = (int) (9 * 40 + Math.sin((position + 1) * Math.PI / 2) * 5);
-        //holder.videoView.setLayoutParams(layoutParams);
+        // 瀑布流时，手动更改高度，使不同位置的高度有所不同
+        if (isStaggeredGridLayoutManager) {
+            ViewGroup.LayoutParams layoutParams = holder.videoView.getLayoutParams();
+            layoutParams.width = 16 * 40;
+            layoutParams.height = (int) (9 * 40 + Math.sin((position + 1) * Math.PI / 2) * 5);
+            holder.videoView.setLayoutParams(layoutParams);
+        }
 
+        //
         ImageView coverView = ((ControlPanel) holder.videoView.getControlPanel()).getCoverView();
 
         Glide.with(holder.videoView.getContext()).load(videoBean.getImage()).into(coverView);
@@ -127,34 +130,43 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             videoView = itemView.findViewById(R.id.videoView);
             ControlPanel controlPanel = new ControlPanel(videoView.getContext());
             videoView.setControlPanel(controlPanel);
+            //optional:
             videoView.setComparator(mComparator);
-            //Specify the Detach Action which would be called when the VideoView has been detached from its window.
-            videoView.setOnWindowDetachedListener(new OnWindowDetachedListener() {
-                @Override
-                public void onDetached(VideoView videoView) {
-                    if (videoView.isCurrentPlaying() && videoView == MediaPlayerManager.instance().getCurrentVideoView()) {
-                        //开启小窗
-                        VideoView tinyVideoView = new VideoView(videoView.getContext());
-                        //set url and data
-                        tinyVideoView.setUp(videoView.getDataSourceObject(), VideoView.WindowType.TINY, videoView.getData());
-                        //set control panel
-                        ControlPanel controlPanel = new ControlPanel(videoView.getContext());
-                        tinyVideoView.setControlPanel(controlPanel);
-                        //set cover
-                        ImageView coverView = controlPanel.getCoverView();
-                        Glide.with(controlPanel.getContext()).load(((VideoBean) videoView.getData()).getImage()).into(coverView);
-                        //set parent
-                        tinyVideoView.setParentVideoView(videoView);
-                        //set LayoutParams
-                        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(16 * 45, 9 * 45);
-                        layoutParams.gravity = Gravity.BOTTOM | Gravity.RIGHT;
-                        layoutParams.setMargins(0, 0, 30, 100);
-                        //start tiny window
-                        tinyVideoView.startTinyWindow(layoutParams);
-                    }
-                }
-            });
+            //optional: Specify the Detach Action which would be called when the VideoView has been detached from its window.
+            videoView.setOnWindowDetachedListener(mOnWindowDetachedListener);
+
+//            videoView.setOnWindowDetachedListener(new OnWindowDetachedListener() {
+//                @Override
+//                public void onDetached(VideoView videoView) {
+//                    if (videoView.isCurrentPlaying() && videoView == MediaPlayerManager.instance().getCurrentVideoView()) {
+//                        //开启小窗
+//                        VideoView tinyVideoView = new VideoView(videoView.getContext());
+//                        //set url and data
+//                        tinyVideoView.setUp(videoView.getDataSourceObject(), VideoView.WindowType.TINY, videoView.getData());
+//                        //set control panel
+//                        ControlPanel controlPanel = new ControlPanel(videoView.getContext());
+//                        tinyVideoView.setControlPanel(controlPanel);
+//                        //set cover
+//                        ImageView coverView = controlPanel.getCoverView();
+//                        Glide.with(controlPanel.getContext()).load(((VideoBean) videoView.getData()).getImage()).into(coverView);
+//                        //set parent
+//                        tinyVideoView.setParentVideoView(videoView);
+//                        //set LayoutParams
+//                        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(16 * 45, 9 * 45);
+//                        layoutParams.gravity = Gravity.BOTTOM | Gravity.RIGHT;
+//                        layoutParams.setMargins(0, 0, 30, 100);
+//                        //start tiny window
+//                        tinyVideoView.startTinyWindow(layoutParams);
+//                    }
+//                }
+//            });
         }
+    }
+
+    private OnWindowDetachedListener mOnWindowDetachedListener = null;
+
+    public void setDetachAction(OnWindowDetachedListener onWindowDetachedListener) {
+        mOnWindowDetachedListener = onWindowDetachedListener;
     }
 
 }

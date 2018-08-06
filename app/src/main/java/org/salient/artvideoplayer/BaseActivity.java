@@ -21,20 +21,20 @@ import java.util.List;
  */
 public abstract class BaseActivity extends AppCompatActivity {
 
-    protected MovieData mMovieData;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mMovieData = BaseApplication.getMovieData();
     }
 
     public List<VideoBean> getAllComing() {
         List<VideoBean> list = new ArrayList<>();
-        for (MovieData.MoviecomingsBean moviecomingsBean : mMovieData.getMoviecomings()) {
-            List<VideoBean> videos = moviecomingsBean.getVideos();
-            if (videos != null && videos.size() > 0) {
-                list.add(videos.get(0));
+        MovieData mMovieData = BaseApplication.getMovieData();
+        if (mMovieData != null) {
+            for (MovieData.MoviecomingsBean moviecomingsBean : mMovieData.getMoviecomings()) {
+                List<VideoBean> videos = moviecomingsBean.getVideos();
+                if (videos != null && videos.size() > 0) {
+                    list.add(videos.get(0));
+                }
             }
         }
         return list;
@@ -42,16 +42,20 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public List<VideoBean> getAllAttention() {
         List<VideoBean> list = new ArrayList<>();
-        for (MovieData.AttentionBean attentionBean : mMovieData.getAttention()) {
-            List<VideoBean> videos = attentionBean.getVideos();
-            if (videos != null && videos.size() > 0) {
-                list.add(videos.get(0));
+        MovieData mMovieData = BaseApplication.getMovieData();
+        if (mMovieData != null) {
+            for (MovieData.AttentionBean attentionBean : mMovieData.getAttention()) {
+                List<VideoBean> videos = attentionBean.getVideos();
+                if (videos != null && videos.size() > 0) {
+                    list.add(videos.get(0));
+                }
             }
         }
         return list;
     }
 
     public VideoBean getRandomVideo() {
+        MovieData mMovieData = BaseApplication.getMovieData();
         if (mMovieData != null) {
             List<VideoBean> allAttention = getAllAttention();
             return allAttention.get(getRandomInt(0, allAttention.size()));

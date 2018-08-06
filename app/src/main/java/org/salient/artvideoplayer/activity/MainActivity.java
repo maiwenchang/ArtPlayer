@@ -12,7 +12,7 @@ import org.salient.artplayer.VideoView;
 import org.salient.artvideoplayer.BaseActivity;
 import org.salient.artvideoplayer.R;
 import org.salient.artvideoplayer.activity.listview.ListViewActivity;
-import org.salient.artvideoplayer.activity.recyclerview.SmartModeActivity;
+import org.salient.artvideoplayer.activity.recyclerview.RecyclerViewActivity;
 import org.salient.controlpanel.ControlPanel;
 
 public class MainActivity extends BaseActivity {
@@ -59,7 +59,7 @@ public class MainActivity extends BaseActivity {
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.smartModeRecyclerView:
-                startActivity(new Intent(this, SmartModeActivity.class));
+                startActivity(new Intent(this, RecyclerViewActivity.class));
                 break;
             case R.id.fullWindow:
                 VideoView videoView = new VideoView(this);
