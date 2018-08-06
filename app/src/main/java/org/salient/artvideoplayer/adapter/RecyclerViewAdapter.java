@@ -1,10 +1,8 @@
 package org.salient.artvideoplayer.adapter;
 
-import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +14,7 @@ import com.bumptech.glide.Glide;
 import org.salient.artplayer.Comparator;
 import org.salient.artplayer.MediaPlayerManager;
 import org.salient.artplayer.OnWindowDetachedListener;
-import org.salient.artplayer.Utils;
 import org.salient.artplayer.VideoView;
-import org.salient.artvideoplayer.DensityUtil;
 import org.salient.artvideoplayer.R;
 import org.salient.artvideoplayer.bean.VideoBean;
 import org.salient.controlpanel.ControlPanel;
@@ -27,9 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * > Created by Mai on 2018/7/17
+ * Created by Mai on 2018/7/17
  * *
- * > Description:
+ * Description:
  * *
  */
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.VideoViewHolder> {
@@ -102,17 +98,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         // 瀑布流时，手动更改高度，使不同位置的高度有所不同
         if (isStaggeredGridLayoutManager) {
-//            ViewGroup.LayoutParams layoutParams = holder.videoView.getLayoutParams();
-//            //layoutParams.width = 16 * 40;
-//            //layoutParams.height = (int) (9 * 40 + Math.sin((position + 1) * Math.PI / 2) * 5);
-//            Activity activity = Utils.scanForActivity(holder.videoView.getContext());
-//            DisplayMetrics dm = null;
-//
-//            activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
-//
-//            layoutParams.height = (int) (DensityUtil.getInstance(videoBean.get).widthPixels / 2 + Math.sin((position + 1) * Math.PI / 2) * 5);
-//
-//            holder.videoView.setLayoutParams(layoutParams);
+            ViewGroup.LayoutParams layoutParams = holder.videoView.getLayoutParams();
+            layoutParams.height = (int) (mScreenWidth / 2 / 16 * 9 + Math.sin((position + 1) * Math.PI / 2) * 15);
+            layoutParams.width = layoutParams.height / 9 * 16;
+            holder.videoView.setLayoutParams(layoutParams);
         }
 
         //setCover

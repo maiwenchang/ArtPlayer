@@ -39,7 +39,7 @@ public class RecyclerViewActivity extends BaseActivity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_smart_mode);
+        setContentView(R.layout.activity_recycler_view);
 
         rgLayoutManager = findViewById(R.id.rgLayoutManager);
         rgDetachAction = findViewById(R.id.rgDetachAction);

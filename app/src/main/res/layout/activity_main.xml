@@ -70,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:onClick="onClick"
-                android:text="SmartMode\n--ListView"
+                android:text="SmartMode\n--ListView(Todo)"
                 android:textAllCaps="false" />
 
         </LinearLayout>

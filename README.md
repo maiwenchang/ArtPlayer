@@ -82,7 +82,7 @@ protected void onDestroy() {
 
 ### Features
 - 全屏，小屏播放
-- 内部支持RecyclerView，ListView中播放
+- 内部支持RecyclerView中播放
 - 自定义UI
 - APP内全局播放
 - 静音

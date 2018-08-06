@@ -6,9 +6,9 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 /**
- * > Created by Mai on 2018/5/18
+ *  Created by Mai on 2018/5/18
  * *
- * > Description:屏幕像素转换类
+ *  Description:屏幕像素转换类
  * *
  */
 public class DensityUtil {
