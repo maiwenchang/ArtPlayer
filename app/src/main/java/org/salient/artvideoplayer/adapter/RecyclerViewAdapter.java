@@ -1,7 +1,10 @@
 package org.salient.artvideoplayer.adapter;
 
+import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +16,9 @@ import com.bumptech.glide.Glide;
 import org.salient.artplayer.Comparator;
 import org.salient.artplayer.MediaPlayerManager;
 import org.salient.artplayer.OnWindowDetachedListener;
+import org.salient.artplayer.Utils;
 import org.salient.artplayer.VideoView;
+import org.salient.artvideoplayer.DensityUtil;
 import org.salient.artvideoplayer.R;
 import org.salient.artvideoplayer.bean.VideoBean;
 import org.salient.controlpanel.ControlPanel;
@@ -29,6 +34,7 @@ import java.util.List;
  */
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.VideoViewHolder> {
 
+    private final int mScreenWidth;
     private List<VideoBean> mList = new ArrayList<>();
 
     private boolean isStaggeredGridLayoutManager = false;
@@ -54,6 +60,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
     };
 
+    public RecyclerViewAdapter(int screenWidth) {
+        mScreenWidth = screenWidth;
+    }
+
     public void setList(List<VideoBean> mList) {
         this.mList = mList;
     }
@@ -76,6 +86,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
+    public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        if (recyclerView.getLayoutManager() != null && recyclerView.getLayoutManager() instanceof StaggeredGridLayoutManager) {
+            isStaggeredGridLayoutManager = true;
+        }
+    }
+
+    @Override
     public void onBindViewHolder(@NonNull VideoViewHolder holder, int position) {
         Log.d("testt", "onBindViewHolder position:" + position + "hashCode : " + holder.videoView.hashCode());
         VideoBean videoBean = mList.get(holder.getAdapterPosition());
@@ -84,16 +102,23 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         // 瀑布流时，手动更改高度，使不同位置的高度有所不同
         if (isStaggeredGridLayoutManager) {
-            ViewGroup.LayoutParams layoutParams = holder.videoView.getLayoutParams();
-            layoutParams.width = 16 * 40;
-            layoutParams.height = (int) (9 * 40 + Math.sin((position + 1) * Math.PI / 2) * 5);
-            holder.videoView.setLayoutParams(layoutParams);
+//            ViewGroup.LayoutParams layoutParams = holder.videoView.getLayoutParams();
+//            //layoutParams.width = 16 * 40;
+//            //layoutParams.height = (int) (9 * 40 + Math.sin((position + 1) * Math.PI / 2) * 5);
+//            Activity activity = Utils.scanForActivity(holder.videoView.getContext());
+//            DisplayMetrics dm = null;
+//
+//            activity.getWindowManager().getDefaultDisplay().getMetrics(dm);
+//
+//            layoutParams.height = (int) (DensityUtil.getInstance(videoBean.get).widthPixels / 2 + Math.sin((position + 1) * Math.PI / 2) * 5);
+//
+//            holder.videoView.setLayoutParams(layoutParams);
         }
 
-        //
+        //setCover
         ImageView coverView = ((ControlPanel) holder.videoView.getControlPanel()).getCoverView();
-
         Glide.with(holder.videoView.getContext()).load(videoBean.getImage()).into(coverView);
+
     }
 
     @Override

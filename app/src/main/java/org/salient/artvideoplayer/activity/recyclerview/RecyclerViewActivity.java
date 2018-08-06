@@ -18,6 +18,7 @@ import org.salient.artplayer.MediaPlayerManager;
 import org.salient.artplayer.OnWindowDetachedListener;
 import org.salient.artplayer.VideoView;
 import org.salient.artvideoplayer.BaseActivity;
+import org.salient.artvideoplayer.DensityUtil;
 import org.salient.artvideoplayer.R;
 import org.salient.artvideoplayer.adapter.RecyclerViewAdapter;
 import org.salient.artvideoplayer.bean.VideoBean;
@@ -64,7 +65,7 @@ public class RecyclerViewActivity extends BaseActivity{
                 recycler_view.setLayoutManager(layoutManager);
 
 
-                RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter();
+                RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(DensityUtil.getWindowWidth(this));
                 recycler_view.setAdapter(recyclerViewAdapter);
 
                 switch (rgDetachAction.getCheckedRadioButtonId()) {
