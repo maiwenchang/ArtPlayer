@@ -53,6 +53,7 @@
                 android:layout_toRightOf="@id/ivLeft"
                 android:ellipsize="marquee"
                 android:focusable="true"
+                android:clickable="true"
                 android:focusableInTouchMode="true"
                 android:paddingBottom="15dp"
                 android:paddingLeft="15dp"
