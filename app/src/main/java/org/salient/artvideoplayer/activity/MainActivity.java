@@ -3,7 +3,11 @@ package org.salient.artvideoplayer.activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
@@ -27,13 +31,16 @@ public class MainActivity extends BaseActivity {
 
         final ControlPanel controlPanel = new ControlPanel(this);
         videoView.setControlPanel(controlPanel);
-
-        videoView.setUp("http://vfx.mtime.cn/Video/2018/06/27/mp4/180627094726195356.mp4");
+        //set title
+        TextView tvTitle = controlPanel.findViewById(R.id.tvTitle);
+        tvTitle.setText("西虹市首富 百变首富预告");
+        //set url
+        videoView.setUp("http://vfx.mtime.cn/Video/2018/07/06/mp4/180706094003288023.mp4");
         //videoView.start();
 
         Glide.with(MainActivity.this)
-                .load("http://img5.mtime.cn/mg/2018/06/27/094527.12278962.jpg")
-                .into(controlPanel.getCoverView());
+                .load("http://img5.mtime.cn/mg/2018/07/06/093947.51483272.jpg")
+                .into((ImageView) controlPanel.findViewById(R.id.video_cover));
     }
 
     @Override
@@ -73,10 +80,12 @@ public class MainActivity extends BaseActivity {
                 tinyVideoView.setUp("http://vfx.mtime.cn/Video/2018/06/06/mp4/180606101738263858.mp4", VideoView.WindowType.TINY);
                 ControlPanel controlPanel = new ControlPanel(this);
                 tinyVideoView.setControlPanel(controlPanel);
-//                ImageView coverView = controlPanel.getCoverView();
-//                Glide.with(controlPanel.getContext()).load("http://img5.mtime.cn/mg/2018/06/06/101658.92608147.jpg").into(coverView);
+                //set LayoutParams
+                FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(16 * 45, 9 * 45);
+                layoutParams.gravity = Gravity.BOTTOM | Gravity.RIGHT;
+                layoutParams.setMargins(0, 0, 30, 100);
                 tinyVideoView.start();
-                tinyVideoView.startTinyWindow();
+                tinyVideoView.startTinyWindow(layoutParams);
                 break;
             case R.id.smartModeListView:
                 startActivity(new Intent(this, ListViewActivity.class));

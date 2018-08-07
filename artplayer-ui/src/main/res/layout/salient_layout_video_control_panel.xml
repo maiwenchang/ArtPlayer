@@ -32,16 +32,14 @@
             tools:visibility="visible">
 
             <ImageView
-                android:id="@+id/back"
-                android:layout_width="wrap_content"
+                android:id="@+id/ivLeft"
+                android:layout_width="48dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_centerVertical="true"
-                android:paddingBottom="15dp"
-                android:paddingLeft="15dp"
-                android:paddingTop="15dp"
+                android:padding="15dp"
                 android:scaleType="centerInside"
                 android:src="@drawable/salient_icon_back"
                 android:visibility="gone" />
@@ -51,17 +49,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/ivFullscreen"
-                android:layout_toRightOf="@id/back"
-                android:paddingBottom="15dp"
+                android:layout_toLeftOf="@id/ivRight"
+                android:layout_toRightOf="@id/ivLeft"
                 android:paddingLeft="15dp"
+                android:paddingBottom="15dp"
                 android:paddingTop="15dp"
+                android:textSize="15sp"
                 android:textColor="#ffffff"
                 tools:text="标题" />
 
             <!--required-->
             <ImageView
-                android:id="@+id/ivFullscreen"
+                android:id="@+id/ivRight"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"

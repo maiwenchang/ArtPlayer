@@ -32,6 +32,8 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
     private final String TAG = ControlPanel.class.getSimpleName();
 
     private final long autoDismissTime = 3000;
+    private int mWhat;
+    private int mExtra;
 
     private CheckBox start;
     private CheckBox ivVolume;
@@ -41,12 +43,13 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
     private TextView current;
     private TextView total;
     private ProgressBar loading;
-    private ImageView back;
+    private ImageView ivLeft;
     private ImageView video_cover;
-    private ImageView ivFullscreen;
+    private ImageView ivRight;
     private LinearLayout llAlert;
     private TextView tvAlert;
     private TextView tvConfirm;
+    private TextView tvTitle;
     private Runnable mDismissTask = new Runnable() {
         @Override
         public void run() {
@@ -84,15 +87,16 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
         total = findViewById(R.id.total);
         ivVolume = findViewById(R.id.ivVolume);
         loading = findViewById(R.id.loading);
-        back = findViewById(R.id.back);
+        ivLeft = findViewById(R.id.ivLeft);
         video_cover = findViewById(R.id.video_cover);
         llAlert = findViewById(R.id.llAlert);
         tvAlert = findViewById(R.id.tvAlert);
         tvConfirm = findViewById(R.id.tvConfirm);
-        ivFullscreen = findViewById(R.id.ivFullscreen);
+        ivRight = findViewById(R.id.ivRight);
+        tvTitle = findViewById(R.id.tvTitle);
 
-        ivFullscreen.setOnClickListener(this);
-        back.setOnClickListener(this);
+        ivRight.setOnClickListener(this);
+        ivLeft.setOnClickListener(this);
         bottom_seek_progress.setOnSeekBarChangeListener(this);
         ivVolume.setOnClickListener(this);
         start.setOnClickListener(this);
@@ -197,7 +201,8 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
 
     @Override
     public void onInfo(int what, int extra) {
-
+        mWhat = what;
+        mExtra = extra;
     }
 
     @Override
@@ -214,17 +219,20 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
 
     @Override
     public void onEnterSecondScreen() {
-        showUI(back);
-        hideUI(ivFullscreen);
+        if (mTarget != null && mTarget.getWindowType() == VideoView.WindowType.FULLSCREEN) {
+            hideUI(ivRight);
+        }
+        showUI(ivLeft);
         SynchronizeViewState();
     }
 
     @Override
     public void onExitSecondScreen() {
-        hideUI(back);
-        showUI(ivFullscreen);
+        if (mTarget != null && mTarget.getWindowType() != VideoView.WindowType.TINY) {
+            ivLeft.setVisibility(GONE);
+        }
+        showUI(ivRight);
         SynchronizeViewState();
-        //MediaPlayerManager.instance().playAt(mTarget);
     }
 
     @Override
@@ -286,13 +294,14 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
     public void onClick(View v) {
         cancelDismissTask();
         int id = v.getId();
-        if (id == R.id.back) {
+        if (id == R.id.ivLeft) {
             if (mTarget == null) return;
             if (mTarget.getWindowType() == VideoView.WindowType.FULLSCREEN) {
-                MediaPlayerManager.instance().backPress(getContext());
+                MediaPlayerManager.instance().exitFullscreen(getContext(), mTarget);
+            } else if (mTarget.getWindowType() == VideoView.WindowType.TINY) {
+                MediaPlayerManager.instance().exitTinyWindow(getContext(), mTarget);
             }
-
-        } else if (id == R.id.ivFullscreen) {
+        } else if (id == R.id.ivRight) {
             if (mTarget == null) return;
             if (mTarget.getWindowType() != VideoView.WindowType.FULLSCREEN) {
                 //new VideoView
@@ -358,6 +367,10 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
         } else {
             ivVolume.setChecked(true);
         }
+        if (mTarget != null && mTarget.getParentVideoView() != null && mTarget.getParentVideoView().getControlPanel() != null) {
+            TextView title = mTarget.getParentVideoView().getControlPanel().findViewById(R.id.tvTitle);
+            tvTitle.setText(title.getText() == null ? "" : title.getText());
+        }
     }
 
     @Override
@@ -376,10 +389,6 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
         if (handler != null && mDismissTask != null) {
             handler.removeCallbacks(mDismissTask);
         }
-    }
-
-    public ImageView getCoverView() {
-        return video_cover;
     }
 
 }

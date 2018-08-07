@@ -95,6 +95,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
 
     /**
      * 设置静音
+     *
      * @param isMute boolean
      */
     public void setMute(boolean isMute) {
@@ -120,7 +121,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     /**
      * 设置循环播放
      *
-     * @param isLooping  boolean
+     * @param isLooping boolean
      */
     public void setLooping(boolean isLooping) {
         this.isLooping = isLooping;
@@ -320,33 +321,59 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
      */
     public boolean backPress(Context context) {
         Log.i(TAG, "backPress");
-        if ((System.currentTimeMillis() - mClickTime) < CLICK_EVENT_SPAN) {
-            return false;
-        }
         try {
             VideoView currentVideoView = getCurrentVideoView();
             if (currentVideoView != null && currentVideoView.getWindowType() == VideoView.WindowType.FULLSCREEN) {//退出全屏
-                Utils.setRequestedOrientation(currentVideoView.getContext(), currentVideoView.getScreenOrientation());
-                clearFullscreenLayout(currentVideoView.getContext());
-                Utils.showSupportActionBar(context);
-                VideoView parent = currentVideoView.getParentVideoView();
-                if (parent != null) {//在常规窗口继续播放
-                    playAt(parent);
-                    AbsControlPanel controlPanel = parent.getControlPanel();
-                    if (controlPanel != null) {
-                        controlPanel.notifyStateChange();
-                        controlPanel.onExitSecondScreen();
-                    }
-                } else {//直接开启的全屏，没有常规窗口
-                    releasePlayerAndView(currentVideoView.getContext());
-                }
-                mClickTime = System.currentTimeMillis();
+                exitFullscreen(context, currentVideoView);
                 return true;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * 退出全屏
+     */
+    public void exitFullscreen(Context context, VideoView videoView) {
+        if ((System.currentTimeMillis() - mClickTime) < CLICK_EVENT_SPAN) {
+            return;
+        }
+        Utils.setRequestedOrientation(videoView.getContext(), videoView.getScreenOrientation());
+        clearFullscreenLayout(videoView.getContext());
+        Utils.showSupportActionBar(context);
+        VideoView parent = videoView.getParentVideoView();
+        if (parent != null && parent.isCurrentPlaying()) {//在常规窗口继续播放
+            playAt(parent);
+            AbsControlPanel controlPanel = parent.getControlPanel();
+            if (controlPanel != null) {
+                controlPanel.notifyStateChange();
+                controlPanel.onExitSecondScreen();
+            }
+        } else {//直接开启的全屏，没有常规窗口
+            releasePlayerAndView(videoView.getContext());
+        }
+        mClickTime = System.currentTimeMillis();
+    }
+
+    /**
+     * 退出小窗
+     */
+    public void exitTinyWindow(Context context, VideoView videoView) {
+        clearTinyLayout(videoView.getContext());
+        VideoView parent = videoView.getParentVideoView();
+        if (parent != null && parent.isCurrentPlaying()) {//在常规窗口继续播放
+            playAt(parent);
+            AbsControlPanel controlPanel = parent.getControlPanel();
+            if (controlPanel != null) {
+                controlPanel.notifyStateChange();
+                controlPanel.onExitSecondScreen();
+            }
+        } else {//直接开启的小屏，没有常规窗口
+            releasePlayerAndView(videoView.getContext());
+        }
+        mClickTime = System.currentTimeMillis();
     }
 
     public void startProgressTimer() {

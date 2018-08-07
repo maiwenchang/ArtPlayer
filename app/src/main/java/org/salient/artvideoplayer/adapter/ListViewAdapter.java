@@ -66,7 +66,7 @@ public class ListViewAdapter extends BaseAdapter {
             VideoView videoView = viewHolder.videoView;
             videoView.setUp(item.getUrl(), VideoView.WindowType.LIST, item);
             ControlPanel controlPanel = (ControlPanel) videoView.getControlPanel();
-            Glide.with(videoView.getContext()).load(item.getImage()).into(controlPanel.getCoverView());
+            Glide.with(videoView.getContext()).load(item.getImage()).into((ImageView) controlPanel.findViewById(R.id.video_cover));
         }
         return convertView;
     }
@@ -91,7 +91,7 @@ public class ListViewAdapter extends BaseAdapter {
                         ControlPanel controlPanel = new ControlPanel(videoView.getContext());
                         tinyVideoView.setControlPanel(controlPanel);
                         //set cover
-                        ImageView coverView = controlPanel.getCoverView();
+                        ImageView coverView = controlPanel.findViewById(R.id.video_cover);
                         Glide.with(controlPanel.getContext()).load(((VideoBean) videoView.getData()).getImage()).into(coverView);
                         //set parent
                         tinyVideoView.setParentVideoView(videoView);

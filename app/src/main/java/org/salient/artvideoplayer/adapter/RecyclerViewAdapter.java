@@ -105,7 +105,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         }
 
         //setCover
-        ImageView coverView = ((ControlPanel) holder.videoView.getControlPanel()).getCoverView();
+        ImageView coverView = ((ControlPanel) holder.videoView.getControlPanel()).findViewById(R.id.video_cover);
         Glide.with(holder.videoView.getContext()).load(videoBean.getImage()).into(coverView);
 
     }

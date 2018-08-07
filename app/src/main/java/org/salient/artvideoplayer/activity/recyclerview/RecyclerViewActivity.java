@@ -106,7 +106,7 @@ public class RecyclerViewActivity extends BaseActivity{
                                     ControlPanel controlPanel = new ControlPanel(videoView.getContext());
                                     tinyVideoView.setControlPanel(controlPanel);
                                     //set cover
-                                    ImageView coverView = controlPanel.getCoverView();
+                                    ImageView coverView = controlPanel.findViewById(R.id.video_cover);
                                     Glide.with(controlPanel.getContext()).load(((VideoBean) videoView.getData()).getImage()).into(coverView);
                                     //set parent
                                     tinyVideoView.setParentVideoView(videoView);
