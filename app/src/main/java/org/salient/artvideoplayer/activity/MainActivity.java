@@ -3,8 +3,11 @@ package org.salient.artvideoplayer.activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,29 +18,31 @@ import org.salient.artplayer.MediaPlayerManager;
 import org.salient.artplayer.VideoView;
 import org.salient.artvideoplayer.BaseActivity;
 import org.salient.artvideoplayer.R;
-import org.salient.artvideoplayer.activity.listview.ListViewActivity;
-import org.salient.artvideoplayer.activity.recyclerview.RecyclerViewActivity;
+import org.salient.artvideoplayer.activity.list.ListActivity;
 import org.salient.controlpanel.ControlPanel;
 
 public class MainActivity extends BaseActivity {
 
     private VideoView videoView;
+    private EditText edUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        videoView = findViewById(R.id.salientVideoView);
+        edUrl = findViewById(R.id.edUrl);
 
+        // note : usage sample
+        videoView = findViewById(R.id.salientVideoView);
         final ControlPanel controlPanel = new ControlPanel(this);
         videoView.setControlPanel(controlPanel);
-        //set title
+        //optional: set title
         TextView tvTitle = controlPanel.findViewById(R.id.tvTitle);
         tvTitle.setText("西虹市首富 百变首富预告");
         //set url
         videoView.setUp("http://vfx.mtime.cn/Video/2018/07/06/mp4/180706094003288023.mp4");
         //videoView.start();
-
+        //optional: set cover
         Glide.with(MainActivity.this)
                 .load("http://img5.mtime.cn/mg/2018/07/06/093947.51483272.jpg")
                 .into((ImageView) controlPanel.findViewById(R.id.video_cover));
@@ -65,8 +70,18 @@ public class MainActivity extends BaseActivity {
 
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.smartModeRecyclerView:
-                startActivity(new Intent(this, RecyclerViewActivity.class));
+            case R.id.play:
+                String url = edUrl.getText().toString();
+                if (!TextUtils.isEmpty(url)) {
+                    videoView.setUp(url);
+                    videoView.start();
+                    TextView tvTitle = videoView.getControlPanel().findViewById(R.id.tvTitle);
+                    tvTitle.setText(url);
+                    ((ImageView) videoView.getControlPanel().findViewById(R.id.video_cover)).setImageResource(0);
+                }
+                break;
+            case R.id.list:
+                startActivity(new Intent(this, ListActivity.class));
                 break;
             case R.id.fullWindow:
                 VideoView videoView = new VideoView(this);
@@ -86,9 +101,6 @@ public class MainActivity extends BaseActivity {
                 layoutParams.setMargins(0, 0, 30, 100);
                 tinyVideoView.start();
                 tinyVideoView.startTinyWindow(layoutParams);
-                break;
-            case R.id.smartModeListView:
-                startActivity(new Intent(this, ListViewActivity.class));
                 break;
         }
     }

@@ -51,11 +51,15 @@
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@id/ivRight"
                 android:layout_toRightOf="@id/ivLeft"
-                android:paddingLeft="15dp"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:paddingBottom="15dp"
+                android:paddingLeft="15dp"
                 android:paddingTop="15dp"
-                android:textSize="15sp"
+                android:singleLine="true"
                 android:textColor="#ffffff"
+                android:textSize="15sp"
                 tools:text="标题" />
 
             <!--required-->

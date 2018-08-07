@@ -25,7 +25,35 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:descendantFocusability="blocksDescendants">
+
+            <EditText
+                android:id="@+id/edUrl"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_weight="1"
+                android:hint="url:"
+                android:inputType="text" />
+
+            <Button
+                android:id="@+id/play"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:onClick="onClick"
+                android:text="play"
+                android:textAllCaps="false" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:descendantFocusability="blocksDescendants">
 
             <Button
                 android:id="@+id/api"
@@ -56,21 +84,21 @@
                 android:textAllCaps="false" />
 
             <Button
-                android:id="@+id/smartModeRecyclerView"
+                android:id="@+id/list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:onClick="onClick"
-                android:text="SmartMode\n--RecyclerView"
+                android:text="List"
                 android:textAllCaps="false" />
 
             <Button
-                android:id="@+id/smartModeListView"
+                android:id="@+id/extension"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:onClick="onClick"
-                android:text="SmartMode\n--ListView(Todo)"
+                android:text="Extension"
                 android:textAllCaps="false" />
 
         </LinearLayout>

@@ -1,4 +1,4 @@
-package org.salient.artvideoplayer.activity.listview;
+package org.salient.artvideoplayer.activity.list;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
