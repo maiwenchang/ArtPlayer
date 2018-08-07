@@ -16,6 +16,7 @@ This is a flexible video player. MediaPlayer is completely separate from VideoVi
 - APP内全局播放
 - 静音
 - 循环播放
+- 手势操作
 
 ### Preview
 #### 列表播放

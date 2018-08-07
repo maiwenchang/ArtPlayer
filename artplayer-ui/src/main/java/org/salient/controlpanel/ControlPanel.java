@@ -5,6 +5,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewParent;
@@ -18,6 +19,7 @@ import android.widget.TextView;
 import org.salient.artplayer.AbsControlPanel;
 import org.salient.artplayer.MediaPlayerManager;
 import org.salient.artplayer.Utils;
+import org.salient.artplayer.VideoGestureListener;
 import org.salient.artplayer.VideoView;
 
 /**
@@ -34,6 +36,7 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
     private final long autoDismissTime = 3000;
     private int mWhat;
     private int mExtra;
+    protected GestureDetector mGestureDetector;
 
     private CheckBox start;
     private CheckBox ivVolume;
@@ -123,6 +126,13 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
                         hideUI(layout_top, layout_bottom, start);
                     }
                 }
+            }
+        });
+        mGestureDetector = new GestureDetector(getContext(),new VideoGestureListener(this));
+        setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return mGestureDetector.onTouchEvent(event);
             }
         });
     }

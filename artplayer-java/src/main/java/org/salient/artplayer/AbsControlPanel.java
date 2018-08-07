@@ -81,6 +81,9 @@ public abstract class AbsControlPanel extends FrameLayout implements MediaStateL
         this.mTarget = target;
     }
 
+    public VideoView getTarget() {
+        return mTarget;
+    }
 
     public void hideUI(View... views) {
         for (View view : views) {
