@@ -7,6 +7,14 @@
     tools:context=".activity.extension.ExtensionActivity">
 
     <Button
+        android:id="@+id/sharpness"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:onClick="onClick"
+        android:text="清晰度切换 Sharpness switching" />
+
+    <Button
         android:id="@+id/ad"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
