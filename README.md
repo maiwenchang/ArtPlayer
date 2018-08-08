@@ -20,10 +20,7 @@ This is a flexible video player. MediaPlayer is completely separate from VideoVi
 
 ### Preview
 #### 列表播放
-
-|keep|pause|stop|minify
-|:---:|:---:|:---:|:---:|
-![image](https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/keep_playing.gif)|![image](https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/pause.gif)|![image](https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/stop.gif)|![image](https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/minify.gif)
+<img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/main.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/mediaplayer.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/api.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/list.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/recyclerview.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/extension.png" height="500"/>
 
 ### Download
 
