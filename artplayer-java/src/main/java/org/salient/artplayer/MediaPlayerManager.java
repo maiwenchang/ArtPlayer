@@ -316,6 +316,10 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
         this.mediaPlayer = mediaPlayer;
     }
 
+    public AbsMediaPlayer getMediaPlayer() {
+        return mediaPlayer;
+    }
+
     /**
      * 拦截返回键
      */

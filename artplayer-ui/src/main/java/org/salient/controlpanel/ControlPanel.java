@@ -187,7 +187,7 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
         start.setChecked(false);
         hideUI(layout_bottom, loading);
         showUI(start);
-        if (mTarget.getWindowType() == VideoView.WindowType.FULLSCREEN) {
+        if (mTarget.getWindowType() == VideoView.WindowType.FULLSCREEN || mTarget.getWindowType() == VideoView.WindowType.TINY) {
             showUI(layout_top);
         }
     }

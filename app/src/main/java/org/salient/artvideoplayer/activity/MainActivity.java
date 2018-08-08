@@ -1,29 +1,38 @@
 package org.salient.artvideoplayer.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.text.Editable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Gravity;
-import android.view.MotionEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import org.salient.artplayer.AbsMediaPlayer;
 import org.salient.artplayer.MediaPlayerManager;
+import org.salient.artplayer.SystemMediaPlayer;
 import org.salient.artplayer.VideoView;
 import org.salient.artvideoplayer.BaseActivity;
 import org.salient.artvideoplayer.R;
+import org.salient.artvideoplayer.activity.api.ApiActivity;
+import org.salient.artvideoplayer.activity.extension.ExtensionActivity;
 import org.salient.artvideoplayer.activity.list.ListActivity;
 import org.salient.controlpanel.ControlPanel;
+
+import java.lang.reflect.Method;
 
 public class MainActivity extends BaseActivity {
 
@@ -35,6 +44,8 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         edUrl = findViewById(R.id.edUrl);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         // note : usage sample
         videoView = findViewById(R.id.salientVideoView);
@@ -91,6 +102,9 @@ public class MainActivity extends BaseActivity {
                     ((ImageView) videoView.getControlPanel().findViewById(R.id.video_cover)).setImageResource(0);
                 }
                 break;
+            case R.id.api:
+                startActivity(new Intent(this, ApiActivity.class));
+                break;
             case R.id.list:
                 startActivity(new Intent(this, ListActivity.class));
                 break;
@@ -115,6 +129,9 @@ public class MainActivity extends BaseActivity {
                 tinyVideoView.start();
                 tinyVideoView.startTinyWindow(layoutParams);
                 break;
+            case R.id.extension:
+                startActivity(new Intent(this, ExtensionActivity.class));
+                break;
         }
     }
 
@@ -122,5 +139,49 @@ public class MainActivity extends BaseActivity {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         hideSoftInput();
+    }
+
+    private Menu mMenu;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_bar_setting, menu);
+        AbsMediaPlayer mediaPlayer = MediaPlayerManager.instance().getMediaPlayer();
+        if (mediaPlayer instanceof SystemMediaPlayer) {
+            menu.getItem(1).getSubMenu().getItem(0).setChecked(true);
+            menu.getItem(0).setTitle("Using: MediaPlayer");
+        } else {
+
+        }
+        mMenu = menu;
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+//        if (item.isChecked()) return super.onOptionsItemSelected(item);
+        int id = item.getItemId();
+        //noinspection SimplifiableIfStatement
+        switch (id) {
+            case R.id.menu_MediaPlayer:
+                mMenu.getItem(0).setTitle("Using: MediaPlayer");
+                if (item.isChecked()) return super.onOptionsItemSelected(item);
+                MediaPlayerManager.instance().releasePlayerAndView(this);
+                MediaPlayerManager.instance().setMediaPlayer(new SystemMediaPlayer());
+                break;
+            case R.id.menu_IjkPlayer:
+                mMenu.getItem(0).setTitle("Using: IjkPlayer");
+                Toast.makeText(this, "coming soon", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.menu_ExoPlayer:
+                mMenu.getItem(0).setTitle("Using: ExoPlayer");
+                Toast.makeText(this, "coming soon", Toast.LENGTH_SHORT).show();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

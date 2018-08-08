@@ -4,38 +4,38 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    tools:context=".activity.api.ApiActivity">
+    tools:context=".activity.extension.ExtensionActivity">
 
     <Button
-        android:id="@+id/common"
+        android:id="@+id/ad"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:onClick="onClick"
-        android:text="常规 Common" />
+        android:text="广告 AD" />
 
     <Button
-        android:id="@+id/rawAssets"
+        android:id="@+id/barrage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:onClick="onClick"
-        android:text="Raw/Assets" />
+        android:text="弹幕 Barrage" />
 
     <Button
-        android:id="@+id/local"
+        android:id="@+id/watermark"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:onClick="onClick"
-        android:text="本地视频 Local video" />
+        android:text="水印 Watermark" />
 
     <Button
-        android:id="@+id/looping"
+        android:id="@+id/projection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:onClick="onClick"
-        android:text="循环 Looping" />
+        android:text="电视投屏 TV projection" />
 
 </LinearLayout>

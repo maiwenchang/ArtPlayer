@@ -16,7 +16,8 @@
             android:name="org.salient.artvideoplayer.activity.MainActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="@string/app_name"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,9 +34,21 @@
             android:configChanges="orientation|screenSize"
             android:label="ListViewActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.list.ListActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.api.ApiActivity" />
+        <activity
+            android:name=".activity.list.ListActivity"
+            android:label="列表播放 ListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.api.ApiActivity"
+            android:label="Api演示 ApiActivity" />
+        <activity
+            android:name=".activity.api.ApiCommonActivity"
+            android:configChanges="orientation|screenSize"
+            android:label="ApiCommonActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.extension.ExtensionActivity"
+            android:label="扩展 ExtensionActivity" />
     </application>
 
 </manifest>

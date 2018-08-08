@@ -12,8 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:onClick="onClick"
-        android:text="RecyclerView"
-        android:textAllCaps="false" />
+        android:text="RecyclerView" />
 
     <Button
         android:id="@+id/listView"
@@ -21,8 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:onClick="onClick"
-        android:text="ListView"
-        android:textAllCaps="false" />
+        android:text="ListView" />
 
     <Button
         android:id="@+id/viewPager"
@@ -30,8 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:onClick="onClick"
-        android:text="ViewPager"
-        android:textAllCaps="false" />
+        android:text="ViewPager" />
 
     <Button
         android:id="@+id/viewPagerRecyclerView"
@@ -39,6 +36,5 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:onClick="onClick"
-        android:text="ViewPager + Fragment + RecyclerView"
-        android:textAllCaps="false" />
+        android:text="ViewPager + Fragment + RecyclerView" />
 </LinearLayout>
