@@ -100,4 +100,69 @@ public abstract class AbsControlPanel extends FrameLayout implements MediaStateL
             }
         }
     }
+
+    @Override
+    public void onStateError() {
+
+    }
+
+    @Override
+    public void onStateIdle() {
+
+    }
+
+    @Override
+    public void onStatePreparing() {
+
+    }
+
+    @Override
+    public void onStatePrepared() {
+
+    }
+
+    @Override
+    public void onStatePlaying() {
+
+    }
+
+    @Override
+    public void onStatePaused() {
+
+    }
+
+    @Override
+    public void onStatePlaybackCompleted() {
+
+    }
+
+    @Override
+    public void onSeekComplete() {
+
+    }
+
+    @Override
+    public void onBufferingUpdate(int progress) {
+
+    }
+
+    @Override
+    public void onInfo(int what, int extra) {
+
+    }
+
+    @Override
+    public void onProgressUpdate(int progress, long position, long duration) {
+
+    }
+
+    @Override
+    public void onEnterSecondScreen() {
+
+    }
+
+    @Override
+    public void onExitSecondScreen() {
+
+    }
 }
