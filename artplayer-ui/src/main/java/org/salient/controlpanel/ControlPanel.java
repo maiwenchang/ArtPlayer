@@ -110,21 +110,14 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
                 if (!mTarget.isCurrentPlaying()) {
                     return;
                 }
-                if ((mTarget.getWindowType() == VideoView.WindowType.NORMAL
-                        || mTarget.getWindowType() == VideoView.WindowType.LIST
-                        || mTarget.getWindowType() == VideoView.WindowType.TINY)
-                        && MediaPlayerManager.instance().getPlayerState() == MediaPlayerManager.PlayerState.PLAYING) {
+                if (MediaPlayerManager.instance().getPlayerState() == MediaPlayerManager.PlayerState.PLAYING) {
+                    cancelDismissTask();
                     if (layout_bottom.getVisibility() != VISIBLE) {
                         showUI(layout_bottom, layout_top, start);
                     } else {
                         hideUI(layout_top, layout_bottom, start);
                     }
-                } else if (mTarget.getWindowType() == VideoView.WindowType.FULLSCREEN && MediaPlayerManager.instance().getPlayerState() == MediaPlayerManager.PlayerState.PLAYING) {
-                    if (layout_bottom.getVisibility() != VISIBLE) {
-                        showUI(layout_top, layout_bottom, start);
-                    } else {
-                        hideUI(layout_top, layout_bottom, start);
-                    }
+                    startDismissTask();
                 }
             }
         });
