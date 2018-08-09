@@ -2,172 +2,145 @@ package org.salient.artplayer;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.TextureView;
-import android.view.View;
 
 /**
- * > Created by Mai on 2018/7/10
- * *
- * > Description:Video display behaves like {@link android.widget.VideoView}
- * *
+ * 用于显示video的，做了横屏与竖屏的匹配，还有需要rotation需求的
  */
+
 public class ResizeTextureView extends TextureView {
-    protected static final String TAG = "ResizeTextureView";
-    public int currentVideoWidth = 0;
-    public int currentVideoHeight = 0;
-    //todo 应该写在attrs declare-styleable 中
-    private VideoImageDisplayType mDisplayType = VideoImageDisplayType.ADAPT;
+
+    private int mVideoWidth;
+
+    private int mVideoHeight;
+
+    private ScaleType screenType = ScaleType.DEFAULT;
 
     public ResizeTextureView(Context context) {
         super(context);
-        currentVideoWidth = 0;
-        currentVideoHeight = 0;
     }
 
     public ResizeTextureView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        currentVideoWidth = 0;
-        currentVideoHeight = 0;
     }
 
-    public void setVideoSize(int currentVideoWidth, int currentVideoHeight) {
-        if (this.currentVideoWidth != currentVideoWidth || this.currentVideoHeight != currentVideoHeight) {
-            this.currentVideoWidth = currentVideoWidth;
-            this.currentVideoHeight = currentVideoHeight;
-            requestLayout();
-        }
+    public void setVideoSize(int width, int height) {
+        mVideoWidth = width;
+        mVideoHeight = height;
+        requestLayout();
     }
 
-    //todo 在VideoView 中调用该方法
-    public void setVideoImageDisplayType(VideoImageDisplayType type) {
-        mDisplayType = type;
+    public void setScreenScale(ScaleType type) {
+        screenType = type;
         requestLayout();
     }
 
     @Override
-    public void setRotation(float rotation) {
-        if (rotation != getRotation()) {
-            super.setRotation(rotation);
-            requestLayout();
-        }
-    }
-
-    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        Log.i(TAG, "onMeasure " + " [" + this.hashCode() + "] ");
-        int viewRotation = (int) getRotation();
-        int videoWidth = currentVideoWidth;
-        int videoHeight = currentVideoHeight;
-
-
-        int parentHeight = ((View) getParent()).getMeasuredHeight();
-        int parentWidth = ((View) getParent()).getMeasuredWidth();
-        if (parentWidth != 0 && parentHeight != 0 && videoWidth != 0 && videoHeight != 0) {
-            if (mDisplayType == VideoImageDisplayType.FILL_PARENT) {
-                if (viewRotation == 90 || viewRotation == 270) {
-                    int tempSize = parentWidth;
-                    parentWidth = parentHeight;
-                    parentHeight = tempSize;
-                }
-                /**强制充满**/
-                videoHeight = videoWidth * parentHeight / parentWidth;
-            }
+//        Log.i("@@@@", "onMeasure(" + MeasureSpec.toString(widthMeasureSpec) + ", "
+//                + MeasureSpec.toString(heightMeasureSpec) + ")");
+        if (getRotation() == 90 || getRotation() == 270) { // 软解码时处理旋转信息，交换宽高
+            widthMeasureSpec = widthMeasureSpec + heightMeasureSpec;
+            heightMeasureSpec = widthMeasureSpec - heightMeasureSpec;
+            widthMeasureSpec = widthMeasureSpec - heightMeasureSpec;
         }
 
-        // 如果判断成立，则说明显示的TextureView和本身的位置是有90度的旋转的，所以需要交换宽高参数。
-        if (viewRotation == 90 || viewRotation == 270) {
-            int tempMeasureSpec = widthMeasureSpec;
-            widthMeasureSpec = heightMeasureSpec;
-            heightMeasureSpec = tempMeasureSpec;
-        }
+        int width = getDefaultSize(mVideoWidth, widthMeasureSpec);
+        int height = getDefaultSize(mVideoHeight, heightMeasureSpec);
 
-        int width = getDefaultSize(videoWidth, widthMeasureSpec);
-        int height = getDefaultSize(videoHeight, heightMeasureSpec);
-        if (videoWidth > 0 && videoHeight > 0) {
+//        Log.d("@@@@", "onMeasure: width" + width + "    height:" + height);
 
-            int widthSpecMode = MeasureSpec.getMode(widthMeasureSpec);
-            int widthSpecSize = MeasureSpec.getSize(widthMeasureSpec);
-            int heightSpecMode = MeasureSpec.getMode(heightMeasureSpec);
-            int heightSpecSize = MeasureSpec.getSize(heightMeasureSpec);
+        //如果设置了比例
+        switch (screenType) {
+            case SCALE_ORIGINAL:
+                width = mVideoWidth;
+                height = mVideoHeight;
+                break;
+            case SCALE_16_9:
+                if (height > width / 16 * 9) {
+                    height = width / 16 * 9;
+                } else {
+                    width = height / 9 * 16;
+                }
+                break;
+            case SCALE_4_3:
+                if (height > width / 4 * 3) {
+                    height = width / 4 * 3;
+                } else {
+                    width = height / 3 * 4;
+                }
+//                Log.d("@@@@", "onMeasure 4:3 : width" + width + "    height:" + height);
+                break;
+            case SCALE_MATCH_PARENT:
+                width = widthMeasureSpec;
+                height = heightMeasureSpec;
+                break;
+            case SCALE_CENTER_CROP:
+                if (mVideoWidth > 0 && mVideoHeight > 0) {
+                    if (mVideoWidth * height > width * mVideoHeight) {
+                        width = height * mVideoWidth / mVideoHeight;
+                    } else {
+                        height = width * mVideoHeight / mVideoWidth;
+                    }
+                }
+                break;
+            case DEFAULT:
+                if (mVideoWidth > 0 && mVideoHeight > 0) {
 
-            Log.i(TAG, "widthMeasureSpec  [" + MeasureSpec.toString(widthMeasureSpec) + "]");
-            Log.i(TAG, "heightMeasureSpec [" + MeasureSpec.toString(heightMeasureSpec) + "]");
+                    int widthSpecMode = MeasureSpec.getMode(widthMeasureSpec);
+                    int widthSpecSize = MeasureSpec.getSize(widthMeasureSpec);
+                    int heightSpecMode = MeasureSpec.getMode(heightMeasureSpec);
+                    int heightSpecSize = MeasureSpec.getSize(heightMeasureSpec);
 
-            if (widthSpecMode == MeasureSpec.EXACTLY && heightSpecMode == MeasureSpec.EXACTLY) {
-                // the size is fixed
-                width = widthSpecSize;
-                height = heightSpecSize;
-                // for compatibility, we adjust size based on aspect ratio
-                if (videoWidth * height < width * videoHeight) {
-                    width = height * videoWidth / videoHeight;
-                } else if (videoWidth * height > width * videoHeight) {
-                    height = width * videoHeight / videoWidth;
+                    if (widthSpecMode == MeasureSpec.EXACTLY && heightSpecMode == MeasureSpec.EXACTLY) {
+                        // the size is fixed
+                        width = widthSpecSize;
+                        height = heightSpecSize;
+
+                        // for compatibility, we adjust size based on aspect ratio
+                        if (mVideoWidth * height < width * mVideoHeight) {
+                            //Log.i("@@@", "image too wide, correcting");
+                            width = height * mVideoWidth / mVideoHeight;
+                        } else if (mVideoWidth * height > width * mVideoHeight) {
+                            //Log.i("@@@", "image too tall, correcting");
+                            height = width * mVideoHeight / mVideoWidth;
+                        }
+                    } else if (widthSpecMode == MeasureSpec.EXACTLY) {
+                        // only the width is fixed, adjust the height to match aspect ratio if possible
+                        width = widthSpecSize;
+                        height = width * mVideoHeight / mVideoWidth;
+                        if (heightSpecMode == MeasureSpec.AT_MOST && height > heightSpecSize) {
+                            // couldn't match aspect ratio within the constraints
+                            height = heightSpecSize;
+                        }
+                    } else if (heightSpecMode == MeasureSpec.EXACTLY) {
+                        // only the height is fixed, adjust the width to match aspect ratio if possible
+                        height = heightSpecSize;
+                        width = height * mVideoWidth / mVideoHeight;
+                        if (widthSpecMode == MeasureSpec.AT_MOST && width > widthSpecSize) {
+                            // couldn't match aspect ratio within the constraints
+                            width = widthSpecSize;
+                        }
+                    } else {
+                        // neither the width nor the height are fixed, try to use actual video size
+                        width = mVideoWidth;
+                        height = mVideoHeight;
+                        if (heightSpecMode == MeasureSpec.AT_MOST && height > heightSpecSize) {
+                            // too tall, decrease both width and height
+                            height = heightSpecSize;
+                            width = height * mVideoWidth / mVideoHeight;
+                        }
+                        if (widthSpecMode == MeasureSpec.AT_MOST && width > widthSpecSize) {
+                            // too wide, decrease both width and height
+                            width = widthSpecSize;
+                            height = width * mVideoHeight / mVideoWidth;
+                        }
+                    }
+                } else {
+                    // no size yet, just adopt the given spec sizes
                 }
-            } else if (widthSpecMode == MeasureSpec.EXACTLY) {
-                // only the width is fixed, adjust the height to match aspect ratio if possible
-                width = widthSpecSize;
-                height = width * videoHeight / videoWidth;
-                if (heightSpecMode == MeasureSpec.AT_MOST && height > heightSpecSize) {
-                    // couldn't match aspect ratio within the constraints
-                    height = heightSpecSize;
-                    width = height * videoWidth / videoHeight;
-                }
-            } else if (heightSpecMode == MeasureSpec.EXACTLY) {
-                // only the height is fixed, adjust the width to match aspect ratio if possible
-                height = heightSpecSize;
-                width = height * videoWidth / videoHeight;
-                if (widthSpecMode == MeasureSpec.AT_MOST && width > widthSpecSize) {
-                    // couldn't match aspect ratio within the constraints
-                    width = widthSpecSize;
-                    height = width * videoHeight / videoWidth;
-                }
-            } else {
-                // neither the width nor the height are fixed, try to use actual video size
-                width = videoWidth;
-                height = videoHeight;
-                if (heightSpecMode == MeasureSpec.AT_MOST && height > heightSpecSize) {
-                    // too tall, decrease both width and height
-                    height = heightSpecSize;
-                    width = height * videoWidth / videoHeight;
-                }
-                if (widthSpecMode == MeasureSpec.AT_MOST && width > widthSpecSize) {
-                    // too wide, decrease both width and height
-                    width = widthSpecSize;
-                    height = width * videoHeight / videoWidth;
-                }
-            }
-        } else {
-            // no size yet, just adopt the given spec sizes
-        }
-        if (parentWidth != 0 && parentHeight != 0 && videoWidth != 0 && videoHeight != 0) {
-            if (mDisplayType == VideoImageDisplayType.ORIGINAL) {
-                /**原图**/
-                height = videoHeight;
-                width = videoWidth;
-            } else if (mDisplayType == VideoImageDisplayType.FILL_CROP) {
-                if (viewRotation == 90 || viewRotation == 270) {
-                    int tempSize = parentWidth;
-                    parentWidth = parentHeight;
-                    parentHeight = tempSize;
-                }
-                /**充满剪切**/
-                if (((double) videoHeight / videoWidth) > ((double) parentHeight / parentWidth)) {
-                    height = (int) (((double) parentWidth / (double) width * (double) height));
-                    width = parentWidth;
-                } else if (((double) videoHeight / videoWidth) < ((double) parentHeight / parentWidth)) {
-                    width = (int) (((double) parentHeight / (double) height * (double) width));
-                    height = parentHeight;
-                }
-            }
+                break;
         }
         setMeasuredDimension(width, height);
-    }
-
-    enum VideoImageDisplayType {
-        ADAPT,
-        FILL_PARENT,
-        FILL_CROP,
-        ORIGINAL
     }
 }

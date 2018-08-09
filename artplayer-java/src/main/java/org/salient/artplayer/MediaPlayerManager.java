@@ -251,10 +251,13 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     public void onVideoSizeChanged(int width, int height) {
         Log.i(TAG, "onVideoSizeChanged " + " [" + this.hashCode() + "] ");
         if (textureView != null) {
-//            if (videoRotation != 0) {
-//                textureView.setRotation(videoRotation);
-//            }
             textureView.setVideoSize(width, height);
+        }
+    }
+
+    public void setScreenScale(ScaleType scaleType) {
+        if (textureView != null) {
+            textureView.setScreenScale(scaleType);
         }
     }
 

@@ -5,24 +5,25 @@
     <item
         android:checked="true"
         app:showAsAction="ifRoom"
-        android:title="Using: MediaPlayer"
+        android:title="MediaPlayer"
         android:checkable="false"/>
     <item android:title=""
-        app:showAsAction="never">
+        android:icon="@android:drawable/ic_menu_more"
+        app:showAsAction="always|collapseActionView">
         <menu>
             <group android:checkableBehavior="single">
                 <item
                     android:id="@+id/menu_MediaPlayer"
                     android:checked="true"
-                    app:showAsAction="ifRoom"
+                    app:showAsAction="always"
                     android:title="MediaPlayer" />
                 <item
                     android:id="@+id/menu_IjkPlayer"
-                    app:showAsAction="ifRoom"
+                    app:showAsAction="always"
                     android:title="IjkPlayer" />
                 <item
                     android:id="@+id/menu_ExoPlayer"
-                    app:showAsAction="ifRoom"
+                    app:showAsAction="always"
                     android:title="ExoPlayer" />
             </group>
         </menu>
