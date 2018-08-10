@@ -12,7 +12,7 @@ import org.salient.artplayer.ScaleType;
 import org.salient.artplayer.VideoView;
 import org.salient.artvideoplayer.BaseActivity;
 import org.salient.artvideoplayer.R;
-import org.salient.controlpanel.ControlPanel;
+import org.salient.artplayer.ui.ControlPanel;
 
 /**
  * Created by Mai on 2018/8/8

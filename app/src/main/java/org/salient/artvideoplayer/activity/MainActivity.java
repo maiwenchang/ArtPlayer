@@ -3,10 +3,7 @@ package org.salient.artvideoplayer.activity;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -30,9 +27,7 @@ import org.salient.artvideoplayer.R;
 import org.salient.artvideoplayer.activity.api.ApiActivity;
 import org.salient.artvideoplayer.activity.extension.ExtensionActivity;
 import org.salient.artvideoplayer.activity.list.ListActivity;
-import org.salient.controlpanel.ControlPanel;
-
-import java.lang.reflect.Method;
+import org.salient.artplayer.ui.ControlPanel;
 
 public class MainActivity extends BaseActivity {
 

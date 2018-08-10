@@ -17,7 +17,7 @@ import org.salient.artplayer.OnWindowDetachedListener;
 import org.salient.artplayer.VideoView;
 import org.salient.artvideoplayer.R;
 import org.salient.artvideoplayer.bean.VideoBean;
-import org.salient.controlpanel.ControlPanel;
+import org.salient.artplayer.ui.ControlPanel;
 
 import java.util.ArrayList;
 import java.util.List;

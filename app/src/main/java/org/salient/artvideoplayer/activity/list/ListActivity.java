@@ -1,17 +1,12 @@
 package org.salient.artvideoplayer.activity.list;
 
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.FrameLayout;
 
-import org.salient.artplayer.VideoView;
 import org.salient.artvideoplayer.BaseActivity;
 import org.salient.artvideoplayer.R;
-import org.salient.controlpanel.ControlPanel;
 
 /**
  * Created by Mai on 2018/8/7

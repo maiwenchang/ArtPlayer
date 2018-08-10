@@ -22,7 +22,7 @@ import org.salient.artvideoplayer.DensityUtil;
 import org.salient.artvideoplayer.R;
 import org.salient.artvideoplayer.adapter.RecyclerViewAdapter;
 import org.salient.artvideoplayer.bean.VideoBean;
-import org.salient.controlpanel.ControlPanel;
+import org.salient.artplayer.ui.ControlPanel;
 
 /**
  * > Created by Mai on 2018/7/17

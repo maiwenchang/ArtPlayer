@@ -1,6 +1,5 @@
 package org.salient.artvideoplayer.adapter;
 
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,13 +10,12 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
-import org.salient.artplayer.Comparator;
 import org.salient.artplayer.MediaPlayerManager;
 import org.salient.artplayer.OnWindowDetachedListener;
 import org.salient.artplayer.VideoView;
 import org.salient.artvideoplayer.R;
 import org.salient.artvideoplayer.bean.VideoBean;
-import org.salient.controlpanel.ControlPanel;
+import org.salient.artplayer.ui.ControlPanel;
 
 import java.util.List;
 
