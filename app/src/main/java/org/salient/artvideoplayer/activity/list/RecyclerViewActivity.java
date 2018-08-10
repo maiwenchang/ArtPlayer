@@ -133,7 +133,7 @@ public class RecyclerViewActivity extends BaseActivity{
 
     @Override
     public void onBackPressed() {
-        if (MediaPlayerManager.instance().backPress(this)) {
+        if (MediaPlayerManager.instance().backPress()) {
             return;
         }
         if (recycler_view.getVisibility() == View.VISIBLE) {

@@ -5,10 +5,7 @@ import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
 
 import org.salient.artplayer.MediaPlayerManager;
 import org.salient.artplayer.ScaleType;

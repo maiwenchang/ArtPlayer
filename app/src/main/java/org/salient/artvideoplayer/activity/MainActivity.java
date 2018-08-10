@@ -71,7 +71,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (MediaPlayerManager.instance().backPress(this)) {
+        if (MediaPlayerManager.instance().backPress()) {
             return;
         }
         super.onBackPressed();

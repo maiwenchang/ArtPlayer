@@ -300,9 +300,9 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
         if (id == R.id.ivLeft) {
             if (mTarget == null) return;
             if (mTarget.getWindowType() == VideoView.WindowType.FULLSCREEN) {
-                MediaPlayerManager.instance().exitFullscreen(getContext(), mTarget);
+                mTarget.exitFullscreen();
             } else if (mTarget.getWindowType() == VideoView.WindowType.TINY) {
-                MediaPlayerManager.instance().exitTinyWindow(getContext(), mTarget);
+                mTarget.exitTinyWindow();
             }
         } else if (id == R.id.ivRight) {
             if (mTarget == null) return;

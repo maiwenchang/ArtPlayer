@@ -169,6 +169,44 @@ public class VideoView extends FrameLayout {
         }
     }
 
+    /**
+     * 退出全屏
+     */
+    public void exitFullscreen() {
+        Utils.setRequestedOrientation(getContext(), getScreenOrientation());
+        MediaPlayerManager.instance().clearFullscreenLayout(getContext());
+        Utils.showSupportActionBar(getContext());
+        VideoView parent = getParentVideoView();
+        if (parent != null && parent.isCurrentPlaying()) {//在常规窗口继续播放
+            MediaPlayerManager.instance().playAt(parent);
+            AbsControlPanel controlPanel = parent.getControlPanel();
+            if (controlPanel != null) {
+                controlPanel.notifyStateChange();
+                controlPanel.onExitSecondScreen();
+            }
+        } else {//直接开启的全屏，没有常规窗口
+            MediaPlayerManager.instance().releasePlayerAndView(getContext());
+        }
+    }
+
+    /**
+     * 退出小窗
+     */
+    public void exitTinyWindow() {
+        MediaPlayerManager.instance().clearTinyLayout(getContext());
+        VideoView parent = getParentVideoView();
+        if (parent != null && parent.isCurrentPlaying()) {//在常规窗口继续播放
+            MediaPlayerManager.instance().playAt(parent);
+            AbsControlPanel controlPanel = parent.getControlPanel();
+            if (controlPanel != null) {
+                controlPanel.notifyStateChange();
+                controlPanel.onExitSecondScreen();
+            }
+        } else {//直接开启的小屏，没有常规窗口
+            MediaPlayerManager.instance().releasePlayerAndView(getContext());
+        }
+    }
+
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();

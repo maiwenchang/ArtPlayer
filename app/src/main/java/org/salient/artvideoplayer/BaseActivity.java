@@ -77,7 +77,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (MediaPlayerManager.instance().backPress(this)) {
+        if (MediaPlayerManager.instance().backPress()) {
             return;
         }
         super.onBackPressed();
