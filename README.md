@@ -1,3 +1,4 @@
+English | [简体中文](./README.zh-CN.md)
 # ArtVideoPlayer
 
 [![API](https://img.shields.io/badge/API-16%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=16)
@@ -6,17 +7,14 @@
 ###
 This is a flexible video player. MediaPlayer is completely separate from VideoView and can be replaced with other player kernels such as ExoPlayer and ijkPlayer. Developers can fully customize the player view, which we call the control panel. In addition, developers can use MediaPlayerManager to control playback behaviours, such as full-screen mode, small screen mode, and smart matching modes in RecyclerView.
 
-###
-这是一个灵活的视频播放器。 MediaPlayer与VideoView完全分开，可以替换为其他播放器内核，如ExoPlayer和ijkPlayer。 可以完全自定义播放器视图，我们称之为控制面板。 此外，可以使用MediaPlayerManager来控制播放行为，例如全屏模式，小屏幕模式以及RecyclerView中的智能匹配模式。
-
 ### Features
-- 全屏，小屏播放
-- 内部支持RecyclerView中播放
-- 自定义UI
-- APP内全局播放
-- 静音
-- 循环播放
-- 手势操作（小窗：单指拖动，双指缩放；全屏：音量，亮度，快进）
+- Fullscreen,TinyWindow play
+- Support for playing in RecyclerView
+- Custom UI
+- Global playback in APP
+- Mute
+- Loop Playback
+- Gesture manipulation (small window: single finger drag, double finger zoom; full screen: volume, brightness, fast forward)
 
 ### Preview
 <img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/main.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/mediaplayer.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/api.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/list.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/recyclerview.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/extension.png" height="500"/>
@@ -90,20 +88,18 @@ protected void onDestroy() {
  ```
 
 ### ON-PLAN
-- 视频画面比例
-- ijkPlayer支持
-- ExoPlayer支持
-- 音频播放
-- Kotlin版本
+- Video picture ratio
+- ijkPlayer support
+- ExoPlayer support
+- Audio playback
+- Kotlin version
 
 ### NOT-ON-PLAN(不在计划)
 - Multiple MediaPlayer playback
-- 多播放器播放
 
 
 ### Support (支持) ###
-- Public technical discussion on github is preferred.
-- 请在 github 上公开讨论[技术问题](https://github.com/maiwenchang/ArtVideoPlayer/issues)
+- Public technical discussion on github is preferred.[Technical problems](https://github.com/maiwenchang/ArtVideoPlayer/issues)
 
 
 ### My Build Environment
