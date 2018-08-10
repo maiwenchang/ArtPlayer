@@ -15,6 +15,8 @@ This is a flexible video player. MediaPlayer is completely separate from VideoVi
 - Mute
 - Loop Playback
 - Gesture manipulation (small window: single finger drag, double finger zoom; full screen: volume, brightness, fast forward)
+- ijkPlayer support
+- ExoPlayer support
 
 ### Preview
 <img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/main.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/mediaplayer.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/api.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/list.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/recyclerview.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/extension.png" height="500"/>
@@ -88,9 +90,6 @@ protected void onDestroy() {
  ```
 
 ### ON-PLAN
-- Video picture ratio
-- ijkPlayer support
-- ExoPlayer support
 - Audio playback
 - Kotlin version
 

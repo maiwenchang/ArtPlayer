@@ -15,6 +15,8 @@
 - 静音
 - 循环播放
 - 手势操作（小窗：单指拖动，双指缩放；全屏：音量，亮度，快进）
+- ijkPlayer支持
+- ExoPlayer支持
 
 ### Preview
 <img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/main.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/mediaplayer.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/api.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/list.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/recyclerview.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/extension.png" height="500"/>
@@ -88,9 +90,6 @@ protected void onDestroy() {
  ```
 
 ### ON-PLAN
-- 视频画面比例
-- ijkPlayer支持
-- ExoPlayer支持
 - 音频播放
 - Kotlin版本
 
