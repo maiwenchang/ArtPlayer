@@ -263,8 +263,11 @@ public class VideoView extends FrameLayout {
                 case ERROR:
                     play();
                     break;
-                case PREPARED:
                 case PLAYBACK_COMPLETED: // 重播
+                    MediaPlayerManager.instance().seekTo(0);
+                    MediaPlayerManager.instance().start();
+                    break;
+                case PREPARED:
                 case PAUSED://从暂停状态恢复播放
                     MediaPlayerManager.instance().start();
                     break;

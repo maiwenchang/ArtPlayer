@@ -1,4 +1,4 @@
-package org.salient.controlpanel;
+package org.salient.artplayer.ui;
 
 import android.content.Context;
 import android.content.pm.ActivityInfo;

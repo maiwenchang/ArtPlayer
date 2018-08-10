@@ -4,23 +4,20 @@ import android.app.Service;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
-import android.media.MediaPlayer;
 import android.view.Surface;
 
-import java.lang.reflect.Method;
-import java.util.Map;
+import tv.danmaku.ijk.media.player.IMediaPlayer;
+import tv.danmaku.ijk.media.player.misc.IMediaDataSource;
 
 /**
- * > Created by Mai on 2018/7/10
+ * Created by Mai on 2018/8/10
  * *
- * > Description: 系统默认播放器
+ * Description: IjkMediaPlayer for ArtVideoPlayer
  * *
  */
-public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener,
-        MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnSeekCompleteListener, MediaPlayer.OnErrorListener,
-        MediaPlayer.OnInfoListener, MediaPlayer.OnVideoSizeChangedListener {
+public class IjkPlayer extends AbsMediaPlayer implements IMediaPlayer.OnPreparedListener, IMediaPlayer.OnCompletionListener, IMediaPlayer.OnBufferingUpdateListener, IMediaPlayer.OnSeekCompleteListener, IMediaPlayer.OnErrorListener, IMediaPlayer.OnInfoListener, IMediaPlayer.OnVideoSizeChangedListener {
 
-    private MediaPlayer mediaPlayer;
+    private tv.danmaku.ijk.media.player.IjkMediaPlayer mediaPlayer;
 
     @Override
     public void start() {
@@ -38,7 +35,7 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
     public void prepare() {
         try {
             MediaPlayerManager.instance().updateState(MediaPlayerManager.PlayerState.PREPARING);
-            mediaPlayer = new MediaPlayer();
+            mediaPlayer = new tv.danmaku.ijk.media.player.IjkMediaPlayer();
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setOnPreparedListener(this);
             mediaPlayer.setOnCompletionListener(this);
@@ -57,11 +54,11 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
             Object dataSource = getDataSource();
             if (dataSource != null && dataSource instanceof AssetFileDescriptor) {//Android assets file
                 AssetFileDescriptor fd = (AssetFileDescriptor) dataSource;
-                mediaPlayer.setDataSource(fd.getFileDescriptor(), fd.getStartOffset(), fd.getLength());
+                mediaPlayer.setDataSource(fd.getFileDescriptor());
+            } else if (dataSource != null && dataSource instanceof RawDataSourceProvider) {// Android raw file
+                mediaPlayer.setDataSource((IMediaDataSource) dataSource);
             } else if (dataSource != null && getHeaders() != null) {//url with headers
-                Class<MediaPlayer> clazz = MediaPlayer.class;
-                Method method = clazz.getDeclaredMethod("setDataSource", String.class, Map.class);
-                method.invoke(mediaPlayer, dataSource.toString(), getHeaders());
+                mediaPlayer.setDataSource(dataSource.toString(), getHeaders());
             } else if (dataSource != null) {
                 mediaPlayer.setDataSource(dataSource.toString());
             }
@@ -217,38 +214,38 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
     }
 
     @Override
-    public void onPrepared(MediaPlayer mediaPlayer) {
+    public void onPrepared(IMediaPlayer iMediaPlayer) {
         MediaPlayerManager.instance().updateState(MediaPlayerManager.PlayerState.PREPARED);
         MediaPlayerManager.instance().start();
     }
 
     @Override
-    public void onCompletion(MediaPlayer mediaPlayer) {
+    public void onCompletion(IMediaPlayer iMediaPlayer) {
         MediaPlayerManager.instance().updateState(MediaPlayerManager.PlayerState.PLAYBACK_COMPLETED);
     }
 
     @Override
-    public void onBufferingUpdate(MediaPlayer mediaPlayer, final int percent) {
+    public void onBufferingUpdate(IMediaPlayer iMediaPlayer, int percent) {
         if (MediaPlayerManager.instance().getCurrentControlPanel() != null) {
             MediaPlayerManager.instance().getCurrentControlPanel().onBufferingUpdate(percent);
         }
     }
 
     @Override
-    public void onSeekComplete(MediaPlayer mediaPlayer) {
+    public void onSeekComplete(IMediaPlayer iMediaPlayer) {
         if (MediaPlayerManager.instance().getCurrentControlPanel() != null) {
             MediaPlayerManager.instance().getCurrentControlPanel().onSeekComplete();
         }
     }
 
     @Override
-    public boolean onError(MediaPlayer mediaPlayer, final int what, final int extra) {
+    public boolean onError(IMediaPlayer iMediaPlayer, int i, int i1) {
         MediaPlayerManager.instance().updateState(MediaPlayerManager.PlayerState.ERROR);
         return true;
     }
 
     @Override
-    public boolean onInfo(MediaPlayer mediaPlayer, final int what, final int extra) {
+    public boolean onInfo(IMediaPlayer iMediaPlayer, int what, int extra) {
         if (MediaPlayerManager.instance().getCurrentControlPanel() != null) {
             MediaPlayerManager.instance().getCurrentControlPanel().onInfo(what, extra);
         }
@@ -256,7 +253,31 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
     }
 
     @Override
-    public void onVideoSizeChanged(MediaPlayer mediaPlayer, int width, int height) {
-        MediaPlayerManager.instance().onVideoSizeChanged(width, height);
+    public void onVideoSizeChanged(IMediaPlayer iMediaPlayer, int i, int i1, int i2, int i3) {
+        int videoWidth = iMediaPlayer.getVideoWidth();
+        int videoHeight = iMediaPlayer.getVideoHeight();
+        if (videoWidth != 0 && videoHeight != 0) {
+            MediaPlayerManager.instance().onVideoSizeChanged(videoWidth, videoHeight);
+        }
     }
+
+    // +++++++++++++++++++++++++++++ ijk only ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+    public void setSpeed(float speed) {
+        mediaPlayer.setSpeed(speed);
+    }
+
+
+    public long getTcpSpeed() {
+        return mediaPlayer.getTcpSpeed();
+    }
+
+    public void setEnableMediaCodec(boolean isEnable) {
+        int value = isEnable ? 1 : 0;
+        mediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", value);//开启硬解码
+        mediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-auto-rotate", value);
+        mediaPlayer.setOption(tv.danmaku.ijk.media.player.IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec-handle-resolution-change", value);
+    }
+
+    // +++++++++++++++++++++++++++++ ijk only ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 }

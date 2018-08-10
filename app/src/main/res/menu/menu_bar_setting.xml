@@ -5,7 +5,7 @@
     <item
         android:checked="true"
         app:showAsAction="ifRoom"
-        android:title="MediaPlayer"
+        android:title="Using: MediaPlayer"
         android:checkable="false"/>
     <item android:title=""
         android:icon="@android:drawable/ic_menu_more"

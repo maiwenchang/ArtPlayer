@@ -24,3 +24,9 @@ allprojects {
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+
+ext {
+    // App dependencies
+    supportLibraryVersion = '27.1.0'
+    ijkPlayerVersion = '0.8.8'
+}

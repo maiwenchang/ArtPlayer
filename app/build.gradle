@@ -35,9 +35,9 @@ android {
 
     dependencies {
         implementation fileTree(include: ['*.jar'], dir: 'libs')
-        implementation 'com.android.support:appcompat-v7:27.1.0'
+        implementation "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
         //design
-        implementation 'com.android.support:design:27.1.0'
+        implementation "com.android.support:design:$rootProject.supportLibraryVersion"
         implementation 'com.android.support.constraint:constraint-layout:1.1.2'
         //FlexboxLayout
         implementation 'com.google.android:flexbox:1.0.0'
@@ -54,8 +54,21 @@ android {
         implementation project(':artplayer-java')
         implementation project(':artplayer-ui')
 
-        //implementation 'org.salient.artvideoplayer:artplayer-java:0.4'
-        //implementation 'org.salient.artvideoplayer:artplayer-ui:0.4'
+        //ijkPlayer: optional
+        implementation "tv.danmaku.ijk.media:ijkplayer-java:$rootProject.ijkPlayerVersion"
+        implementation "tv.danmaku.ijk.media:ijkplayer-armv7a:$rootProject.ijkPlayerVersion"
+
+         //Other ABIs: optional
+        implementation "tv.danmaku.ijk.media:ijkplayer-armv5:$rootProject.ijkPlayerVersion"
+        //implementation "tv.danmaku.ijk.media:ijkplayer-arm64:$rootProject.ijkPlayerVersion"
+        implementation "tv.danmaku.ijk.media:ijkplayer-x86:$rootProject.ijkPlayerVersion"
+        //implementation "tv.danmaku.ijk.media:ijkplayer-x86_64:$rootProject.ijkPlayerVersion"
+
+        // ExoPlayer as IMediaPlayer: optional, experimental
+        implementation "tv.danmaku.ijk.media:ijkplayer-exo:$rootProject.ijkPlayerVersion"
+
+        //implementation 'org.salient.artvideoplayer:artplayer-java:0.5'
+        //implementation 'org.salient.artvideoplayer:artplayer-ui:0.5'
     }
 }
 

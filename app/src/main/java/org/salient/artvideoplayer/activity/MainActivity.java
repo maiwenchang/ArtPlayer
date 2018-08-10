@@ -19,15 +19,17 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import org.salient.artplayer.AbsMediaPlayer;
+import org.salient.artplayer.ExoPlayer;
+import org.salient.artplayer.IjkPlayer;
 import org.salient.artplayer.MediaPlayerManager;
 import org.salient.artplayer.SystemMediaPlayer;
 import org.salient.artplayer.VideoView;
+import org.salient.artplayer.ui.ControlPanel;
 import org.salient.artvideoplayer.BaseActivity;
 import org.salient.artvideoplayer.R;
 import org.salient.artvideoplayer.activity.api.ApiActivity;
 import org.salient.artvideoplayer.activity.extension.ExtensionActivity;
 import org.salient.artvideoplayer.activity.list.ListActivity;
-import org.salient.artplayer.ui.ControlPanel;
 
 public class MainActivity extends BaseActivity {
 
@@ -139,16 +141,31 @@ public class MainActivity extends BaseActivity {
     private Menu mMenu;
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        if (mMenu == null) return super.onMenuOpened(featureId, menu);
+        AbsMediaPlayer mediaPlayer = MediaPlayerManager.instance().getMediaPlayer();
+        if (mediaPlayer instanceof SystemMediaPlayer) {
+            mMenu.getItem(1).getSubMenu().getItem(0).setChecked(true);
+            mMenu.getItem(0).setTitle("Using: MediaPlayer");
+        } else if (mediaPlayer instanceof IjkPlayer) {
+            mMenu.getItem(1).getSubMenu().getItem(1).setChecked(true);
+            mMenu.getItem(0).setTitle("Using: IjkPlayer");
+        } else if (mediaPlayer instanceof ExoPlayer) {
+            mMenu.getItem(1).getSubMenu().getItem(2).setChecked(true);
+            mMenu.getItem(0).setTitle("Using: ExoPlayer");
+        }
+        return super.onMenuOpened(featureId, mMenu);
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_bar_setting, menu);
-        AbsMediaPlayer mediaPlayer = MediaPlayerManager.instance().getMediaPlayer();
-        if (mediaPlayer instanceof SystemMediaPlayer) {
-            menu.getItem(1).getSubMenu().getItem(0).setChecked(true);
-            menu.getItem(0).setTitle("Using: MediaPlayer");
-        } else {
-
-        }
         mMenu = menu;
         return true;
     }
@@ -158,23 +175,22 @@ public class MainActivity extends BaseActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-//        if (item.isChecked()) return super.onOptionsItemSelected(item);
+        if (item.isChecked()) return super.onOptionsItemSelected(item);
+        MediaPlayerManager.instance().releasePlayerAndView(this);
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         switch (id) {
             case R.id.menu_MediaPlayer:
                 mMenu.getItem(0).setTitle("Using: MediaPlayer");
-                if (item.isChecked()) return super.onOptionsItemSelected(item);
-                MediaPlayerManager.instance().releasePlayerAndView(this);
                 MediaPlayerManager.instance().setMediaPlayer(new SystemMediaPlayer());
                 break;
             case R.id.menu_IjkPlayer:
                 mMenu.getItem(0).setTitle("Using: IjkPlayer");
-                Toast.makeText(this, "coming soon", Toast.LENGTH_SHORT).show();
+                MediaPlayerManager.instance().setMediaPlayer(new IjkPlayer());
                 break;
             case R.id.menu_ExoPlayer:
                 mMenu.getItem(0).setTitle("Using: ExoPlayer");
-                Toast.makeText(this, "coming soon", Toast.LENGTH_SHORT).show();
+                MediaPlayerManager.instance().setMediaPlayer(new ExoPlayer(this));
                 break;
         }
         return super.onOptionsItemSelected(item);
