@@ -2,6 +2,7 @@ package org.salient.artplayer;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -39,16 +40,6 @@ public abstract class AbsControlPanel extends FrameLayout implements MediaStateL
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
         super.onLayout(changed, l, t, r, b);
-//        if (mTarget == null) {
-//            ViewParent viewParent = getParent();
-//            if (viewParent != null) {
-//                ViewGroup parent = (ViewGroup) viewParent;
-//                if (parent instanceof VideoView) {
-//                    VideoView videoView = (VideoView) parent;
-//                    videoView.setControlPanel(this);
-//                }
-//            }
-//        }
     }
 
     public void notifyStateChange() {
@@ -164,5 +155,15 @@ public abstract class AbsControlPanel extends FrameLayout implements MediaStateL
     @Override
     public void onExitSecondScreen() {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        return false;
     }
 }
