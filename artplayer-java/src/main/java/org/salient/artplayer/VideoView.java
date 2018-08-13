@@ -41,12 +41,11 @@ public class VideoView extends FrameLayout {
     private AbsControlPanel mControlPanel;
     private WindowType mWindowType = WindowType.NORMAL;
     private OnWindowDetachedListener mDetachedListener;
-    private boolean mSmartMode = true;
     private VideoView mParentVideoView = null;
 
     //api attribute
-    public int widthRatio = 0;
-    public int heightRatio = 0;
+//    public int widthRatio = 0;
+//    public int heightRatio = 0;
 
     private Comparator mComparator = new Comparator() {
         @Override
@@ -104,11 +103,11 @@ public class VideoView extends FrameLayout {
         this.mWindowType = windowType;
         this.mData = data;
         VideoView currentVideoView = MediaPlayerManager.instance().getCurrentVideoView();
-        if (mSmartMode
-                && mWindowType == WindowType.LIST
-                && (isCurrentPlaying() || currentVideoView == null || currentVideoView.getWindowType() == WindowType.TINY)) {
-            autoMatch();
-        }
+//        if (mSmartMode
+//                && mWindowType == WindowType.LIST
+//                && (isCurrentPlaying() || currentVideoView == null || currentVideoView.getWindowType() == WindowType.TINY)) {
+//            autoMatch();
+//        }
     }
 
     public Map<String, String> getHeaders() {
@@ -118,20 +117,11 @@ public class VideoView extends FrameLayout {
     public void setHeaders(Map<String, String> mHeaders) {
         this.mHeaders = mHeaders;
     }
-
-    public boolean isSmartMode() {
-        return mSmartMode;
-    }
-
-    public void setSmartMode(boolean mSmartMode) {
-        this.mSmartMode = mSmartMode;
-    }
-
     /**
      * 列表匹配模式
      */
     private void autoMatch() {
-        if (!mSmartMode || mWindowType != WindowType.LIST) {
+        if (mWindowType != WindowType.LIST) {
             return;
         }
         VideoView currentVideoView = MediaPlayerManager.instance().getCurrentVideoView();
@@ -157,7 +147,7 @@ public class VideoView extends FrameLayout {
                     mControlPanel.notifyStateChange();
                 }
             }
-        } else if (currentVideoView == this) {
+        } else if (currentVideoView == this) { // 该VideoView被复用了，设置了别的dataSource
             MediaPlayerManager.instance().removeTextureView();
             if (mControlPanel != null) {
                 mControlPanel.onStateIdle();
@@ -210,9 +200,10 @@ public class VideoView extends FrameLayout {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        if (mSmartMode) {
-            autoMatch();
-        }
+        autoMatch();
+//        if (mSmartMode) {
+//            autoMatch();
+//        }
     }
 
     public Object getData() {
@@ -223,24 +214,24 @@ public class VideoView extends FrameLayout {
         mData = data;
     }
 
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        if (mWindowType == WindowType.FULLSCREEN || mWindowType == WindowType.TINY) {
-            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-            return;
-        }
-        if (widthRatio != 0 && heightRatio != 0) {
-            int specWidth = MeasureSpec.getSize(widthMeasureSpec);
-            int specHeight = (int) ((specWidth * (float) heightRatio) / widthRatio);
-            setMeasuredDimension(specWidth, specHeight);
-
-            int childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(specWidth, MeasureSpec.EXACTLY);
-            int childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(specHeight, MeasureSpec.EXACTLY);
-            getChildAt(0).measure(childWidthMeasureSpec, childHeightMeasureSpec);
-        } else {
-            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        }
-    }
+//    @Override
+//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+//        if (mWindowType == WindowType.FULLSCREEN || mWindowType == WindowType.TINY) {
+//            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+//            return;
+//        }
+//        if (widthRatio != 0 && heightRatio != 0) {
+//            int specWidth = MeasureSpec.getSize(widthMeasureSpec);
+//            int specHeight = (int) ((specWidth * (float) heightRatio) / widthRatio);
+//            setMeasuredDimension(specWidth, specHeight);
+//
+//            int childWidthMeasureSpec = MeasureSpec.makeMeasureSpec(specWidth, MeasureSpec.EXACTLY);
+//            int childHeightMeasureSpec = MeasureSpec.makeMeasureSpec(specHeight, MeasureSpec.EXACTLY);
+//            getChildAt(0).measure(childWidthMeasureSpec, childHeightMeasureSpec);
+//        } else {
+//            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+//        }
+//    }
 
     public int getScreenOrientation() {
         return mScreenOrientation;
