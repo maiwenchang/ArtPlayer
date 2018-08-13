@@ -34,8 +34,22 @@ dependencies {
     // required
     implementation 'org.salient.artvideoplayer:artplayer-java:0.5'
 
-    // optional:  Default control panel
+    // Default control panel: optional
     implementation 'org.salient.artvideoplayer:artplayer-ui:0.5'
+
+     //ijkPlayer: optional
+     implementation "tv.danmaku.ijk.media:ijkplayer-java:${lastVersion}"
+     implementation "tv.danmaku.ijk.media:ijkplayer-armv7a:${lastVersion}"
+
+      //Other ABIs: optional
+     implementation "tv.danmaku.ijk.media:ijkplayer-armv5:${lastVersion}"
+     implementation "tv.danmaku.ijk.media:ijkplayer-x86:${lastVersion}"
+     // Other ABIs: optional (minSdk version >= 21)
+     implementation "tv.danmaku.ijk.media:ijkplayer-arm64:${lastVersion}"
+     implementation "tv.danmaku.ijk.media:ijkplayer-x86_64:${lastVersion}"
+
+     // ExoPlayer as IMediaPlayer: optional, experimental
+     implementation "tv.danmaku.ijk.media:ijkplayer-exo:${lastVersion}"
 }
 ```
 

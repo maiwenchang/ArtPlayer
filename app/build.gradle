@@ -67,6 +67,9 @@ android {
         // ExoPlayer as IMediaPlayer: optional, experimental
         implementation "tv.danmaku.ijk.media:ijkplayer-exo:$rootProject.ijkPlayerVersion"
 
+        //ExoPlayer2
+        implementation "com.google.android.exoplayer:exoplayer:2.8.3"
+
         //implementation 'org.salient.artvideoplayer:artplayer-java:0.5'
         //implementation 'org.salient.artvideoplayer:artplayer-ui:0.5'
     }
