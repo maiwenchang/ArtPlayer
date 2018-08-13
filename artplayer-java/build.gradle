@@ -35,6 +35,7 @@ dependencies {
     compileOnly "tv.danmaku.ijk.media:ijkplayer-java:$rootProject.ijkPlayerVersion"
     compileOnly "tv.danmaku.ijk.media:ijkplayer-exo:$rootProject.ijkPlayerVersion"
     compileOnly "com.google.android.exoplayer:exoplayer:2.8.3"
+    compileOnly "com.google.android.exoplayer:extension-rtmp:2.8.3"
 }
 
 apply from: './bintary_push.gradle'

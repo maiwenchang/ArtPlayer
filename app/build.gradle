@@ -9,6 +9,10 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        ndk {
+            //设置支持的SO库架构
+            abiFilters 'armeabi', 'armeabi-v7a','armeabi-v5', 'x86'
+        }
     }
     buildTypes {
         debug {
@@ -30,6 +34,12 @@ android {
                             outputFileName = new File("./", "artplayer-debug.apk")
                         }
                 }
+        }
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
         }
     }
 
@@ -64,11 +74,12 @@ android {
         implementation "tv.danmaku.ijk.media:ijkplayer-x86:$rootProject.ijkPlayerVersion"
         //implementation "tv.danmaku.ijk.media:ijkplayer-x86_64:$rootProject.ijkPlayerVersion"
 
-        // ExoPlayer as IMediaPlayer: optional, experimental
+        // ExoPlayer as IMediaPlayer: optional, experimental : optional
         implementation "tv.danmaku.ijk.media:ijkplayer-exo:$rootProject.ijkPlayerVersion"
 
-        //ExoPlayer2
+        //ExoPlayer2 : optional
         implementation "com.google.android.exoplayer:exoplayer:2.8.3"
+        implementation "com.google.android.exoplayer:extension-rtmp:2.8.3"
 
         //implementation 'org.salient.artvideoplayer:artplayer-java:0.5'
         //implementation 'org.salient.artvideoplayer:artplayer-ui:0.5'

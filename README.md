@@ -50,6 +50,10 @@ dependencies {
 
      // ExoPlayer as IMediaPlayer: optional, experimental
      implementation "tv.danmaku.ijk.media:ijkplayer-exo:${lastVersion}"
+
+     //ExoPlayer2 : optional
+     implementation "com.google.android.exoplayer:exoplayer:2.x.x"
+     implementation "com.google.android.exoplayer:extension-rtmp:2.x.x"
 }
 ```
 

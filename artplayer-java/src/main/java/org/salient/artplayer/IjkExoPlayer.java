@@ -115,6 +115,7 @@ public class IjkExoPlayer extends AbsMediaPlayer implements IMediaPlayer.OnPrepa
         try {
             if (mediaPlayer != null) {
                 mediaPlayer.release();
+                mediaPlayer = null;
                 MediaPlayerManager.instance().updateState(MediaPlayerManager.PlayerState.IDLE);
             }
         } catch (Exception e) {

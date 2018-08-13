@@ -107,6 +107,7 @@ public class IjkPlayer extends AbsMediaPlayer implements IMediaPlayer.OnPrepared
         try {
             if (mediaPlayer != null) {
                 mediaPlayer.release();
+                mediaPlayer = null;
                 MediaPlayerManager.instance().updateState(MediaPlayerManager.PlayerState.IDLE);
             }
         } catch (Exception e) {
