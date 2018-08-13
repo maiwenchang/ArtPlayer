@@ -14,12 +14,11 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
 import org.salient.artplayer.AbsMediaPlayer;
-import org.salient.artplayer.ExoPlayer;
+import org.salient.artplayer.IjkExoPlayer;
 import org.salient.artplayer.IjkPlayer;
 import org.salient.artplayer.MediaPlayerManager;
 import org.salient.artplayer.SystemMediaPlayer;
@@ -155,7 +154,7 @@ public class MainActivity extends BaseActivity {
         } else if (mediaPlayer instanceof IjkPlayer) {
             mMenu.getItem(1).getSubMenu().getItem(1).setChecked(true);
             mMenu.getItem(0).setTitle("Using: IjkPlayer");
-        } else if (mediaPlayer instanceof ExoPlayer) {
+        } else if (mediaPlayer instanceof IjkExoPlayer) {
             mMenu.getItem(1).getSubMenu().getItem(2).setChecked(true);
             mMenu.getItem(0).setTitle("Using: ExoPlayer");
         }
@@ -190,7 +189,7 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.menu_ExoPlayer:
                 mMenu.getItem(0).setTitle("Using: ExoPlayer");
-                MediaPlayerManager.instance().setMediaPlayer(new ExoPlayer(this));
+                MediaPlayerManager.instance().setMediaPlayer(new IjkExoPlayer(this));
                 break;
         }
         return super.onOptionsItemSelected(item);
