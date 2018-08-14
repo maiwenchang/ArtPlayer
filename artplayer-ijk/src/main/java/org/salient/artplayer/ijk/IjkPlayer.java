@@ -1,10 +1,14 @@
-package org.salient.artplayer;
+package org.salient.artplayer.ijk;
 
 import android.app.Service;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.media.AudioManager;
 import android.view.Surface;
+
+import org.salient.artplayer.AbsMediaPlayer;
+import org.salient.artplayer.MediaPlayerManager;
+import org.salient.artplayer.VideoView;
 
 import tv.danmaku.ijk.media.player.IMediaPlayer;
 import tv.danmaku.ijk.media.player.misc.IMediaDataSource;

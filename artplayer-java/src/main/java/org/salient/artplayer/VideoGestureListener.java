@@ -1,5 +1,6 @@
 package org.salient.artplayer;
 
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
@@ -177,5 +178,9 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
         target.setX(X);
     }
 
-
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        Log.d(getClass().getSimpleName(), "onSingleTapUp");
+        return super.onSingleTapUp(e);
+    }
 }

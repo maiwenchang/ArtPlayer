@@ -1,4 +1,4 @@
-package org.salient.artplayer;
+package org.salient.artplayer.ijk;
 
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;

@@ -1,4 +1,4 @@
-package org.salient.artplayer;
+package org.salient.artplayer.exo;
 
 import android.content.Context;
 import android.net.Uri;

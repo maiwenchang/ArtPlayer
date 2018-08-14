@@ -18,12 +18,11 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 
 import org.salient.artplayer.AbsMediaPlayer;
-import org.salient.artplayer.ExoPlayer;
-import org.salient.artplayer.IjkExoPlayer;
-import org.salient.artplayer.IjkPlayer;
 import org.salient.artplayer.MediaPlayerManager;
 import org.salient.artplayer.SystemMediaPlayer;
 import org.salient.artplayer.VideoView;
+import org.salient.artplayer.exo.ExoPlayer;
+import org.salient.artplayer.ijk.IjkPlayer;
 import org.salient.artplayer.ui.ControlPanel;
 import org.salient.artvideoplayer.BaseActivity;
 import org.salient.artvideoplayer.R;
@@ -176,20 +175,22 @@ public class MainActivity extends BaseActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         if (item.isChecked()) return super.onOptionsItemSelected(item);
-        MediaPlayerManager.instance().releasePlayerAndView(this);
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         switch (id) {
             case R.id.menu_MediaPlayer:
                 mMenu.getItem(0).setTitle("Using: MediaPlayer");
+                MediaPlayerManager.instance().releasePlayerAndView(this);
                 MediaPlayerManager.instance().setMediaPlayer(new SystemMediaPlayer());
                 break;
             case R.id.menu_IjkPlayer:
                 mMenu.getItem(0).setTitle("Using: IjkPlayer");
+                MediaPlayerManager.instance().releasePlayerAndView(this);
                 MediaPlayerManager.instance().setMediaPlayer(new IjkPlayer());
                 break;
             case R.id.menu_ExoPlayer:
                 mMenu.getItem(0).setTitle("Using: ExoPlayer");
+                MediaPlayerManager.instance().releasePlayerAndView(this);
                 MediaPlayerManager.instance().setMediaPlayer(new ExoPlayer(this));
                 break;
         }

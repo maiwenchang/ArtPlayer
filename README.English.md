@@ -122,7 +122,9 @@ protected void onDestroy() {
 ### My Build Environment
 - Java 1.7
 - Android Studio 3.1.2
-- Gradle 3.1.2
+- Gradle 4.4
+- IjkPlayer 0.8.8
+- ExoPlayer 2.8.3
 
 ### Authors
 - [maiwenchang](https://github.com/maiwenchang)

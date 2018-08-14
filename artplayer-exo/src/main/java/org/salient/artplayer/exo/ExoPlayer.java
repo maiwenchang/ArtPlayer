@@ -1,4 +1,4 @@
-package org.salient.artplayer;
+package org.salient.artplayer.exo;
 
 import android.app.Service;
 import android.content.Context;
@@ -29,6 +29,10 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+
+import org.salient.artplayer.AbsMediaPlayer;
+import org.salient.artplayer.MediaPlayerManager;
+import org.salient.artplayer.VideoView;
 
 import java.io.IOException;
 import java.util.Timer;
@@ -87,38 +91,14 @@ public class ExoPlayer extends AbsMediaPlayer implements Player.EventListener, A
             mediaPlayer = ExoPlayerFactory.newSimpleInstance(rendererFactory, mTrackSelector, loadControl, null);
             mediaPlayer.addListener(this);
             mediaPlayer.addAnalyticsListener(this);
-            //mInternalPlayer.addListener(mEventLogger);
 //            if (mSpeedPlaybackParameters != null) { // todo speed
 //                mediaPlayer.setPlaybackParameters(mSpeedPlaybackParameters);
 //            }
-
-
             MediaSource mediaSource = ExoSourceManager.newInstance(mAppContext, getHeaders()).getMediaSource(
                     getDataSource().toString(), false, false, MediaPlayerManager.instance().isLooping(), null
             );
-
-
             mediaPlayer.prepare(mediaSource);
             mediaPlayer.setPlayWhenReady(true);
-
-//            if (MediaPlayerManager.instance().isMute()) {
-//                mute(true);
-//            }
-//            if (MediaPlayerManager.instance().isLooping()) {
-//                setLooping(true);
-//            }
-//            Object dataSource = getDataSource();
-//            if (dataSource != null && dataSource instanceof AssetFileDescriptor) {//Android assets file
-//                AssetFileDescriptor fd = (AssetFileDescriptor) dataSource;
-//                mediaPlayer.setDataSource(fd.getFileDescriptor());
-//            } else if (dataSource != null && dataSource instanceof RawDataSourceProvider) {// Android raw file
-//                mediaPlayer.setDataSource((IMediaDataSource) dataSource);
-//            } else if (dataSource != null && dataSource instanceof Uri && getHeaders() != null) {//url with headers
-//                mediaPlayer.setDataSource(mAppContext, (Uri) dataSource, getHeaders());
-//            } else if (dataSource != null) {
-//                mediaPlayer.setDataSource(dataSource.toString());
-//            }
-//            mediaPlayer.prepareAsync();
         } catch (Exception e) {
             e.printStackTrace();
             MediaPlayerManager.instance().updateState(MediaPlayerManager.PlayerState.ERROR);

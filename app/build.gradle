@@ -61,25 +61,25 @@ android {
         //releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
         testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 
+        //required
         implementation project(':artplayer-java')
+        //default controller panel: optional
         implementation project(':artplayer-ui')
 
-        //ijkPlayer: optional
-        implementation "tv.danmaku.ijk.media:ijkplayer-java:$rootProject.ijkPlayerVersion"
-        implementation "tv.danmaku.ijk.media:ijkplayer-armv7a:$rootProject.ijkPlayerVersion"
+        //ExoPlayer : optional
+        implementation project(':artplayer-exo')
 
-         //Other ABIs: optional
-        implementation "tv.danmaku.ijk.media:ijkplayer-armv5:$rootProject.ijkPlayerVersion"
-        //implementation "tv.danmaku.ijk.media:ijkplayer-arm64:$rootProject.ijkPlayerVersion"
-        implementation "tv.danmaku.ijk.media:ijkplayer-x86:$rootProject.ijkPlayerVersion"
-        //implementation "tv.danmaku.ijk.media:ijkplayer-x86_64:$rootProject.ijkPlayerVersion"
+        //ijkPlayer : optional
+        implementation project(':artplayer-armv7a')
 
-        // ExoPlayer as IMediaPlayer: optional, experimental : optional
-        implementation "tv.danmaku.ijk.media:ijkplayer-exo:$rootProject.ijkPlayerVersion"
+        //ijkPlayer : required for ijkPlayer, enough for most devices.
+        implementation project(':artplayer-ijk')
 
-        //ExoPlayer2 : optional
-        implementation "com.google.android.exoplayer:exoplayer:2.8.3"
-        implementation "com.google.android.exoplayer:extension-rtmp:2.8.3"
+        // Other ABIs for ijkPlayer : optional
+        implementation project(':artplayer-armv5')
+        implementation project(':artplayer-x86')
+        //implementation project(':artplayer-x86_64')
+        //implementation project(':artplayer-arm64')
 
         //implementation 'org.salient.artvideoplayer:artplayer-java:0.5'
         //implementation 'org.salient.artvideoplayer:artplayer-ui:0.5'

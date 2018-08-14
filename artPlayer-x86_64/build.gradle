@@ -1,7 +1,9 @@
 apply plugin: 'com.android.library'
 
 android {
+
     compileSdkVersion 27
+
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 27
@@ -10,22 +12,30 @@ android {
     }
 
     buildTypes {
-        release {
+        debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        debug {
+        release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
+    compileOptions {
+        targetCompatibility 1.7
+        sourceCompatibility 1.7
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    compileOnly "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
-    compileOnly project(':artplayer-java')
+    implementation "tv.danmaku.ijk.media:ijkplayer-x86_64:$rootProject.ijkPlayerVersion"
 }
-
 apply from: './bintary_push.gradle'
