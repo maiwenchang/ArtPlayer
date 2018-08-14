@@ -29,4 +29,8 @@ ext {
     // App dependencies
     supportLibraryVersion = '27.1.0'
     ijkPlayerVersion = '0.8.8'
+    exoPlayerVersion = '2.8.3'
+
+    libraryVersionCode = 6
+    libraryVersionName = "0.6.0"
 }

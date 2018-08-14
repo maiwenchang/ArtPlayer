@@ -1,0 +1,35 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 27
+
+
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 27
+        versionCode rootProject.libraryVersionCode
+        versionName rootProject.libraryVersionName
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    compileOnly "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+
+    implementation "com.google.android.exoplayer:exoplayer:$rootProject.exoPlayerVersion"
+    implementation "com.google.android.exoplayer:extension-rtmp:$rootProject.exoPlayerVersion"
+
+    compileOnly project(':artplayer-java')
+}
+apply from: './bintary_push.gradle'

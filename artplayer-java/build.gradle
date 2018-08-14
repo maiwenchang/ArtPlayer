@@ -6,8 +6,8 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 27
-        versionCode 5
-        versionName "0.5"
+        versionCode rootProject.libraryVersionCode
+        versionName rootProject.libraryVersionName
 
     }
 
@@ -27,13 +27,16 @@ android {
         sourceCompatibility 1.7
     }
 
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     compileOnly "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
-    compileOnly "tv.danmaku.ijk.media:ijkplayer-java:$rootProject.ijkPlayerVersion"
-    compileOnly "tv.danmaku.ijk.media:ijkplayer-exo:$rootProject.ijkPlayerVersion"
 }
 
 apply from: './bintary_push.gradle'

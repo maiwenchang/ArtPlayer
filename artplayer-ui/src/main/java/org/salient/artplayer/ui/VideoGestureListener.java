@@ -4,6 +4,7 @@ import android.app.Service;
 import android.media.AudioManager;
 import android.util.Log;
 import android.view.Display;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -244,7 +245,11 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
         target.setX(X);
     }
 
-
+    @Override
+    public boolean onSingleTapUp(MotionEvent e) {
+        Log.d(getClass().getSimpleName(), "onSingleTapUp");
+        return super.onSingleTapUp(e);
+    }
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         final int action = event.getAction();
