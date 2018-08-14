@@ -1,8 +1,18 @@
-package org.salient.artplayer;
+package org.salient.artplayer.ui;
 
+import android.app.Service;
+import android.media.AudioManager;
+import android.util.Log;
+import android.view.Display;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+
+import org.salient.artplayer.AbsControlPanel;
+import org.salient.artplayer.MediaPlayerManager;
+import org.salient.artplayer.VideoView;
 
 /**
  * Created by Mai on 2018/8/7
@@ -10,7 +20,7 @@ import android.view.ViewGroup;
  * Description:
  * *
  */
-public class VideoGestureListener extends GestureDetector.SimpleOnGestureListener {
+public class VideoGestureListener extends GestureDetector.SimpleOnGestureListener implements View.OnTouchListener {
 
     private AbsControlPanel mControlPanel;
 
@@ -24,12 +34,20 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
     private float currentWidth;
     private float currentHeight;
     private float baseValue;
+    private int mVolume = -1;//当前声音
+    private int mMaxVolume;//最大声音
+    private AudioManager mAudioManager;
+    public ProgressBar pbVolume;//调节音量
 
     private VideoGestureListener() {
     }
 
     public VideoGestureListener(AbsControlPanel controlPanel) {
         mControlPanel = controlPanel;
+        pbVolume = mControlPanel.findViewById(R.id.pbVolume);
+        mAudioManager = (AudioManager) mControlPanel.getContext().getSystemService(Service.AUDIO_SERVICE);
+        mMaxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        pbVolume.setMax(mMaxVolume * 100);
     }
 
     @Override
@@ -52,6 +70,12 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
     }
 
     @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        Log.i("onVolumeSlide", "MotionEvent.ACTION_UP");
+        return super.onFling(e1, e2, velocityX, velocityY);
+    }
+
+    @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
         VideoView target = mControlPanel.getTarget();
         if (target == null) return false;
@@ -62,9 +86,52 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
                 return zoomWindow(target, e1, e2);
             }
         } else if (target.getWindowType() == VideoView.WindowType.FULLSCREEN) {
-
+            if (e2.getPointerCount() == 1) {//单指移动
+                Log.i("onVolumeSlide", " VideoView.WindowType.FULLSCREEN ");
+                return changeVolume(e1, e2);
+            }
         }
         return false;
+    }
+
+    /**
+     * Move the window according to the finger position
+     * 根据手指移动调整音量
+     */
+    private boolean changeVolume(MotionEvent e1, MotionEvent e2) {
+        float mOldX = e1.getX(), mOldY = e1.getY();
+        int y = (int) e2.getRawY();
+        if (mOldX > currentWidth * 2.0 / 3)// 右边滑动
+            onVolumeSlide(((mOldY - y) * 2 / currentHeight));
+        return true;
+    }
+
+    /**
+     * 滑动改变声音大小
+     *
+     * @param percent
+     */
+    private void onVolumeSlide(float percent) {
+        Log.i("onVolumeSlide", " percent :" + percent);
+        if (mVolume == -1) {
+            if (mVolume < 0)
+                mVolume = 0;
+            mVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+        }
+        // 显示
+        pbVolume.setVisibility(View.VISIBLE);
+        float index = (percent * mMaxVolume) + mVolume;
+        if (index > mMaxVolume)
+            index = mMaxVolume;
+        else if (index < 0)
+            index = 0;
+
+        // 变更声音
+        Log.i("onVolumeSlide", " index :" + index);
+        mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (int) index, 0);
+
+        // 变更进度条
+        pbVolume.setProgress((int) (index * 100));
     }
 
     /**
@@ -178,4 +245,20 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
     }
 
 
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        final int action = event.getAction();
+        if (action == MotionEvent.ACTION_UP) {
+            mVolume = -1;
+            pbVolume.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    pbVolume.setVisibility(View.GONE);
+                }
+            }, 500);
+
+        }
+
+        return false;
+    }
 }

@@ -51,9 +51,9 @@
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@id/ivRight"
                 android:layout_toRightOf="@id/ivLeft"
+                android:clickable="true"
                 android:ellipsize="marquee"
                 android:focusable="true"
-                android:clickable="true"
                 android:focusableInTouchMode="true"
                 android:paddingBottom="15dp"
                 android:paddingLeft="15dp"
@@ -94,6 +94,17 @@
                 android:button="@drawable/salient_selector_video_play"
                 android:checked="false" />
         </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/pbVolume"
+            android:layout_width="2dp"
+            android:layout_height="70dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="50dp"
+            android:indeterminateOnly="false"
+            android:progressDrawable="@drawable/progress_vertical"
+            android:visibility="gone" />
 
         <ProgressBar
             android:id="@+id/loading"
