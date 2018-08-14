@@ -19,7 +19,6 @@ import android.widget.TextView;
 import org.salient.artplayer.AbsControlPanel;
 import org.salient.artplayer.MediaPlayerManager;
 import org.salient.artplayer.Utils;
-import org.salient.artplayer.VideoGestureListener;
 import org.salient.artplayer.VideoView;
 
 /**
@@ -121,11 +120,14 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
                 }
             }
         });
-        mGestureDetector = new GestureDetector(getContext(),new VideoGestureListener(this));
+        final VideoGestureListener videoGestureListener = new VideoGestureListener(this);
+        mGestureDetector = new GestureDetector(getContext(), videoGestureListener);
         setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                return mGestureDetector.onTouchEvent(event);
+                if (mGestureDetector.onTouchEvent(event))
+                    return true;
+                return videoGestureListener.onTouch(v, event);
             }
         });
     }
