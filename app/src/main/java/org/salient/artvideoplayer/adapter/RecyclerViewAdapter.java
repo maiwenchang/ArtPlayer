@@ -35,13 +35,13 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private boolean isStaggeredGridLayoutManager = false;
 
-    private OnItemClickListener mOnItemClickListener = null;
     private Comparator mComparator = new Comparator() {
         @Override
         public boolean compare(VideoView videoView) {
             try {
                 Object currentData = MediaPlayerManager.instance().getCurrentData();
                 //By comparing the position on the list to distinguish whether the same video
+                //根据列表位置识别是否同一个视频
                 if (currentData != null && videoView != null) {
                     Object data = videoView.getData();
                     return data != null
@@ -68,17 +68,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public VideoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_video_view, parent, false);
-        final VideoViewHolder videoViewHolder = new VideoViewHolder(view);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mOnItemClickListener != null) {
-                    //注意这里使用getTag方法获取position
-                    mOnItemClickListener.onItemClick(v, videoViewHolder.getAdapterPosition());
-                }
-            }
-        });
-        return videoViewHolder;
+        return new VideoViewHolder(view);
     }
 
     @Override
@@ -125,16 +115,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return mList == null ? 0 : mList.size();
     }
 
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        if (onItemClickListener != null) {
-            this.mOnItemClickListener = onItemClickListener;
-        }
-    }
-
-    public interface OnItemClickListener {
-        void onItemClick(View view, int position);
-    }
-
     class VideoViewHolder extends RecyclerView.ViewHolder {
 
         VideoView videoView;
@@ -148,32 +128,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             videoView.setComparator(mComparator);
             //optional: Specify the Detach Action which would be called when the VideoView has been detached from its window.
             videoView.setOnWindowDetachedListener(mOnWindowDetachedListener);
-
-//            videoView.setOnWindowDetachedListener(new OnWindowDetachedListener() {
-//                @Override
-//                public void onDetached(VideoView videoView) {
-//                    if (videoView.isCurrentPlaying() && videoView == MediaPlayerManager.instance().getCurrentVideoView()) {
-//                        //开启小窗
-//                        VideoView tinyVideoView = new VideoView(videoView.getContext());
-//                        //set url and data
-//                        tinyVideoView.setUp(videoView.getDataSourceObject(), VideoView.WindowType.TINY, videoView.getData());
-//                        //set control panel
-//                        ControlPanel controlPanel = new ControlPanel(videoView.getContext());
-//                        tinyVideoView.setControlPanel(controlPanel);
-//                        //set cover
-//                        ImageView coverView = controlPanel.getCoverView();
-//                        Glide.with(controlPanel.getContext()).load(((VideoBean) videoView.getData()).getImage()).into(coverView);
-//                        //set parent
-//                        tinyVideoView.setParentVideoView(videoView);
-//                        //set LayoutParams
-//                        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(16 * 45, 9 * 45);
-//                        layoutParams.gravity = Gravity.BOTTOM | Gravity.RIGHT;
-//                        layoutParams.setMargins(0, 0, 30, 100);
-//                        //start tiny window
-//                        tinyVideoView.startTinyWindow(layoutParams);
-//                    }
-//                }
-//            });
         }
     }
 

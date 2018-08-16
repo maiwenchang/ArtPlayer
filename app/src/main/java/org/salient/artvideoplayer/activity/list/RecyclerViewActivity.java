@@ -64,7 +64,6 @@ public class RecyclerViewActivity extends BaseActivity{
                 }
                 recycler_view.setLayoutManager(layoutManager);
 
-
                 RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(DensityUtil.getWindowWidth(this));
                 recycler_view.setAdapter(recyclerViewAdapter);
 
@@ -76,9 +75,7 @@ public class RecyclerViewActivity extends BaseActivity{
                         recyclerViewAdapter.setDetachAction(new OnWindowDetachedListener() {
                             @Override
                             public void onDetached(VideoView videoView) {
-                                if (videoView.isCurrentPlaying() && videoView == MediaPlayerManager.instance().getCurrentVideoView()) {
-                                    videoView.pause();
-                                }
+                                videoView.pause();
                             }
                         });
                         break;
@@ -86,9 +83,7 @@ public class RecyclerViewActivity extends BaseActivity{
                         recyclerViewAdapter.setDetachAction(new OnWindowDetachedListener() {
                             @Override
                             public void onDetached(VideoView videoView) {
-                                if (videoView.isCurrentPlaying() && videoView == MediaPlayerManager.instance().getCurrentVideoView()) {
-                                    MediaPlayerManager.instance().releasePlayerAndView(RecyclerViewActivity.this);
-                                }
+                                 MediaPlayerManager.instance().releasePlayerAndView(RecyclerViewActivity.this);
                             }
                         });
                         break;
@@ -97,31 +92,28 @@ public class RecyclerViewActivity extends BaseActivity{
                         recyclerViewAdapter.setDetachAction(new OnWindowDetachedListener() {
                             @Override
                             public void onDetached(VideoView videoView) {
-                                if (videoView.isCurrentPlaying() && videoView == MediaPlayerManager.instance().getCurrentVideoView()) {
-                                    //开启小窗
-                                    VideoView tinyVideoView = new VideoView(videoView.getContext());
-                                    //set url and data
-                                    tinyVideoView.setUp(videoView.getDataSourceObject(), VideoView.WindowType.TINY, videoView.getData());
-                                    //set control panel
-                                    ControlPanel controlPanel = new ControlPanel(videoView.getContext());
-                                    tinyVideoView.setControlPanel(controlPanel);
-                                    //set cover
-                                    ImageView coverView = controlPanel.findViewById(R.id.video_cover);
-                                    Glide.with(controlPanel.getContext()).load(((VideoBean) videoView.getData()).getImage()).into(coverView);
-                                    //set parent
-                                    tinyVideoView.setParentVideoView(videoView);
-                                    //set LayoutParams
-                                    FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(16 * 45, 9 * 45);
-                                    layoutParams.gravity = Gravity.BOTTOM | Gravity.RIGHT;
-                                    layoutParams.setMargins(0, 0, 30, 100);
-                                    //start tiny window
-                                    tinyVideoView.startTinyWindow(layoutParams);
-                                }
+                                //开启小窗
+                                VideoView tinyVideoView = new VideoView(videoView.getContext());
+                                //set url and data
+                                tinyVideoView.setUp(videoView.getDataSourceObject(), VideoView.WindowType.TINY, videoView.getData());
+                                //set control panel
+                                ControlPanel controlPanel = new ControlPanel(videoView.getContext());
+                                tinyVideoView.setControlPanel(controlPanel);
+                                //set cover
+                                ImageView coverView = controlPanel.findViewById(R.id.video_cover);
+                                Glide.with(controlPanel.getContext()).load(((VideoBean) videoView.getData()).getImage()).into(coverView);
+                                //set parent
+                                tinyVideoView.setParentVideoView(videoView);
+                                //set LayoutParams
+                                FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(16 * 45, 9 * 45);
+                                layoutParams.gravity = Gravity.BOTTOM | Gravity.RIGHT;
+                                layoutParams.setMargins(0, 0, 30, 100);
+                                //start tiny window
+                                tinyVideoView.startTinyWindow(layoutParams);
                             }
                         });
                         break;
                 }
-
 
                 recyclerViewAdapter.setList(getAllComing());
                 recyclerViewAdapter.notifyDataSetChanged();

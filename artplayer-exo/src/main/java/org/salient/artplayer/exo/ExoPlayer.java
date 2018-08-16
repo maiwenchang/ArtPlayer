@@ -91,6 +91,9 @@ public class ExoPlayer extends AbsMediaPlayer implements Player.EventListener, A
             mediaPlayer = ExoPlayerFactory.newSimpleInstance(rendererFactory, mTrackSelector, loadControl, null);
             mediaPlayer.addListener(this);
             mediaPlayer.addAnalyticsListener(this);
+            if (MediaPlayerManager.instance().isMute()) {
+                mute(true);
+            }
 //            if (mSpeedPlaybackParameters != null) { // todo speed
 //                mediaPlayer.setPlaybackParameters(mSpeedPlaybackParameters);
 //            }
