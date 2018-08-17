@@ -40,7 +40,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.api.ApiActivity"
-            android:label="Api演示 ApiActivity" />
+            android:label="Api演示 ApiActivity"
+             />
         <activity
             android:name=".activity.api.ApiCommonActivity"
             android:configChanges="orientation|screenSize"
@@ -48,7 +49,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.extension.ExtensionActivity"
-            android:label="扩展 ExtensionActivity" />
+            android:label="扩展 ExtensionActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>
