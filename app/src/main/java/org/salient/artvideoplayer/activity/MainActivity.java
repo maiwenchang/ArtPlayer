@@ -29,6 +29,7 @@ import org.salient.artvideoplayer.R;
 import org.salient.artvideoplayer.activity.api.ApiActivity;
 import org.salient.artvideoplayer.activity.extension.ExtensionActivity;
 import org.salient.artvideoplayer.activity.list.ListActivity;
+import org.salient.artvideoplayer.activity.tiny.TinyWindowActivity;
 
 public class MainActivity extends BaseActivity {
 
@@ -113,17 +114,7 @@ public class MainActivity extends BaseActivity {
                 videoView.startFullscreen(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
                 break;
             case R.id.tinyWindow:
-                hideSoftInput();
-                VideoView tinyVideoView = new VideoView(this);
-                tinyVideoView.setUp("http://vfx.mtime.cn/Video/2018/06/06/mp4/180606101738263858.mp4", VideoView.WindowType.TINY);
-                ControlPanel controlPanel = new ControlPanel(this);
-                tinyVideoView.setControlPanel(controlPanel);
-                //set LayoutParams
-                FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(16 * 45, 9 * 45);
-                layoutParams.gravity = Gravity.BOTTOM | Gravity.RIGHT;
-                layoutParams.setMargins(0, 0, 30, 100);
-                tinyVideoView.start();
-                tinyVideoView.startTinyWindow(layoutParams);
+                startActivity(new Intent(this, TinyWindowActivity.class));
                 break;
             case R.id.extension:
                 startActivity(new Intent(this, ExtensionActivity.class));

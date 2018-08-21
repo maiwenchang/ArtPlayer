@@ -28,12 +28,6 @@ import org.salient.artplayer.VideoView;
 public class VideoGestureListener extends GestureDetector.SimpleOnGestureListener implements View.OnTouchListener {
 
     private AbsControlPanel mControlPanel;
-
-    private boolean firstTouch;
-    private boolean mChangeXY;
-    private boolean mChangePosition;
-    private boolean mChangeBrightness;
-    private boolean mChangeVolume;
     private float currentX;
     private float currentY;
     private float currentWidth;
@@ -63,7 +57,6 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
     public boolean onDown(MotionEvent e) {
         VideoView target = mControlPanel.getTarget();
         if (target == null) return false;
-        firstTouch = true;
         baseValue = 0;
         currentX = target.getX();
         currentY = target.getY();
@@ -164,10 +157,11 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
 
         WindowManager.LayoutParams lpa = ((Activity) mControlPanel.getContext()).getWindow().getAttributes();
         lpa.screenBrightness = mBrightness + percent;
-        if (lpa.screenBrightness > 1.0f)
+        if (lpa.screenBrightness > 1.0f) {
             lpa.screenBrightness = 1.0f;
-        else if (lpa.screenBrightness < 0.01f)
+        } else if (lpa.screenBrightness < 0.01f) {
             lpa.screenBrightness = 0.01f;
+        }
         ((Activity) mControlPanel.getContext()).getWindow().setAttributes(lpa);
 
         // 变更进度条
@@ -200,9 +194,6 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
                 }
                 target.setY(y);
                 target.setX(x);
-                break;
-            case MotionEvent.ACTION_UP:
-                revisePosition(target);
                 break;
         }
         return true;
@@ -252,8 +243,6 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
                     target.requestLayout();
                 }
             }
-        } else if (e1.getAction() == MotionEvent.ACTION_UP || e2.getAction() == MotionEvent.ACTION_UP || e2.getAction() == MotionEvent.ACTION_POINTER_UP) {
-            revisePosition(target);
         }
         return true;
     }
@@ -301,6 +290,18 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
             llOperation.postDelayed(runnable, 500);
             //亮度变量清空
             mBrightness = -1f;
+
+            //拖动或缩放窗口后修正位置
+            if (v instanceof AbsControlPanel) {
+                AbsControlPanel absControlPanel = (AbsControlPanel) v;
+                VideoView target = absControlPanel.getTarget();
+                if (target != null) {
+                    VideoView.WindowType windowType = target.getWindowType();
+                    if (windowType == VideoView.WindowType.TINY) {
+                        revisePosition(target);
+                    }
+                }
+            }
         }
 
 
