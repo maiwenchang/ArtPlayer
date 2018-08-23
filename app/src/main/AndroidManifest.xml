@@ -39,7 +39,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activity.api.ApiActivity"
-            android:label="Api演示 ApiActivity" />
+            android:label="Api演示 ApiActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.api.ApiCommonActivity"
             android:configChanges="orientation|screenSize"
@@ -54,6 +55,9 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="TinyWindowActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".activity.orientation.OrientationActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

@@ -52,6 +52,8 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
     private TextView tvAlert;
     private TextView tvConfirm;
     private TextView tvTitle;
+    private LinearLayout llOperation;
+
     private Runnable mDismissTask = new Runnable() {
         @Override
         public void run() {
@@ -96,6 +98,7 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
         tvConfirm = findViewById(R.id.tvConfirm);
         ivRight = findViewById(R.id.ivRight);
         tvTitle = findViewById(R.id.tvTitle);
+        llOperation = findViewById(R.id.llOperation);
 
         ivRight.setOnClickListener(this);
         ivLeft.setOnClickListener(this);
@@ -173,7 +176,7 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
     public void onStatePlaying() {
         start.setChecked(true);
         showUI(layout_bottom, layout_top);
-        hideUI(video_cover, loading);
+        hideUI(video_cover, loading, llOperation);
         startDismissTask();
     }
 
@@ -181,7 +184,7 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
     public void onStatePaused() {
         start.setChecked(false);
         showUI(start, layout_bottom);
-        hideUI(video_cover, loading);
+        hideUI(video_cover, loading, llOperation);
     }
 
     @Override
