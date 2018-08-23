@@ -29,6 +29,7 @@ import org.salient.artvideoplayer.R;
 import org.salient.artvideoplayer.activity.api.ApiActivity;
 import org.salient.artvideoplayer.activity.extension.ExtensionActivity;
 import org.salient.artvideoplayer.activity.list.ListActivity;
+import org.salient.artvideoplayer.activity.orientation.OrientationActivity;
 
 public class MainActivity extends BaseActivity {
 
@@ -127,6 +128,9 @@ public class MainActivity extends BaseActivity {
                 break;
             case R.id.extension:
                 startActivity(new Intent(this, ExtensionActivity.class));
+                break;
+            case R.id.orientation:
+                startActivity(new Intent(this, OrientationActivity.class));
                 break;
         }
     }

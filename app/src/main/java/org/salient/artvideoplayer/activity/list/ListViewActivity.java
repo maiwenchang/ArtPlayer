@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import org.salient.artplayer.MediaPlayerManager;
 import org.salient.artvideoplayer.BaseActivity;
 import org.salient.artvideoplayer.adapter.ListViewAdapter;
 import org.salient.artvideoplayer.bean.VideoBean;
@@ -35,5 +36,19 @@ public class ListViewActivity extends BaseActivity {
         listViewAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * 实现重力感应则在对应生命周期下，增加以下实现方法
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MediaPlayerManager.instance().orientationEnable(this);//开启重力感应监听
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MediaPlayerManager.instance().orientationDisable();//关闭重力感应监听
+    }
 
 }

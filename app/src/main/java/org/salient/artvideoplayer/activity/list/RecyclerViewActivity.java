@@ -30,7 +30,7 @@ import org.salient.artplayer.ui.ControlPanel;
  * > Description:
  * *
  */
-public class RecyclerViewActivity extends BaseActivity{
+public class RecyclerViewActivity extends BaseActivity {
 
     private RadioGroup rgLayoutManager;
     private RadioGroup rgDetachAction;
@@ -59,7 +59,7 @@ public class RecyclerViewActivity extends BaseActivity{
                         layoutManager = new GridLayoutManager(this, 2);
                         break;
                     case R.id.staggeredGridLayoutManager:
-                        layoutManager = new StaggeredGridLayoutManager(2,StaggeredGridLayoutManager.VERTICAL);
+                        layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
                         break;
                 }
                 recycler_view.setLayoutManager(layoutManager);
@@ -83,7 +83,7 @@ public class RecyclerViewActivity extends BaseActivity{
                         recyclerViewAdapter.setDetachAction(new OnWindowDetachedListener() {
                             @Override
                             public void onDetached(VideoView videoView) {
-                                 MediaPlayerManager.instance().releasePlayerAndView(RecyclerViewActivity.this);
+                                MediaPlayerManager.instance().releasePlayerAndView(RecyclerViewActivity.this);
                             }
                         });
                         break;
@@ -135,5 +135,20 @@ public class RecyclerViewActivity extends BaseActivity{
         }
         super.onBackPressed();
 
+    }
+
+    /**
+     * 实现重力感应则在对应生命周期下，增加以下实现方法
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MediaPlayerManager.instance().orientationEnable(this);//开启重力感应监听
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MediaPlayerManager.instance().orientationDisable();//关闭重力感应监听
     }
 }

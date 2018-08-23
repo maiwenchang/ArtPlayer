@@ -72,6 +72,7 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
 
         //取消隐藏音量和亮度的图层的操作
         llOperation.getHandler().removeCallbacks(runnable);
+        Log.i("llOperation", "removeCallbacks");
 
         return true;
     }
@@ -128,6 +129,7 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
             // 显示
             imgOperation.setImageResource(R.drawable.salient_volume);
             llOperation.setVisibility(View.VISIBLE);
+            Log.i("llOperation", "onVolumeSlide View.VISIBLE");
         }
         float index = (percent * mMaxVolume) + mVolume;
         if (index > mMaxVolume)
@@ -160,6 +162,7 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
             // 显示
             imgOperation.setImageResource(R.drawable.salient_brightness);
             llOperation.setVisibility(View.VISIBLE);
+            Log.i("llOperation", "onBrightnessSlide View.VISIBLE");
         }
 
         WindowManager.LayoutParams lpa = ((Activity) mControlPanel.getContext()).getWindow().getAttributes();
@@ -288,6 +291,7 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
         @Override
         public void run() {
             llOperation.setVisibility(View.GONE);
+            Log.i("llOperation", "View.GONE");
         }
     };
 
