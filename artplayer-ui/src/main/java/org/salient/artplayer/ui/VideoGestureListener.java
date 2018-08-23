@@ -65,7 +65,6 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
 
         //取消隐藏音量和亮度的图层的操作
         llOperation.getHandler().removeCallbacks(runnable);
-        Log.i("llOperation", "removeCallbacks");
 
         return true;
     }
@@ -78,7 +77,6 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
 
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        Log.i("onVolumeSlide", "MotionEvent.ACTION_UP");
         return super.onFling(e1, e2, velocityX, velocityY);
     }
 
@@ -122,7 +120,6 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
             // 显示
             imgOperation.setImageResource(R.drawable.salient_volume);
             llOperation.setVisibility(View.VISIBLE);
-            Log.i("llOperation", "onVolumeSlide View.VISIBLE");
         }
         float index = (percent * mMaxVolume) + mVolume;
         if (index > mMaxVolume)
@@ -131,7 +128,6 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
             index = 0;
 
         // 变更声音
-        Log.i("onVolumeSlide", " index :" + index);
         mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, (int) index, 0);
 
         // 变更进度条
@@ -155,7 +151,6 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
             // 显示
             imgOperation.setImageResource(R.drawable.salient_brightness);
             llOperation.setVisibility(View.VISIBLE);
-            Log.i("llOperation", "onBrightnessSlide View.VISIBLE");
         }
 
         WindowManager.LayoutParams lpa = ((Activity) mControlPanel.getContext()).getWindow().getAttributes();
@@ -280,7 +275,6 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
         @Override
         public void run() {
             llOperation.setVisibility(View.GONE);
-            Log.i("llOperation", "View.GONE");
         }
     };
 
@@ -288,7 +282,6 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
     public boolean onTouch(View v, MotionEvent event) {
         final int action = event.getAction();
         if (action == MotionEvent.ACTION_UP) {
-            Log.i("onTouch", " MotionEvent.ACTION_UP :" + " pbOperation.getMax() :" + pbOperation.getMax());
             //音量变量清空，延迟隐藏声音控件
             mVolume = -1;
             llOperation.postDelayed(runnable, 500);
