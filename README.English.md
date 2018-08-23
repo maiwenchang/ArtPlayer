@@ -32,28 +32,24 @@ This is a flexible video player. MediaPlayer is completely separate from VideoVi
 ```
 dependencies {
     // required
-    implementation 'org.salient.artvideoplayer:artplayer-java:0.5'
+    implementation 'org.salient.artvideoplayer:artplayer-java:0.6.0'
 
     // Default control panel: optional
-    implementation 'org.salient.artvideoplayer:artplayer-ui:0.5'
+    implementation 'org.salient.artvideoplayer:artplayer-ui:0.6.0'
 
      //ijkPlayer: optional
-     implementation "tv.danmaku.ijk.media:ijkplayer-java:${lastVersion}"
-     implementation "tv.danmaku.ijk.media:ijkplayer-armv7a:${lastVersion}"
+     implementation 'org.salient.artvideoplayer:artplayer-ijk:0.6.0'
+     implementation "org.salient.artvideoplayer:artplayer-armv7a:0.6.0"
 
       //Other ABIs: optional
-     implementation "tv.danmaku.ijk.media:ijkplayer-armv5:${lastVersion}"
-     implementation "tv.danmaku.ijk.media:ijkplayer-x86:${lastVersion}"
+     implementation "org.salient.artvideoplayer:artplayer-armv5:0.6.0"
+     implementation "org.salient.artvideoplayer:artplayer-x86:0.6.0"
      // Other ABIs: optional (minSdk version >= 21)
-     implementation "tv.danmaku.ijk.media:ijkplayer-arm64:${lastVersion}"
-     implementation "tv.danmaku.ijk.media:ijkplayer-x86_64:${lastVersion}"
-
-     // ExoPlayer as IMediaPlayer: optional, experimental
-     implementation "tv.danmaku.ijk.media:ijkplayer-exo:${lastVersion}"
+     implementation "org.salient.artvideoplayer:artplayer-arm64:0.6.0"
+     implementation "org.salient.artvideoplayer:artplayer-x86_64:0.6.0"
 
      //ExoPlayer2 : optional
-     implementation "com.google.android.exoplayer:exoplayer:2.x.x"
-     implementation "com.google.android.exoplayer:extension-rtmp:2.x.x"
+     implementation "org.salient.artvideoplayer:artplayer-exo:0.6.0"
 }
 ```
 
