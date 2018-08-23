@@ -11,11 +11,13 @@ import org.salient.artvideoplayer.R;
 import org.salient.artvideoplayer.activity.api.ApiCommonActivity;
 import org.salient.artvideoplayer.activity.list.ListViewActivity;
 import org.salient.artvideoplayer.activity.list.RecyclerViewActivity;
+import org.salient.artvideoplayer.activity.tiny.TinyWindowActivity;
 
 public class OrientationActivity extends Activity implements View.OnClickListener {
     private Button normal;
     private Button listViewOrientation;
     private Button recyclerViewOrientation;
+    private Button tinyWindowOrientation;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,10 +30,12 @@ public class OrientationActivity extends Activity implements View.OnClickListene
         normal = findViewById(R.id.normal);
         listViewOrientation = findViewById(R.id.listViewOrientation);
         recyclerViewOrientation = findViewById(R.id.recyclerViewOrientation);
+        tinyWindowOrientation = findViewById(R.id.tinyWindowOrientation);
 
         normal.setOnClickListener(this);
         listViewOrientation.setOnClickListener(this);
         recyclerViewOrientation.setOnClickListener(this);
+        tinyWindowOrientation.setOnClickListener(this);
     }
 
     @Override
@@ -45,6 +49,9 @@ public class OrientationActivity extends Activity implements View.OnClickListene
                 break;
             case R.id.recyclerViewOrientation:
                 startActivity(new Intent(this, RecyclerViewActivity.class));
+                break;
+            case R.id.tinyWindowOrientation:
+                startActivity(new Intent(this, TinyWindowActivity.class));
                 break;
         }
     }

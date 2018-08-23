@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
 
+import org.salient.artplayer.MediaPlayerManager;
 import org.salient.artplayer.VideoView;
 import org.salient.artplayer.ui.ControlPanel;
 import org.salient.artvideoplayer.BaseActivity;
@@ -111,5 +112,20 @@ public class TinyWindowActivity extends BaseActivity {
                 tinyVideoView.startTinyWindow(layoutParams);
                 break;
         }
+    }
+
+    /**
+     * 实现重力感应则在对应生命周期下，增加以下实现方法
+     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MediaPlayerManager.instance().orientationEnable(this);//开启重力感应监听
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MediaPlayerManager.instance().orientationDisable();//关闭重力感应监听
     }
 }

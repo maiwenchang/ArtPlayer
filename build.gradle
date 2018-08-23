@@ -27,7 +27,7 @@ task clean(type: Delete) {
 
 ext {
     // App dependencies
-    supportLibraryVersion = '27.1.0'
+    supportLibraryVersion = '27.1.1'
     ijkPlayerVersion = '0.8.8'
     exoPlayerVersion = '2.8.3'
 

@@ -27,8 +27,12 @@ dependencies {
 
     compileOnly "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
 
-    implementation "com.google.android.exoplayer:exoplayer:$rootProject.exoPlayerVersion"
-    implementation "com.google.android.exoplayer:extension-rtmp:$rootProject.exoPlayerVersion"
+    api("com.google.android.exoplayer:exoplayer:$rootProject.exoPlayerVersion") {
+        exclude group: 'com.android.support'
+    }
+    api("com.google.android.exoplayer:extension-rtmp:$rootProject.exoPlayerVersion") {
+        exclude group: 'com.android.support'
+    }
 
     compileOnly project(':artplayer-java')
 }

@@ -118,7 +118,7 @@
                 android:indeterminateOnly="false"
                 android:max="100"
                 android:progress="50"
-                android:progressDrawable="@drawable/progress_vertical"
+                android:progressDrawable="@drawable/progress_custom"
                 android:visibility="visible" />
         </LinearLayout>
 

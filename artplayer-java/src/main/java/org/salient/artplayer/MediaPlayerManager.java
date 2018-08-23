@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.Gravity;
@@ -47,6 +48,8 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     protected static final int PORTRAIT = 1;
     protected static final int LANDSCAPE = 2;
     protected static final int REVERSE_LANDSCAPE = 3;
+
+    private int isRotate;//0 代表没开启方向锁定，1 代表开启方向锁定
 
     // settable by client
     private AudioManager.OnAudioFocusChangeListener onAudioFocusChangeListener;
@@ -177,7 +180,13 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
                 @Override
                 public void onOrientationChanged(int orientation) {
                     Activity activity = (Activity) context;
-                    if (activity == null) return;
+                    try {
+                        //获取是否开启系统
+                        isRotate = Settings.System.getInt(context.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION);
+                    } catch (Settings.SettingNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    if (activity == null || isRotate == 0) return;
                     if (orientation >= 340) { //屏幕顶部朝上
                         Log.i("orientation", "屏幕顶部朝上");
                         onOrientationPortrait(activity);

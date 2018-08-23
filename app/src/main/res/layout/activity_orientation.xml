@@ -34,6 +34,13 @@
             android:onClick="onClick"
             android:text="RecycleView中带重力感应" />
 
+        <Button
+            android:id="@+id/tinyWindowOrientation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:onClick="onClick"
+            android:text="小窗中带重力感应" />
 
     </LinearLayout>
 </LinearLayout>
