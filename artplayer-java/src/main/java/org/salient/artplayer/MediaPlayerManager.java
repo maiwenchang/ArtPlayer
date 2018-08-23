@@ -188,13 +188,10 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
                     }
                     if (activity == null || isRotate == 0) return;
                     if (orientation >= 340) { //屏幕顶部朝上
-                        Log.i("orientation", "屏幕顶部朝上");
                         onOrientationPortrait(activity);
                     } else if (orientation >= 260 && orientation <= 280) { //屏幕左边朝上
-                        Log.i("orientation", "屏幕左边朝上");
                         onOrientationLandscape(activity);
                     } else if (orientation >= 70 && orientation <= 90) { //屏幕右边朝上
-                        Log.i("orientation", "屏幕右边朝上");
                         onOrientationReverseLandscape(activity);
                     }
                 }
