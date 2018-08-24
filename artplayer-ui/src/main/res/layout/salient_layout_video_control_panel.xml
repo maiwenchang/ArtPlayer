@@ -122,6 +122,23 @@
                 android:visibility="visible" />
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/llProgressTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <TextView
+                android:id="@+id/tvProgressTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ffffff" />
+        </LinearLayout>
+
         <ProgressBar
             android:id="@+id/loading"
             android:layout_width="45dp"
@@ -142,6 +159,12 @@
             android:visibility="invisible"
             tools:visibility="visible">
 
+            <CheckBox
+                android:id="@+id/cbBottomPlay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:button="@drawable/salient_selector_bottom_video_play" />
             <!--required-->
             <TextView
                 android:id="@+id/current"

@@ -11,7 +11,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             //设置支持的SO库架构
-            abiFilters 'armeabi', 'armeabi-v7a','armeabi-v5', 'x86'
+            abiFilters 'armeabi', 'armeabi-v7a', 'armeabi-v5', 'x86'
         }
     }
     buildTypes {
@@ -67,17 +67,17 @@ android {
         implementation project(':artplayer-ui')
 
         //ExoPlayer : optional
-        implementation project(':artplayer-exo')
+        implementation 'org.salient.artvideoplayer:artplayer-exo:0.6.0'
 
         //ijkPlayer : optional
-        implementation project(':artplayer-armv7a')
+        implementation 'org.salient.artvideoplayer:artplayer-armv7a:0.6.0'
 
         //ijkPlayer : required for ijkPlayer, enough for most devices.
-        implementation project(':artplayer-ijk')
+        implementation 'org.salient.artvideoplayer:artplayer-ijk:0.6.0'
 
         // Other ABIs for ijkPlayer : optional
-        implementation project(':artplayer-armv5')
-        implementation project(':artplayer-x86')
+        implementation 'org.salient.artvideoplayer:artplayer-armv5:0.6.0'
+        implementation 'org.salient.artvideoplayer:artplayer-x86:0.6.0'
         //implementation project(':artplayer-x86_64')
         //implementation project(':artplayer-arm64')
 
