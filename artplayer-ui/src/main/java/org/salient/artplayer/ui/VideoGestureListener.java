@@ -14,9 +14,12 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import org.salient.artplayer.AbsControlPanel;
 import org.salient.artplayer.MediaPlayerManager;
+import org.salient.artplayer.Utils;
 import org.salient.artplayer.VideoView;
 
 /**
@@ -41,6 +44,15 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
     public ImageView imgOperation;//
     public LinearLayout llOperation;
 
+    private boolean firstTouch;//按住屏幕不放的第一次点击，则为true
+    private boolean mChangePosition;//判断是改变进度条则为true，否则为false
+    private boolean mChangeBrightness;//判断是不是改变亮度的操作
+    private boolean mChangeVolume;//判断是不是改变音量的操作
+    private SeekBar seekBar;
+    private int preDuration;//手势调整进度条的滑动距离
+    private LinearLayout llProgressTime;//展示手势滑动进度条的图层
+    private TextView tvProgressTime;//展示手势滑动改变多少的进度条
+
     private VideoGestureListener() {
     }
 
@@ -51,6 +63,9 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
         imgOperation = mControlPanel.findViewById(R.id.imgOperation);
         mAudioManager = (AudioManager) mControlPanel.getContext().getSystemService(Service.AUDIO_SERVICE);
         mMaxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        seekBar = mControlPanel.findViewById(R.id.bottom_seek_progress);
+        llProgressTime = mControlPanel.findViewById(R.id.llProgressTime);
+        tvProgressTime = mControlPanel.findViewById(R.id.tvProgressTime);
     }
 
     @Override
@@ -65,7 +80,8 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
 
         //取消隐藏音量和亮度的图层的操作
         llOperation.getHandler().removeCallbacks(runnable);
-
+        firstTouch = true;
+        mChangePosition = false;
         return true;
     }
 
@@ -93,17 +109,54 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
         } else if (target.getWindowType() == VideoView.WindowType.FULLSCREEN) {
             if (e2.getPointerCount() == 1) {//单指移动
                 float mOldX = e1.getX(), mOldY = e1.getY();
+                int x = (int) e2.getRawX();
                 int y = (int) e2.getRawY();
-                if (mOldX > currentWidth * 2.0 / 3) {
-                    // 右边滑动
-                    onVolumeSlide(((mOldY - y) * 2 / currentHeight));
-                } else if ((mOldX < currentWidth / 3.0)) {
+                if (firstTouch) {
+                    mChangePosition = Math.abs(distanceX) >= Math.abs(distanceY);
+                    if (!mChangePosition) {
+                        if (mOldX > currentWidth * 2.0 / 3) {
+                            //右边三分之一区域滑动
+                            mChangeVolume = true;
+                        } else if ((mOldX < currentWidth / 3.0)) {
+                            //左边三分之一区域滑动
+                            mChangeBrightness = true;
+                        }
+                    }
+                    firstTouch = false;
+                }
+                if (mChangePosition) {
+                    onSeekProgressControl(x - mOldX);
+                } else if (mChangeBrightness) {
                     onBrightnessSlide((mOldY - y) * 2 / currentHeight);
+                } else if (mChangeVolume) {
+                    onVolumeSlide(((mOldY - y) * 2 / currentHeight));
                 }
                 return true;
             }
         }
         return false;
+    }
+
+    /**
+     * 滑动改变播放的快进快退
+     *
+     * @param seekDistance
+     */
+    private void onSeekProgressControl(float seekDistance) {
+        if (MediaPlayerManager.instance().getPlayerState() != MediaPlayerManager.PlayerState.PLAYING &&
+                MediaPlayerManager.instance().getPlayerState() != MediaPlayerManager.PlayerState.PAUSED)
+            return;
+        preDuration = seekBar.getProgress() + (int) ((seekDistance / currentWidth) * 30);
+        if (preDuration > 100) {
+            preDuration = 100;
+        } else if (preDuration < 0) {
+            preDuration = 0;
+        }
+        long time = preDuration * MediaPlayerManager.instance().getDuration() / 100;
+        if (llProgressTime.getVisibility() == View.GONE) {
+            llProgressTime.setVisibility(View.VISIBLE);
+        }
+        tvProgressTime.setText(Utils.stringForTime(time) + "/" + Utils.stringForTime(MediaPlayerManager.instance().getDuration()));
     }
 
     /**
@@ -275,6 +328,7 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
         @Override
         public void run() {
             llOperation.setVisibility(View.GONE);
+            llProgressTime.setVisibility(View.GONE);
         }
     };
 
@@ -287,6 +341,13 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
             llOperation.postDelayed(runnable, 500);
             //亮度变量清空
             mBrightness = -1f;
+
+            if (mChangePosition) {
+                if (seekBar != null) {
+                    seekBar.setProgress(preDuration);
+                    mControlPanel.onStopTrackingTouch(seekBar);
+                }
+            }
 
             //拖动或缩放窗口后修正位置
             if (v instanceof AbsControlPanel) {
@@ -304,4 +365,16 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
 
         return false;
     }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent e) {
+        //双击播放或暂停
+        if (mControlPanel.getTarget().isCurrentPlaying() && MediaPlayerManager.instance().isPlaying()) {
+            mControlPanel.getTarget().pause();
+        } else {
+            mControlPanel.getTarget().start();
+        }
+        return true;
+    }
+
 }

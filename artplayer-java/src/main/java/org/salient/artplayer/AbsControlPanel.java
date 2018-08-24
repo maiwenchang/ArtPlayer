@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.SeekBar;
 
 /**
  * > Created by Mai on 2018/7/10
@@ -12,7 +13,7 @@ import android.widget.FrameLayout;
  * > Description:视频播放控制面板的基类
  * *
  */
-public abstract class AbsControlPanel extends FrameLayout implements MediaStateListener, View.OnClickListener, View.OnTouchListener {
+public abstract class AbsControlPanel extends FrameLayout implements MediaStateListener, View.OnClickListener, View.OnTouchListener, SeekBar.OnSeekBarChangeListener{
 
     protected VideoView mTarget;
 
@@ -165,5 +166,20 @@ public abstract class AbsControlPanel extends FrameLayout implements MediaStateL
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         return false;
+    }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+
     }
 }

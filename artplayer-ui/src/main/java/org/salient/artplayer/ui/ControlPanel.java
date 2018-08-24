@@ -28,7 +28,7 @@ import org.salient.artplayer.VideoView;
  * <p>
  * *
  */
-public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarChangeListener {
+public class ControlPanel extends AbsControlPanel {
 
     private final String TAG = ControlPanel.class.getSimpleName();
 
@@ -53,6 +53,8 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
     private TextView tvConfirm;
     private TextView tvTitle;
     private LinearLayout llOperation;
+    private LinearLayout llProgressTime;
+    private CheckBox cbBottomPlay;//底部播放按钮
 
     private Runnable mDismissTask = new Runnable() {
         @Override
@@ -99,12 +101,15 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
         ivRight = findViewById(R.id.ivRight);
         tvTitle = findViewById(R.id.tvTitle);
         llOperation = findViewById(R.id.llOperation);
+        llProgressTime = findViewById(R.id.llProgressTime);
+        cbBottomPlay = findViewById(R.id.cbBottomPlay);
 
         ivRight.setOnClickListener(this);
         ivLeft.setOnClickListener(this);
         bottom_seek_progress.setOnSeekBarChangeListener(this);
         ivVolume.setOnClickListener(this);
         start.setOnClickListener(this);
+        cbBottomPlay.setOnClickListener(this);
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -158,6 +163,7 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
         hideUI(layout_bottom, layout_top, loading, llAlert);
         showUI(video_cover, start);
         start.setChecked(false);
+        cbBottomPlay.setChecked(false);
         //if (mTarget!=null && mTarget.get)
         SynchronizeViewState();
     }
@@ -175,21 +181,24 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
     @Override
     public void onStatePlaying() {
         start.setChecked(true);
+        cbBottomPlay.setChecked(true);
         showUI(layout_bottom, layout_top);
-        hideUI(video_cover, loading, llOperation);
+        hideUI(video_cover, loading, llOperation, llProgressTime);
         startDismissTask();
     }
 
     @Override
     public void onStatePaused() {
         start.setChecked(false);
+        cbBottomPlay.setChecked(false);
         showUI(start, layout_bottom);
-        hideUI(video_cover, loading, llOperation);
+        hideUI(video_cover, loading, llOperation, llProgressTime);
     }
 
     @Override
     public void onStatePlaybackCompleted() {
         start.setChecked(false);
+        cbBottomPlay.setChecked(false);
         hideUI(layout_bottom, loading);
         showUI(start);
         if (mTarget.getWindowType() == VideoView.WindowType.FULLSCREEN || mTarget.getWindowType() == VideoView.WindowType.TINY) {
@@ -351,6 +360,26 @@ public class ControlPanel extends AbsControlPanel implements SeekBar.OnSeekBarCh
                 mTarget.pause();
             }
 
+        } else if (id == R.id.cbBottomPlay) {
+            if (mTarget == null) {
+                return;
+            }
+            if (cbBottomPlay.isChecked()) {
+                if (mTarget.isCurrentPlaying() && MediaPlayerManager.instance().isPlaying()) {
+                    return;
+                }
+                if (!Utils.isNetConnected(getContext())) {
+                    onStateError();
+                    return;
+                }
+                if (!Utils.isWifiConnected(getContext())) {
+                    showWifiAlert();
+                    return;
+                }
+                mTarget.start();
+            } else {
+                mTarget.pause();
+            }
         }
         startDismissTask();
     }
