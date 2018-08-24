@@ -3,9 +3,6 @@ package org.salient.artplayer.ui;
 import android.app.Activity;
 import android.app.Service;
 import android.media.AudioManager;
-import android.util.Log;
-import android.view.Display;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -369,10 +366,12 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
     @Override
     public boolean onDoubleTap(MotionEvent e) {
         //双击播放或暂停
-        if (mControlPanel.getTarget().isCurrentPlaying() && MediaPlayerManager.instance().isPlaying()) {
-            mControlPanel.getTarget().pause();
-        } else {
-            mControlPanel.getTarget().start();
+        if (mControlPanel.getTarget().isCurrentPlaying()) {
+            if (MediaPlayerManager.instance().isPlaying()) {
+                mControlPanel.getTarget().pause();
+            } else {
+                mControlPanel.getTarget().start();
+            }
         }
         return true;
     }
