@@ -7,6 +7,7 @@ import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.OrientationEventListener;
@@ -44,10 +45,10 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     private Timer mProgressTimer;
     private ProgressTimerTask mProgressTimerTask;
 
-    protected int currentOrientation = 0;
-    protected static final int PORTRAIT = 1;
-    protected static final int LANDSCAPE = 2;
-    protected static final int REVERSE_LANDSCAPE = 3;
+    private int currentOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+//    private static final int PORTRAIT = 1;
+//    private static final int LANDSCAPE = 2;
+//    private static final int REVERSE_LANDSCAPE = 3;
 
     private int isRotate;//0 代表没开启方向锁定，1 代表开启方向锁定
 
@@ -67,7 +68,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     /**
      * 加速度传感器监听
      */
-    protected OrientationEventListener orientationEventListener;
+    private OrientationEventListener orientationEventListener;
 
     public static MediaPlayerManager instance() {
         return ManagerHolder.INSTANCE;
@@ -105,18 +106,23 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     /**
      * 竖屏
      */
-    protected void onOrientationPortrait(Activity activity) {
+    public void onOrientationPortrait(Activity activity) {
         VideoView currentFloor = getCurrentVideoView();
         if (currentFloor != null) {
-            if (currentOrientation == PORTRAIT)
-                return;
-            if ((currentOrientation == LANDSCAPE || currentOrientation == REVERSE_LANDSCAPE) && !(currentFloor.getWindowType() == VideoView.WindowType.FULLSCREEN)) {
-                currentOrientation = PORTRAIT;
+            if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
                 return;
             }
-            currentOrientation = PORTRAIT;
-            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            currentFloor.getParentVideoView().setControlPanel(getCurrentControlPanel());
+            if ((currentOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                    || currentOrientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE)
+                    && !(currentFloor.getWindowType() == VideoView.WindowType.FULLSCREEN)) {
+                currentOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+                return;
+            }
+            currentOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+            VideoView parentVideoView = currentFloor.getParentVideoView();
+            if (parentVideoView != null) {
+                parentVideoView.setControlPanel(getCurrentControlPanel());
+            }
             currentFloor.exitFullscreen();
         }
     }
@@ -124,16 +130,17 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     /**
      * 横屏
      */
-    protected void onOrientationLandscape(Activity activity) {
+    public void onOrientationLandscape(Activity activity) {
         VideoView currentFloor = getCurrentVideoView();
         if (currentFloor != null) {
-            if (currentOrientation == LANDSCAPE) return;
-            if (currentOrientation == PORTRAIT && (currentFloor.getWindowType() == VideoView.WindowType.FULLSCREEN)) {
-                currentOrientation = LANDSCAPE;
+            if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) return;
+            if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                    && (currentFloor.getWindowType() == VideoView.WindowType.FULLSCREEN)) {
+                currentOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
                 return;
             }
-            currentOrientation = LANDSCAPE;
-            if (!(currentFloor.getWindowType() == VideoView.WindowType.FULLSCREEN)) {
+            currentOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
+            if (currentFloor.getWindowType() != VideoView.WindowType.FULLSCREEN) {
                 //new VideoView
                 VideoView videoView = new VideoView(activity);
                 //set parent
@@ -142,7 +149,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
                 videoView.setControlPanel(getCurrentControlPanel());
                 videoView.setUp(currentFloor.getDataSourceObject(), VideoView.WindowType.FULLSCREEN, currentFloor.getData());
                 //start fullscreen
-                videoView.startFullscreen(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                videoView.startFullscreen(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
             }
         }
     }
@@ -150,16 +157,17 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     /**
      * 反向横屏
      */
-    protected void onOrientationReverseLandscape(Activity activity) {
+    public void onOrientationReverseLandscape(Activity activity) {
         VideoView currentFloor = getCurrentVideoView();
         if (currentFloor != null) {
-            if (currentOrientation == REVERSE_LANDSCAPE) return;
-            if (currentOrientation == PORTRAIT && (currentFloor.getWindowType() == VideoView.WindowType.FULLSCREEN)) {
-                currentOrientation = REVERSE_LANDSCAPE;
+            if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) return;
+            if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                    && (currentFloor.getWindowType() == VideoView.WindowType.FULLSCREEN)) {
+                currentOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
                 return;
             }
-            currentOrientation = REVERSE_LANDSCAPE;
-            if (!(currentFloor.getWindowType() == VideoView.WindowType.FULLSCREEN)) {
+            currentOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
+            if (currentFloor.getWindowType() != VideoView.WindowType.FULLSCREEN) {
                 //new VideoView
                 VideoView videoView = new VideoView(activity);
                 //set parent
@@ -169,16 +177,19 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
                 videoView.setControlPanel(getCurrentControlPanel());
                 //start fullscreen
                 videoView.startFullscreen(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
+                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
             }
-//            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
         }
     }
 
+    private long orientationListenerDelayTime = 0;
+
     public void orientationEnable(final Context context) {
         if (orientationEventListener == null) {
-            orientationEventListener = new OrientationEventListener(context) { // 加速度传感器监听，用于自动旋转屏幕
+            orientationEventListener = new OrientationEventListener(context, 5) { // 加速度传感器监听，用于自动旋转屏幕
                 @Override
                 public void onOrientationChanged(int orientation) {
+                    Log.d(getClass().getSimpleName(), "onOrientationChanged: " + orientation);
                     Activity activity = (Activity) context;
                     try {
                         //获取是否开启系统
@@ -186,17 +197,22 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
                     } catch (Settings.SettingNotFoundException e) {
                         e.printStackTrace();
                     }
-                    if (activity == null || isRotate == 0) return;
-                    if (orientation >= 340) { //屏幕顶部朝上
+                    if (isRotate == 0) return;
+                    if ((orientation >= 300 || orientation <= 30) && System.currentTimeMillis() - orientationListenerDelayTime > 1000) { //屏幕顶部朝上
                         onOrientationPortrait(activity);
-                    } else if (orientation >= 260 && orientation <= 280) { //屏幕左边朝上
+                        orientationListenerDelayTime = System.currentTimeMillis();
+                    } else if (orientation >= 260 && orientation <= 280
+                            && System.currentTimeMillis() - orientationListenerDelayTime > 1000) { //屏幕左边朝上
                         onOrientationLandscape(activity);
-                    } else if (orientation >= 70 && orientation <= 90) { //屏幕右边朝上
+                        orientationListenerDelayTime = System.currentTimeMillis();
+                    } else if (orientation >= 70 && orientation <= 90
+                            && System.currentTimeMillis() - orientationListenerDelayTime > 1000) { //屏幕右边朝上
                         onOrientationReverseLandscape(activity);
+                        orientationListenerDelayTime = System.currentTimeMillis();
                     }
                 }
             };
-
+            currentOrientation = ((AppCompatActivity) context).getRequestedOrientation();
             orientationEventListener.enable();
         }
     }
