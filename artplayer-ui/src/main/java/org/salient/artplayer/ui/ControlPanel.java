@@ -120,9 +120,9 @@ public class ControlPanel extends AbsControlPanel {
                 if (MediaPlayerManager.instance().getPlayerState() == MediaPlayerManager.PlayerState.PLAYING) {
                     cancelDismissTask();
                     if (layout_bottom.getVisibility() != VISIBLE) {
-                        showUI(layout_bottom, layout_top, start);
+                        showUI(layout_bottom, layout_top);
                     } else {
-                        hideUI(layout_top, layout_bottom, start);
+                        hideUI(layout_top, layout_bottom);
                     }
                     startDismissTask();
                 }
@@ -133,8 +133,7 @@ public class ControlPanel extends AbsControlPanel {
         setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (mGestureDetector.onTouchEvent(event))
-                    return true;
+                if (mGestureDetector.onTouchEvent(event)) return true;
                 return videoGestureListener.onTouch(v, event);
             }
         });
@@ -164,8 +163,15 @@ public class ControlPanel extends AbsControlPanel {
         showUI(video_cover, start);
         start.setChecked(false);
         cbBottomPlay.setChecked(false);
-        //if (mTarget!=null && mTarget.get)
-        SynchronizeViewState();
+        if (MediaPlayerManager.instance().isMute()) {
+            ivVolume.setChecked(false);
+        } else {
+            ivVolume.setChecked(true);
+        }
+        if (mTarget != null && mTarget.getParentVideoView() != null && mTarget.getParentVideoView().getControlPanel() != null) {
+            TextView title = mTarget.getParentVideoView().getControlPanel().findViewById(R.id.tvTitle);
+            tvTitle.setText(title.getText() == null ? "" : title.getText());
+        }
     }
 
     @Override
@@ -183,7 +189,7 @@ public class ControlPanel extends AbsControlPanel {
         start.setChecked(true);
         cbBottomPlay.setChecked(true);
         showUI(layout_bottom, layout_top);
-        hideUI(video_cover, loading, llOperation, llProgressTime);
+        hideUI(start, video_cover, loading, llOperation, llProgressTime);
         startDismissTask();
     }
 
@@ -191,7 +197,7 @@ public class ControlPanel extends AbsControlPanel {
     public void onStatePaused() {
         start.setChecked(false);
         cbBottomPlay.setChecked(false);
-        showUI(start, layout_bottom);
+        showUI(layout_bottom);
         hideUI(video_cover, loading, llOperation, llProgressTime);
     }
 
@@ -277,7 +283,7 @@ public class ControlPanel extends AbsControlPanel {
         if (MediaPlayerManager.instance().getPlayerState() != MediaPlayerManager.PlayerState.PLAYING &&
                 MediaPlayerManager.instance().getPlayerState() != MediaPlayerManager.PlayerState.PAUSED)
             return;
-        long time = seekBar.getProgress() * MediaPlayerManager.instance().getDuration() / 100;
+        long time = (long) (seekBar.getProgress() * 1.00 / 100 * MediaPlayerManager.instance().getDuration());
         MediaPlayerManager.instance().seekTo(time);
         Log.i(TAG, "seekTo " + time + " [" + this.hashCode() + "] ");
     }
@@ -286,7 +292,7 @@ public class ControlPanel extends AbsControlPanel {
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if (fromUser) {
             long duration = MediaPlayerManager.instance().getDuration();
-            current.setText(Utils.stringForTime(progress * duration / 100));
+            current.setText(Utils.stringForTime(progress / 100 * duration));
         }
     }
 
@@ -403,6 +409,12 @@ public class ControlPanel extends AbsControlPanel {
             ivVolume.setChecked(false);
         } else {
             ivVolume.setChecked(true);
+        }
+        if (MediaPlayerManager.instance().getPlayerState() != MediaPlayerManager.PlayerState.PLAYING
+                && MediaPlayerManager.instance().getPlayerState() != MediaPlayerManager.PlayerState.PAUSED) {
+            showUI(start);
+        } else {
+            hideUI(start);
         }
         if (mTarget != null && mTarget.getParentVideoView() != null && mTarget.getParentVideoView().getControlPanel() != null) {
             TextView title = mTarget.getParentVideoView().getControlPanel().findViewById(R.id.tvTitle);

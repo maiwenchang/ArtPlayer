@@ -46,11 +46,8 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     private ProgressTimerTask mProgressTimerTask;
 
     private int currentOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-//    private static final int PORTRAIT = 1;
-//    private static final int LANDSCAPE = 2;
-//    private static final int REVERSE_LANDSCAPE = 3;
 
-    private int isRotate;//0 代表没开启方向锁定，1 代表开启方向锁定
+    private int isRotate;//0 代表方向锁定，1 代表没方向锁定
 
     // settable by client
     private AudioManager.OnAudioFocusChangeListener onAudioFocusChangeListener;
@@ -451,7 +448,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
 
     @Override
     public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
-        //Log.i(TAG, "onSurfaceTextureUpdated [" + VideoLayerManager.getCurrentFloor().hashCode() + "] ");
+
     }
 
     public void setMediaPlayer(AbsMediaPlayer mediaPlayer) {
