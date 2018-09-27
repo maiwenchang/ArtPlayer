@@ -20,12 +20,12 @@
 - 重力感应支持
 
 ### Preview
-<img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/main.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/mediaplayer.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/api.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/list.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/recyclerview.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/extension.png" height="500"/>
+<img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/main.png" height="500"/><img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/mediaplayer.png" height="500"/><img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/api.png" height="500"/><img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/list.png" height="500"/><img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/recyclerview.png" height="500"/><img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/extension.png" height="500"/>
 
 ### Download
 
- - [Demo Download](https://github.com/maiwenchang/ArtVideoPlayer/raw/master/app/debug/artplayer-debug.apk)
- - ![image](https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/apkqrcode.png)
+ - [Demo Download](https://github.com/maiwenchang/ArtPlayer/raw/master/app/debug/artplayer-debug.apk)
+ - ![image](https://github.com/maiwenchang/ArtPlayer/raw/master/pic/apkqrcode.png)
 
 
 ### Getting started
@@ -113,7 +113,7 @@ protected void onDestroy() {
 
 
 ### Support (支持) ###
-- 请在 github 上公开讨论[技术问题](https://github.com/maiwenchang/ArtVideoPlayer/issues)
+- 请在 github 上公开讨论[技术问题](https://github.com/maiwenchang/ArtPlayer/issues)
 
 
 ### My Build Environment
