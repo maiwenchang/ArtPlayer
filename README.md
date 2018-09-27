@@ -1,5 +1,5 @@
 [English](https://github.com/maiwenchang/ArtVideoPlayer/blob/master/README.English.md) | 简体中文
-# ArtVideoPlayer
+# ArtPlayer
 
 [![API](https://img.shields.io/badge/API-16%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=16)
 [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)](https://github.com/maiwenchang/ArtVideoPlayer/blob/master/LICENSE)
