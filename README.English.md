@@ -1,5 +1,5 @@
 English | [简体中文](https://github.com/maiwenchang/ArtVideoPlayer/blob/master/README.md)
-# ArtVideoPlayer
+# ArtPlayer
 
 [![API](https://img.shields.io/badge/API-16%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=16)
 [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)](https://github.com/maiwenchang/ArtVideoPlayer/blob/master/LICENSE)
@@ -20,12 +20,12 @@ This is a flexible video player. MediaPlayer is completely separate from VideoVi
 - Gravity sensor support
 
 ### Preview
-<img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/main.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/mediaplayer.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/api.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/list.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/recyclerview.png" height="500"/><img src="https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/extension.png" height="500"/>
+<img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/main.png" height="500"/><img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/mediaplayer.png" height="500"/><img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/api.png" height="500"/><img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/list.png" height="500"/><img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/recyclerview.png" height="500"/><img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/extension.png" height="500"/>
 
 ### Download
 
- - [Demo Download](https://github.com/maiwenchang/ArtVideoPlayer/raw/master/app/debug/artplayer-debug.apk)
- - ![image](https://github.com/maiwenchang/ArtVideoPlayer/raw/master/pic/apkqrcode.png)
+ - [Demo Download](https://github.com/maiwenchang/ArtPlayer/raw/master/app/debug/artplayer-debug.apk)
+ - ![image](https://github.com/maiwenchang/ArtPlayer/raw/master/pic/apkqrcode.png)
 
 
 ### Getting started
@@ -113,7 +113,7 @@ protected void onDestroy() {
 
 
 ### Support (支持) ###
-- Public technical discussion on github is preferred.[Technical problems](https://github.com/maiwenchang/ArtVideoPlayer/issues)
+- Public technical discussion on github is preferred.[Technical problems](https://github.com/maiwenchang/ArtPlayer/issues)
 
 
 ### My Build Environment
