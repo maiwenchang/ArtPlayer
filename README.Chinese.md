@@ -127,6 +127,8 @@ protected void onDestroy() {
 - [maiwenchang](https://github.com/maiwenchang)
 - [ironman6121](https://github.com/ironman6121)
 
+### 联系方式
+- cv.stronger@gmail.com
 
 ### License
 
