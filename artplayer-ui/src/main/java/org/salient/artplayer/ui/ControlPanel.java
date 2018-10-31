@@ -403,7 +403,7 @@ public class ControlPanel extends AbsControlPanel {
         return false;
     }
 
-    //同步跟MediaPlayer状态无关的视图
+    //同步跟MediaPlayer状态无关的视图 //todo 如果这样的控件的数量很多，应该尝试寻找更好的实现方式
     public void SynchronizeViewState() {
         if (MediaPlayerManager.instance().isMute()) {
             ivVolume.setChecked(false);

@@ -32,7 +32,7 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
     private float currentY;
     private float currentWidth;
     private float currentHeight;
-    private float baseValue;
+    private float baseValue; //缩放时，两指间初始距离
     private int mVolume = -1;//当前声音
     private int mMaxVolume;//最大声音
     private float mBrightness = -1f;//当前亮度
@@ -103,7 +103,7 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
             } else if (e2.getPointerCount() == 2) {//双指缩放
                 return zoomWindow(target, e1, e2);
             }
-        } else if (target.getWindowType() == VideoView.WindowType.FULLSCREEN) {
+        } else if (target.getWindowType() == VideoView.WindowType.FULLSCREEN) {//全屏
             if (e2.getPointerCount() == 1) {//单指移动
                 float mOldX = e1.getX(), mOldY = e1.getY();
                 int x = (int) e2.getRawX();
@@ -249,6 +249,8 @@ public class VideoGestureListener extends GestureDetector.SimpleOnGestureListene
 
     /**
      * Zoom window according to two fingers
+     * @param e1 The first down motion event that started the scrolling.
+     * @param e2 The move motion event that triggered the current onScroll.
      * 根据两个手指缩放窗口
      */
     private boolean zoomWindow(VideoView target, MotionEvent e1, MotionEvent e2) {
