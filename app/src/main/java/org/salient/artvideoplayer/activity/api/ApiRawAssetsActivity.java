@@ -60,17 +60,13 @@ public class ApiRawAssetsActivity extends BaseActivity {
                 AssetManager am = getAssets();
                 try {
                     String fileName = edAssetsUrl.getText().toString();
-                    AssetFileDescriptor assetFileDescriptor = am.openFd(fileName);
-                    videoView.setDataSourceObject(assetFileDescriptor);
+                    AssetFileDescriptor afd2 = am.openFd(fileName);
+                    videoView.setDataSourceObject(afd2);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
                 videoView.start();
                 break;
-
-            //set Raw Resource File uri
-//               videoView.setUp(edRawUrl.getText().toString());
-//               videoView.start();
         }
 
 

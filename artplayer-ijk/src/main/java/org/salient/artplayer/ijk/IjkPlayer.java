@@ -58,8 +58,9 @@ public class IjkPlayer extends AbsMediaPlayer implements IMediaPlayer.OnPrepared
             Object dataSource = getDataSource();
             if (dataSource instanceof AssetFileDescriptor) {//Android assets file
                 AssetFileDescriptor fd = (AssetFileDescriptor) dataSource;
-                mediaPlayer.setDataSource(fd.getFileDescriptor());
-            } else if (dataSource != null && dataSource instanceof RawDataSourceProvider) {// Android raw file
+                RawDataSourceProvider sourceProvider = new RawDataSourceProvider(fd);
+                mediaPlayer.setDataSource(sourceProvider);
+            } else if (dataSource instanceof RawDataSourceProvider) {// Android raw file
                 mediaPlayer.setDataSource((IMediaDataSource) dataSource);
             } else if (dataSource != null && getHeaders() != null) {//url with headers
                 mediaPlayer.setDataSource(dataSource.toString(), getHeaders());
