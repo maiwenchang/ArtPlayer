@@ -7,13 +7,17 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
 
+import org.salient.artvideoplayer.BaseActivity;
 import org.salient.artvideoplayer.R;
 import org.salient.artvideoplayer.activity.api.ApiCommonActivity;
 import org.salient.artvideoplayer.activity.list.ListViewActivity;
 import org.salient.artvideoplayer.activity.list.RecyclerViewActivity;
 import org.salient.artvideoplayer.activity.tiny.TinyWindowActivity;
 
-public class OrientationActivity extends Activity implements View.OnClickListener {
+/**
+ * 重力感应全屏
+ */
+public class OrientationActivity extends BaseActivity implements View.OnClickListener {
     private Button normal;
     private Button listViewOrientation;
     private Button recyclerViewOrientation;

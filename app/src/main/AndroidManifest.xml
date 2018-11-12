@@ -54,9 +54,15 @@
             android:name=".activity.tiny.TinyWindowActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="TinyWindowActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activity.orientation.OrientationActivity"
+            android:label="OrientationActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activity.api.ApiRawAssetsActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="ApiRawAssetsActivity"
             android:screenOrientation="portrait" />
     </application>
 

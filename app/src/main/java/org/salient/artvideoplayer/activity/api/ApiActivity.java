@@ -35,6 +35,9 @@ public class ApiActivity extends BaseActivity {
             case R.id.common:
                 startActivity(new Intent(this, ApiCommonActivity.class));
                 break;
+            case R.id.rawAssets:
+                startActivity(new Intent(this,ApiRawAssetsActivity.class));
+                break;
 
         }
     }

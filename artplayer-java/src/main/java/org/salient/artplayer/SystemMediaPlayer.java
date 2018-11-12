@@ -55,7 +55,7 @@ public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnP
                 setLooping(true);
             }
             Object dataSource = getDataSource();
-            if (dataSource != null && dataSource instanceof AssetFileDescriptor) {//Android assets file
+            if (dataSource instanceof AssetFileDescriptor) {//Android assets file
                 AssetFileDescriptor fd = (AssetFileDescriptor) dataSource;
                 mediaPlayer.setDataSource(fd.getFileDescriptor(), fd.getStartOffset(), fd.getLength());
             } else if (dataSource != null && getHeaders() != null) {//url with headers

@@ -81,7 +81,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     }
 
     public void setDataSource(Object dataSource, Map<String, String> headers) {
-        mediaPlayer.setDataSource(dataSource.toString());
+        mediaPlayer.setDataSource(dataSource);
         mediaPlayer.setHeaders(headers);
     }
 
@@ -128,23 +128,23 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
      * 横屏
      */
     public void onOrientationLandscape(Activity activity) {
-        VideoView currentFloor = getCurrentVideoView();
-        if (currentFloor != null) {
+        VideoView currentVideoView = getCurrentVideoView();
+        if (currentVideoView != null) {
             if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) return;
             if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                    && (currentFloor.getWindowType() == VideoView.WindowType.FULLSCREEN)) {
+                    && (currentVideoView.getWindowType() == VideoView.WindowType.FULLSCREEN)) {
                 currentOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
                 return;
             }
             currentOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
-            if (currentFloor.getWindowType() != VideoView.WindowType.FULLSCREEN) {
+            if (currentVideoView.getWindowType() != VideoView.WindowType.FULLSCREEN) {
                 //new VideoView
                 VideoView videoView = new VideoView(activity);
                 //set parent
-                videoView.setParentVideoView(currentFloor);
+                videoView.setParentVideoView(currentVideoView);
                 //optional: set ControlPanel
                 videoView.setControlPanel(getCurrentControlPanel());
-                videoView.setUp(currentFloor.getDataSourceObject(), VideoView.WindowType.FULLSCREEN, currentFloor.getData());
+                videoView.setUp(currentVideoView.getDataSourceObject(), VideoView.WindowType.FULLSCREEN, currentVideoView.getData());
                 //start fullscreen
                 videoView.startFullscreen(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
             }
@@ -321,6 +321,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     }
 
     public void releaseMediaPlayer() {
+        cancelProgressTimer();
         mediaPlayer.release();
         mediaPlayer.setHeaders(null);
         mediaPlayer.setDataSource(null);
@@ -485,11 +486,11 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     }
 
     public void cancelProgressTimer() {
-        if (mProgressTimer != null) {
-            mProgressTimer.cancel();
-        }
         if (mProgressTimerTask != null) {
             mProgressTimerTask.cancel();
+        }
+        if (mProgressTimer != null) {
+            mProgressTimer.cancel();
         }
     }
 

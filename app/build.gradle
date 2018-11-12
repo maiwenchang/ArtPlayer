@@ -73,7 +73,8 @@ android {
         implementation 'org.salient.artvideoplayer:artplayer-armv7a:0.6.0'
 
         //ijkPlayer : required for ijkPlayer, enough for most devices.
-        implementation 'org.salient.artvideoplayer:artplayer-ijk:0.6.0'
+        //implementation 'org.salient.artvideoplayer:artplayer-ijk:0.6.0'
+        implementation project(':artplayer-ijk')
 
         // Other ABIs for ijkPlayer : optional
         implementation 'org.salient.artvideoplayer:artplayer-armv5:0.6.0'
@@ -81,8 +82,8 @@ android {
         //implementation project(':artplayer-x86_64')
         //implementation project(':artplayer-arm64')
 
-        //implementation 'org.salient.artvideoplayer:artplayer-java:0.5'
-        //implementation 'org.salient.artvideoplayer:artplayer-ui:0.5'
+        //implementation 'org.salient.artvideoplayer:artplayer-java:0.6.0'
+        //implementation 'org.salient.artvideoplayer:artplayer-ui:0.6.0'
     }
 }
 
