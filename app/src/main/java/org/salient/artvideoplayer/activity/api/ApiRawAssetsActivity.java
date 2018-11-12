@@ -75,13 +75,17 @@ public class ApiRawAssetsActivity extends BaseActivity {
                 break;
             case R.id.playAssets:
                 //set Assets Resource File uri
-                AssetManager am = getAssets();
-                try {
-                    String fileName = edAssetsUrl.getText().toString(); // "assets_video.mp4"
-                    AssetFileDescriptor afd2 = am.openFd(fileName);
-                    videoView.setDataSourceObject(afd2);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                String fileName = edAssetsUrl.getText().toString(); // "assets_video.mp4"
+                if (MediaPlayerManager.instance().getMediaPlayer() instanceof ExoPlayer) {
+                    videoView.setDataSourceObject("file:///android_asset/" + fileName);
+                } else {
+                    AssetManager am = getAssets();
+                    try {
+                        AssetFileDescriptor afd2 = am.openFd(fileName);
+                        videoView.setDataSourceObject(afd2);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
                 videoView.start();
                 break;
