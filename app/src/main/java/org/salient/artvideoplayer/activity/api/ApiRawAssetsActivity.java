@@ -7,7 +7,12 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.EditText;
 
+import com.google.android.exoplayer2.upstream.DataSpec;
+import com.google.android.exoplayer2.upstream.RawResourceDataSource;
+
+import org.salient.artplayer.MediaPlayerManager;
 import org.salient.artplayer.VideoView;
+import org.salient.artplayer.exo.ExoPlayer;
 import org.salient.artplayer.ui.ControlPanel;
 import org.salient.artvideoplayer.BaseActivity;
 import org.salient.artvideoplayer.R;
@@ -50,16 +55,29 @@ public class ApiRawAssetsActivity extends BaseActivity {
             case R.id.playRaw:
                 //set Raw Resource File uri
                 String name = edRawUrl.getText().toString();
-                int raw = getResources().getIdentifier(name, "raw", getPackageName());
-                AssetFileDescriptor afd = getResources().openRawResourceFd(raw);
-                videoView.setDataSourceObject(afd);
+                int raw = getResources().getIdentifier(name, "raw", getPackageName()); // R.raw.raw_video
+
+                if (MediaPlayerManager.instance().getMediaPlayer() instanceof ExoPlayer) {
+                    DataSpec dataSpec = new DataSpec(RawResourceDataSource.buildRawResourceUri(raw));
+                    RawResourceDataSource rawResourceDataSource = new RawResourceDataSource(this);
+                    try {
+                        rawResourceDataSource.open(dataSpec);
+                    } catch (RawResourceDataSource.RawResourceDataSourceException e) {
+                        e.printStackTrace();
+                    }
+                    videoView.setDataSourceObject(rawResourceDataSource);
+                } else {
+                    AssetFileDescriptor afd = getResources().openRawResourceFd(raw);
+                    videoView.setDataSourceObject(afd);
+                }
+
                 videoView.start();
                 break;
             case R.id.playAssets:
                 //set Assets Resource File uri
                 AssetManager am = getAssets();
                 try {
-                    String fileName = edAssetsUrl.getText().toString();
+                    String fileName = edAssetsUrl.getText().toString(); // "assets_video.mp4"
                     AssetFileDescriptor afd2 = am.openFd(fileName);
                     videoView.setDataSourceObject(afd2);
                 } catch (IOException e) {

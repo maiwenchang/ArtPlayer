@@ -67,7 +67,8 @@ android {
         implementation project(':artplayer-ui')
 
         //ExoPlayer : optional
-        implementation 'org.salient.artvideoplayer:artplayer-exo:0.6.0'
+        //implementation 'org.salient.artvideoplayer:artplayer-exo:0.6.0'
+        implementation project(':artplayer-exo')
 
         //ijkPlayer : optional
         implementation 'org.salient.artvideoplayer:artplayer-armv7a:0.6.0'

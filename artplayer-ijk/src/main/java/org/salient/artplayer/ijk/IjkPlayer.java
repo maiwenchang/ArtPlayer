@@ -56,11 +56,11 @@ public class IjkPlayer extends AbsMediaPlayer implements IMediaPlayer.OnPrepared
                 setLooping(true);
             }
             Object dataSource = getDataSource();
-            if (dataSource instanceof AssetFileDescriptor) {//Android assets file
+            if (dataSource instanceof AssetFileDescriptor) {//Android raw/assets file
                 AssetFileDescriptor fd = (AssetFileDescriptor) dataSource;
                 RawDataSourceProvider sourceProvider = new RawDataSourceProvider(fd);
                 mediaPlayer.setDataSource(sourceProvider);
-            } else if (dataSource instanceof RawDataSourceProvider) {// Android raw file
+            } else if (dataSource instanceof RawDataSourceProvider) {// IMediaDataSource
                 mediaPlayer.setDataSource((IMediaDataSource) dataSource);
             } else if (dataSource != null && getHeaders() != null) {//url with headers
                 mediaPlayer.setDataSource(dataSource.toString(), getHeaders());

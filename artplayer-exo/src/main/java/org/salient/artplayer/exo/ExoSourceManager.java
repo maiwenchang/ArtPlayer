@@ -103,7 +103,7 @@ public class ExoSourceManager {
         return mediaSource;
     }
 
-    @C.ContentType
+//    @C.ContentType
     public static int inferContentType(String fileName) {
         fileName = Util.toLowerInvariant(fileName);
         if (fileName.endsWith(".mpd")) {

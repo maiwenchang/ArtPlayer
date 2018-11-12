@@ -2,6 +2,8 @@ package org.salient.artplayer.exo;
 
 import android.app.Service;
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
 import android.media.AudioManager;
 import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
@@ -29,6 +31,7 @@ import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
 import com.google.android.exoplayer2.trackselection.TrackSelection;
 import com.google.android.exoplayer2.trackselection.TrackSelectionArray;
 import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
+import com.google.android.exoplayer2.upstream.RawResourceDataSource;
 
 import org.salient.artplayer.AbsMediaPlayer;
 import org.salient.artplayer.MediaPlayerManager;
@@ -97,8 +100,17 @@ public class ExoPlayer extends AbsMediaPlayer implements Player.EventListener, A
 //            if (mSpeedPlaybackParameters != null) { // todo speed
 //                mediaPlayer.setPlaybackParameters(mSpeedPlaybackParameters);
 //            }
+            //设置播放Url
+            String  url;
+            Object dataSource = getDataSource();
+            if (dataSource instanceof RawResourceDataSource) {//Android raw file
+                RawResourceDataSource rawDataSource = (RawResourceDataSource) dataSource;
+                url = rawDataSource.getUri() != null ? rawDataSource.getUri().toString() : "";
+            } else {
+                url = dataSource.toString();
+            }
             MediaSource mediaSource = ExoSourceManager.newInstance(mAppContext, getHeaders()).getMediaSource(
-                    getDataSource().toString(), false, false, MediaPlayerManager.instance().isLooping(), null
+                    url, false, false, MediaPlayerManager.instance().isLooping(), null
             );
             mediaPlayer.prepare(mediaSource);
             mediaPlayer.setPlayWhenReady(true);
