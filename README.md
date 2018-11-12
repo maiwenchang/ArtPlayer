@@ -7,6 +7,10 @@ English | [简体中文](https://github.com/maiwenchang/ArtVideoPlayer/blob/mast
 ###
 This is a flexible video player. MediaPlayer is completely separate from VideoView and can be replaced with other player kernels such as ExoPlayer and ijkPlayer. Developers can fully customize the player view, which we call the control panel. In addition, developers can use MediaPlayerManager to control playback behaviours, such as full-screen mode, small screen mode, and smart matching modes in RecyclerView.
 
+<p align="center">
+<img src="https://github.com/maiwenchang/ArtPlayer/raw/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png"/>
+</p>
+
 ### Features
 - Fullscreen,TinyWindow play
 - Support for playing in RecyclerView
