@@ -22,7 +22,9 @@ import java.io.IOException;
 /**
  * Created by Mai on 2018/11/12
  * *
- * Description:
+ * Description: 播放 Raw / Assets 音视频文件
+ * 详细介绍参考: https://www.jianshu.com/p/37fef37706d3
+ *
  * *
  */
 public class ApiRawAssetsActivity extends BaseActivity {
@@ -46,7 +48,7 @@ public class ApiRawAssetsActivity extends BaseActivity {
 
         edRawUrl.setText(getResources().getResourceName(R.raw.raw_video));
 
-        edAssetsUrl.setText("assets_video.mp4");
+       edAssetsUrl.setText("assets_video.mp4");
 
     }
 
@@ -58,6 +60,7 @@ public class ApiRawAssetsActivity extends BaseActivity {
                 int raw = getResources().getIdentifier(name, "raw", getPackageName()); // R.raw.raw_video
 
                 if (MediaPlayerManager.instance().getMediaPlayer() instanceof ExoPlayer) {
+                    // ExoPlayer
                     DataSpec dataSpec = new DataSpec(RawResourceDataSource.buildRawResourceUri(raw));
                     RawResourceDataSource rawResourceDataSource = new RawResourceDataSource(this);
                     try {
@@ -67,6 +70,7 @@ public class ApiRawAssetsActivity extends BaseActivity {
                     }
                     videoView.setDataSourceObject(rawResourceDataSource);
                 } else {
+                    //android.media.MediaPlayer & IjkPlayer
                     AssetFileDescriptor afd = getResources().openRawResourceFd(raw);
                     videoView.setDataSourceObject(afd);
                 }
@@ -77,8 +81,10 @@ public class ApiRawAssetsActivity extends BaseActivity {
                 //set Assets Resource File uri
                 String fileName = edAssetsUrl.getText().toString(); // "assets_video.mp4"
                 if (MediaPlayerManager.instance().getMediaPlayer() instanceof ExoPlayer) {
+                    // ExoPlayer
                     videoView.setDataSourceObject("file:///android_asset/" + fileName);
                 } else {
+                    //android.media.MediaPlayer & IjkPlayer
                     AssetManager am = getAssets();
                     try {
                         AssetFileDescriptor afd2 = am.openFd(fileName);

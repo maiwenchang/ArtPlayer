@@ -262,6 +262,8 @@ public class VideoView extends FrameLayout {
         Utils.scanForActivity(context).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         //bind {@link AudioManager#OnAudioFocusChangeListener}
         MediaPlayerManager.instance().bindAudioFocus(context);
+        //bind OrientationEventManager
+        MediaPlayerManager.instance().bindOrientationManager(getContext());
         //init TextureView, we will prepare and start the player when surfaceTextureAvailable.
         MediaPlayerManager.instance().initTextureView(context);
         MediaPlayerManager.instance().addTextureView(this);

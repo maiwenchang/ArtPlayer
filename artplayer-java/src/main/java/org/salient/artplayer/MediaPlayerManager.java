@@ -1,16 +1,11 @@
 package org.salient.artplayer;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
-import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.OrientationEventListener;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
@@ -45,27 +40,21 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     private Timer mProgressTimer;
     private ProgressTimerTask mProgressTimerTask;
 
-    private int currentOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-
-    private int isRotate;//0 代表方向锁定，1 代表没方向锁定
-
-    // settable by client
-    private AudioManager.OnAudioFocusChangeListener onAudioFocusChangeListener;
-    private AbsMediaPlayer mediaPlayer;
-    private boolean isMute = false;
-    private boolean isLooping = false;
+    // settable by client 可设置的属性
+    private AudioManager.OnAudioFocusChangeListener mOnAudioFocusChangeListener;//音频焦点事件监听
+    private OrientationEventManager.OnOrientationChangeListener mOnOrientationChangeListener;//重力感应事件监听
+    private OrientationEventManager mOrientationEventManager;//重力感应事件管理
+    private AbsMediaPlayer mediaPlayer;//播放器内核
+    private boolean isMute = false; //是否静音
+    private boolean isLooping = false; //是否循环播放
 
     private MediaPlayerManager() {
         if (mediaPlayer == null) {
             mediaPlayer = new SystemMediaPlayer();
-            onAudioFocusChangeListener = new AudioFocusManager();
+            mOrientationEventManager = new OrientationEventManager();
+            mOnOrientationChangeListener = new OrientationChangeListener();
         }
     }
-
-    /**
-     * 加速度传感器监听
-     */
-    private OrientationEventListener orientationEventListener;
 
     public static MediaPlayerManager instance() {
         return ManagerHolder.INSTANCE;
@@ -91,127 +80,6 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
 
     public void seekTo(long time) {
         mediaPlayer.seekTo(time);
-    }
-
-    public void orientationDisable() {
-        if (orientationEventListener != null) {
-            orientationEventListener.disable();
-            orientationEventListener = null;
-        }
-    }
-
-    /**
-     * 竖屏
-     */
-    public void onOrientationPortrait(Activity activity) {
-        VideoView currentFloor = getCurrentVideoView();
-        if (currentFloor != null) {
-            if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
-                return;
-            }
-            if ((currentOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                    || currentOrientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE)
-                    && !(currentFloor.getWindowType() == VideoView.WindowType.FULLSCREEN)) {
-                currentOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-                return;
-            }
-            currentOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
-            VideoView parentVideoView = currentFloor.getParentVideoView();
-            if (parentVideoView != null) {
-                parentVideoView.setControlPanel(getCurrentControlPanel());
-            }
-            currentFloor.exitFullscreen();
-        }
-    }
-
-    /**
-     * 横屏
-     */
-    public void onOrientationLandscape(Activity activity) {
-        VideoView currentVideoView = getCurrentVideoView();
-        if (currentVideoView != null) {
-            if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) return;
-            if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                    && (currentVideoView.getWindowType() == VideoView.WindowType.FULLSCREEN)) {
-                currentOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
-                return;
-            }
-            currentOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
-            if (currentVideoView.getWindowType() != VideoView.WindowType.FULLSCREEN) {
-                //new VideoView
-                VideoView videoView = new VideoView(activity);
-                //set parent
-                videoView.setParentVideoView(currentVideoView);
-                //optional: set ControlPanel
-                videoView.setControlPanel(getCurrentControlPanel());
-                videoView.setUp(currentVideoView.getDataSourceObject(), VideoView.WindowType.FULLSCREEN, currentVideoView.getData());
-                //start fullscreen
-                videoView.startFullscreen(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-            }
-        }
-    }
-
-    /**
-     * 反向横屏
-     */
-    public void onOrientationReverseLandscape(Activity activity) {
-        VideoView currentFloor = getCurrentVideoView();
-        if (currentFloor != null) {
-            if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) return;
-            if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                    && (currentFloor.getWindowType() == VideoView.WindowType.FULLSCREEN)) {
-                currentOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
-                return;
-            }
-            currentOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE;
-            if (currentFloor.getWindowType() != VideoView.WindowType.FULLSCREEN) {
-                //new VideoView
-                VideoView videoView = new VideoView(activity);
-                //set parent
-                videoView.setParentVideoView(currentFloor);
-                videoView.setUp(currentFloor.getDataSourceObject(), VideoView.WindowType.FULLSCREEN, currentFloor.getData());
-                //optional: set ControlPanel
-                videoView.setControlPanel(getCurrentControlPanel());
-                //start fullscreen
-                videoView.startFullscreen(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
-                activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-            }
-        }
-    }
-
-    private long orientationListenerDelayTime = 0;
-
-    public void orientationEnable(final Context context) {
-        if (orientationEventListener == null) {
-            orientationEventListener = new OrientationEventListener(context, 5) { // 加速度传感器监听，用于自动旋转屏幕
-                @Override
-                public void onOrientationChanged(int orientation) {
-                    Log.d(getClass().getSimpleName(), "onOrientationChanged: " + orientation);
-                    Activity activity = (Activity) context;
-                    try {
-                        //获取是否开启系统
-                        isRotate = Settings.System.getInt(context.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION);
-                    } catch (Settings.SettingNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    if (isRotate == 0) return;
-                    if ((orientation >= 300 || orientation <= 30) && System.currentTimeMillis() - orientationListenerDelayTime > 1000) { //屏幕顶部朝上
-                        onOrientationPortrait(activity);
-                        orientationListenerDelayTime = System.currentTimeMillis();
-                    } else if (orientation >= 260 && orientation <= 280
-                            && System.currentTimeMillis() - orientationListenerDelayTime > 1000) { //屏幕左边朝上
-                        onOrientationLandscape(activity);
-                        orientationListenerDelayTime = System.currentTimeMillis();
-                    } else if (orientation >= 70 && orientation <= 90
-                            && System.currentTimeMillis() - orientationListenerDelayTime > 1000) { //屏幕右边朝上
-                        onOrientationReverseLandscape(activity);
-                        orientationListenerDelayTime = System.currentTimeMillis();
-                    }
-                }
-            };
-            currentOrientation = ((AppCompatActivity) context).getRequestedOrientation();
-            orientationEventListener.enable();
-        }
     }
 
     public void pause() {
@@ -286,7 +154,8 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
                 clearFullscreenLayout(context);
                 clearTinyLayout(context);
                 Utils.scanForActivity(context).getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                abandonAudioFocus(context);
+                unbindAudioFocus(context);
+                unbindOrientationManager();
                 Utils.showSupportActionBar(context);
             }
             releaseMediaPlayer();
@@ -343,23 +212,55 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
         }
     }
 
-    public void abandonAudioFocus(Context context) {
+    /**
+     *  解绑音频焦点管理
+     */
+    public void unbindAudioFocus(Context context) {
         AudioManager mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         if (mAudioManager != null) {
-            mAudioManager.abandonAudioFocus(onAudioFocusChangeListener);
+            mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
         }
     }
 
+    /**
+     *  绑定音频焦点管理
+     * @param context Context
+     */
     public void bindAudioFocus(Context context) {
         AudioManager mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         if (mAudioManager != null) {
-            mAudioManager.requestAudioFocus(onAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+            mAudioManager.abandonAudioFocus(mOnAudioFocusChangeListener);
+            mAudioManager.requestAudioFocus(mOnAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
         }
     }
 
-
+    /**
+     * 设置音频焦点监听
+     */
     public void setOnAudioFocusChangeListener(AudioManager.OnAudioFocusChangeListener onAudioFocusChangeListener) {
-        this.onAudioFocusChangeListener = onAudioFocusChangeListener;
+        mOnAudioFocusChangeListener = onAudioFocusChangeListener;
+    }
+
+    /**
+     *  解绑音频焦点管理
+     */
+    public void unbindOrientationManager() {
+        mOrientationEventManager.orientationDisable();
+    }
+
+    /**
+     *  解绑音频焦点管理
+     */
+    public void bindOrientationManager(Context context) {
+        mOrientationEventManager.orientationDisable();
+        mOrientationEventManager.orientationEnable(context, mOnOrientationChangeListener);
+    }
+
+    /**
+     *  解绑音频焦点管理
+     */
+    public void setOnOrientationChangeListener(OrientationEventManager.OnOrientationChangeListener orientationChangeListener) {
+        mOnOrientationChangeListener = orientationChangeListener;
     }
 
     public void updateState(PlayerState playerState) {

@@ -94,6 +94,14 @@ public class Utils {
         return null;
     }
 
+    public static int getRequestedOrientation(Context context) {
+        if (getAppCompActivity(context) != null) {
+           return getAppCompActivity(context).getRequestedOrientation();
+        } else {
+           return scanForActivity(context).getRequestedOrientation();
+        }
+    }
+
     public static void setRequestedOrientation(Context context, int orientation) {
         if (getAppCompActivity(context) != null) {
             getAppCompActivity(context).setRequestedOrientation(orientation);

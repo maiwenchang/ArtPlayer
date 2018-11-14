@@ -37,7 +37,7 @@ public class ControlPanel extends AbsControlPanel {
     private int mExtra;
     protected GestureDetector mGestureDetector;
 
-    private CheckBox start;
+    private ImageView start;
     private CheckBox ivVolume;
     private SeekBar bottom_seek_progress;
     private View layout_bottom;
@@ -161,7 +161,6 @@ public class ControlPanel extends AbsControlPanel {
     public void onStateIdle() {
         hideUI(layout_bottom, layout_top, loading, llAlert);
         showUI(video_cover, start);
-        start.setChecked(false);
         cbBottomPlay.setChecked(false);
         if (MediaPlayerManager.instance().isMute()) {
             ivVolume.setChecked(false);
@@ -186,16 +185,14 @@ public class ControlPanel extends AbsControlPanel {
 
     @Override
     public void onStatePlaying() {
-        start.setChecked(true);
         cbBottomPlay.setChecked(true);
         showUI(layout_bottom, layout_top);
-        hideUI(start, video_cover, loading, llOperation, llProgressTime);
+        hideUI(start, video_cover, loading, llOperation, llProgressTime,llAlert);
         startDismissTask();
     }
 
     @Override
     public void onStatePaused() {
-        start.setChecked(false);
         cbBottomPlay.setChecked(false);
         showUI(layout_bottom);
         hideUI(video_cover, loading, llOperation, llProgressTime);
@@ -203,7 +200,6 @@ public class ControlPanel extends AbsControlPanel {
 
     @Override
     public void onStatePlaybackCompleted() {
-        start.setChecked(false);
         cbBottomPlay.setChecked(false);
         hideUI(layout_bottom, loading);
         showUI(start);
@@ -317,14 +313,14 @@ public class ControlPanel extends AbsControlPanel {
     public void onClick(View v) {
         cancelDismissTask();
         int id = v.getId();
-        if (id == R.id.ivLeft) {
+        if (id == R.id.ivLeft) {//返回
             if (mTarget == null) return;
             if (mTarget.getWindowType() == VideoView.WindowType.FULLSCREEN) {
                 mTarget.exitFullscreen();
             } else if (mTarget.getWindowType() == VideoView.WindowType.TINY) {
                 mTarget.exitTinyWindow();
             }
-        } else if (id == R.id.ivRight) {
+        } else if (id == R.id.ivRight) {//全屏
             if (mTarget == null) return;
             if (mTarget.getWindowType() != VideoView.WindowType.FULLSCREEN) {
                 //new VideoView
@@ -333,40 +329,35 @@ public class ControlPanel extends AbsControlPanel {
                 videoView.setParentVideoView(mTarget);
                 videoView.setUp(mTarget.getDataSourceObject(), VideoView.WindowType.FULLSCREEN, mTarget.getData());
                 videoView.setControlPanel(new ControlPanel(getContext()));
-                //start fullscreen
+                //start fullscreen0
                 videoView.startFullscreen(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
                 //MediaPlayerManager.instance().startFullscreen(videoView, ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
             }
 
-        } else if (id == R.id.ivVolume) {
+        } else if (id == R.id.ivVolume) {//音量
             if (ivVolume.isChecked()) {
                 MediaPlayerManager.instance().setMute(false);
             } else {
                 MediaPlayerManager.instance().setMute(true);
             }
 
-        } else if (id == R.id.start) {
+        } else if (id == R.id.start) {//开始
             if (mTarget == null) {
                 return;
             }
-            if (start.isChecked()) {
-                if (mTarget.isCurrentPlaying() && MediaPlayerManager.instance().isPlaying()) {
-                    return;
-                }
-                if (!Utils.isNetConnected(getContext())) {
-                    onStateError();
-                    return;
-                }
-                if (!Utils.isWifiConnected(getContext())) {
-                    showWifiAlert();
-                    return;
-                }
-                mTarget.start();
-            } else {
-                mTarget.pause();
+            if (mTarget.isCurrentPlaying() && MediaPlayerManager.instance().isPlaying()) {
+                return;
             }
-
-        } else if (id == R.id.cbBottomPlay) {
+            if (!Utils.isNetConnected(getContext())) {
+                onStateError();
+                return;
+            }
+            if (!Utils.isWifiConnected(getContext())) {
+                showWifiAlert();
+                return;
+            }
+            mTarget.start();
+        } else if (id == R.id.cbBottomPlay) {//暂停及恢复
             if (mTarget == null) {
                 return;
             }

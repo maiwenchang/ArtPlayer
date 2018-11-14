@@ -87,12 +87,11 @@
             android:layout_gravity="center_vertical">
 
             <!--required-->
-            <CheckBox
+            <ImageView
                 android:id="@+id/start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:button="@drawable/salient_selector_video_play"
-                android:checked="false" />
+                android:src="@drawable/salient_icon_start" />
         </LinearLayout>
 
         <LinearLayout

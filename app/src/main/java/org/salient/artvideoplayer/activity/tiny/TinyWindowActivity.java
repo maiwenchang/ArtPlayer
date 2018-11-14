@@ -120,12 +120,10 @@ public class TinyWindowActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        MediaPlayerManager.instance().orientationEnable(this);//开启重力感应监听
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        MediaPlayerManager.instance().orientationDisable();//关闭重力感应监听
     }
 }
