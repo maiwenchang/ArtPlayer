@@ -242,14 +242,14 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     }
 
     /**
-     *  解绑音频焦点管理
+     *  解绑重力感应横竖屏管理
      */
     public void unbindOrientationManager() {
         mOrientationEventManager.orientationDisable();
     }
 
     /**
-     *  解绑音频焦点管理
+     *  绑定重力感应横竖屏管理
      */
     public void bindOrientationManager(Context context) {
         mOrientationEventManager.orientationDisable();
@@ -257,7 +257,7 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
     }
 
     /**
-     *  解绑音频焦点管理
+     *  设置重力感应横竖屏管理
      */
     public void setOnOrientationChangeListener(OrientationEventManager.OnOrientationChangeListener orientationChangeListener) {
         mOnOrientationChangeListener = orientationChangeListener;
