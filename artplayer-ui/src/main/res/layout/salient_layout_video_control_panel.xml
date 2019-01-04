@@ -20,7 +20,6 @@
         android:layout_height="match_parent"
         android:descendantFocusability="blocksDescendants">
 
-        <!--required-->
         <RelativeLayout
             android:id="@+id/layout_top"
             android:layout_width="match_parent"
@@ -44,6 +43,19 @@
                 android:src="@drawable/salient_icon_back"
                 android:visibility="gone" />
 
+            <ImageView
+                android:id="@+id/ivRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingBottom="10dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp"
+                android:paddingTop="10dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/salient_icon_full_screen" />
+
             <TextView
                 android:id="@+id/tvTitle"
                 android:layout_width="match_parent"
@@ -62,20 +74,6 @@
                 android:textColor="#ffffff"
                 android:textSize="15sp"
                 tools:text="标题" />
-
-            <!--required-->
-            <ImageView
-                android:id="@+id/ivRight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:paddingBottom="10dp"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp"
-                android:paddingTop="10dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/salient_icon_full_screen" />
         </RelativeLayout>
 
         <LinearLayout
@@ -86,7 +84,6 @@
             android:layout_centerVertical="true"
             android:layout_gravity="center_vertical">
 
-            <!--required-->
             <ImageView
                 android:id="@+id/start"
                 android:layout_width="wrap_content"
@@ -147,7 +144,6 @@
             android:indeterminateDrawable="@drawable/salient_video_loading"
             android:visibility="invisible" />
 
-        <!--required-->
         <LinearLayout
             android:id="@+id/layout_bottom"
             android:layout_width="match_parent"
@@ -174,7 +170,6 @@
                 android:textColor="#ffffff"
                 android:textSize="13sp" />
 
-            <!--required-->
             <SeekBar
                 android:id="@+id/bottom_seek_progress"
                 android:layout_width="0dp"
@@ -192,7 +187,6 @@
                 android:progressDrawable="@drawable/salient_seek_bar_video_white"
                 android:thumb="@drawable/salient_seek_thumb_video_white" />
 
-            <!--required-->
             <TextView
                 android:id="@+id/total"
                 android:layout_width="wrap_content"
