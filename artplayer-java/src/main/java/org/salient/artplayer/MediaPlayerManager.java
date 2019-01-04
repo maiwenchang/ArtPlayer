@@ -20,9 +20,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * > Created by Mai on 2018/7/10
+ *  Created by Mai on 2018/7/10
  * *
- * > Description: 视频播放器管理类
+ *  Description: 视频播放器管理类
  * *
  */
 public class MediaPlayerManager implements TextureView.SurfaceTextureListener {

@@ -1,9 +1,9 @@
 package org.salient.artvideoplayer.bean;
 
 /**
- * > Created by Mai on 2018/7/17
+ * Created by Mai on 2018/7/17
  * *
- * > Description:
+ * Description:
  * *
  */
 public class VideoBean {

@@ -20,9 +20,9 @@ import org.salient.artplayer.ui.ControlPanel;
 import java.util.List;
 
 /**
- * > Created by Mai on 2018/7/19
+ * Created by Mai on 2018/7/19
  * *
- * > Description:
+ * Description:
  * *
  */
 public class ListViewAdapter extends BaseAdapter {

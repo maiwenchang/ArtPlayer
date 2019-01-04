@@ -15,9 +15,9 @@ import java.io.InputStreamReader;
 import java.util.concurrent.Executors;
 
 /**
- * > Created by Mai on 2018/7/17
+ * Created by Mai on 2018/7/17
  * *
- * > Description:
+ * Description:
  * *
  */
 public class BaseApplication extends Application {

@@ -19,6 +19,15 @@ allprojects {
         google()
         jcenter()
     }
+
+    // 解决 : bintray 上传如果注释中有中文，可能会出现：编码GBK的不可映射字符
+    tasks.withType(Javadoc) {
+        options {
+            encoding "UTF-8"
+            charSet 'UTF-8'
+            links "http://docs.oracle.com/javase/7/docs/api"
+        }
+    }
 }
 
 task clean(type: Delete) {
@@ -31,6 +40,6 @@ ext {
     ijkPlayerVersion = '0.8.8'
     exoPlayerVersion = '2.8.3'
 
-    libraryVersionCode = 6
-    libraryVersionName = "0.6.0"
+    libraryVersionCode = 7
+    libraryVersionName = "0.7.0"
 }

@@ -25,9 +25,9 @@ import org.salient.artvideoplayer.bean.VideoBean;
 import org.salient.artplayer.ui.ControlPanel;
 
 /**
- * > Created by Mai on 2018/7/17
+ * Created by Mai on 2018/7/17
  * *
- * > Description:
+ * Description:
  * *
  */
 public class RecyclerViewActivity extends BaseActivity {

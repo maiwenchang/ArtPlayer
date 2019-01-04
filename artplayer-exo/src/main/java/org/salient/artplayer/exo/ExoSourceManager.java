@@ -120,9 +120,7 @@ public class ExoSourceManager {
         }
     }
 
-    /**
-     * 本地缓存目录
-     */
+    //本地缓存目录
     public static synchronized Cache getCacheSingleInstance(Context context, File cacheDir) {
         String dirs = context.getCacheDir().getAbsolutePath();
         if (cacheDir != null) {
@@ -150,13 +148,7 @@ public class ExoSourceManager {
         }
     }
 
-    /**
-     * Cache需要release之后才能clear
-     *
-     * @param context
-     * @param cacheDir
-     * @param url
-     */
+    //Cache需要release之后才能clear
     public static void clearCache(Context context, File cacheDir, String url) {
         try {
             Cache cache = getCacheSingleInstance(context, cacheDir);

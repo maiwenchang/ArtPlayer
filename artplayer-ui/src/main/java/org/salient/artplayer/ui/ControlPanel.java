@@ -22,10 +22,10 @@ import org.salient.artplayer.Utils;
 import org.salient.artplayer.VideoView;
 
 /**
- * > Created by Mai on 2018/7/10
+ *  Created by Mai on 2018/7/10
  * *
- * > Description: 视频播放器的控制面板，旨在展示与视频播放相关的核心功能；
- * <p>
+ *  Description: 视频播放器的控制面板，旨在展示与视频播放相关的核心功能；
+ *
  * *
  */
 public class ControlPanel extends AbsControlPanel {

@@ -67,24 +67,24 @@ android {
         implementation project(':artplayer-ui')
 
         //ExoPlayer : optional
-        //implementation 'org.salient.artvideoplayer:artplayer-exo:0.6.0'
+        //implementation "org.salient.artvideoplayer:artplayer-exo:$rootProject.libraryVersionName"
         implementation project(':artplayer-exo')
 
         //ijkPlayer : optional
-        implementation 'org.salient.artvideoplayer:artplayer-armv7a:0.6.0'
+        implementation "org.salient.artvideoplayer:artplayer-armv7a:$rootProject.libraryVersionName"
 
         //ijkPlayer : required for ijkPlayer, enough for most devices.
-        //implementation 'org.salient.artvideoplayer:artplayer-ijk:0.6.0'
+        //implementation "org.salient.artvideoplayer:artplayer-ijk:$rootProject.libraryVersionName"
         implementation project(':artplayer-ijk')
 
         // Other ABIs for ijkPlayer : optional
-        implementation 'org.salient.artvideoplayer:artplayer-armv5:0.6.0'
-        implementation 'org.salient.artvideoplayer:artplayer-x86:0.6.0'
+        implementation "org.salient.artvideoplayer:artplayer-armv5:$rootProject.libraryVersionName"
+        implementation "org.salient.artvideoplayer:artplayer-x86:$rootProject.libraryVersionName"
         //implementation project(':artplayer-x86_64')
         //implementation project(':artplayer-arm64')
 
-        //implementation 'org.salient.artvideoplayer:artplayer-java:0.6.0'
-        //implementation 'org.salient.artvideoplayer:artplayer-ui:0.6.0'
+        //implementation "org.salient.artvideoplayer:artplayer-java:$rootProject.libraryVersionName"
+        //implementation "org.salient.artvideoplayer:artplayer-ui:$rootProject.libraryVersionName"
     }
 }
 

@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * > Created by Mai on 2018/7/19
+ * Created by Mai on 2018/7/19
  * *
- * > Description:
+ * Description:
  * *
  */
 public class ListViewActivity extends BaseActivity {

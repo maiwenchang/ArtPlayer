@@ -5,9 +5,9 @@ import android.view.Surface;
 import java.util.Map;
 
 /**
- * > Created by Mai on 2018/7/10
+ *  Created by Mai on 2018/7/10
  * *
- * > Description: 视频播放器的抽象基类
+ *  Description: 视频播放器的抽象基类
  * *
  */
 public abstract class AbsMediaPlayer {

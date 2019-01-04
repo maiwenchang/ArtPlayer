@@ -11,9 +11,9 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 /**
- * > Created by Mai on 2018/7/10
+ *  Created by Mai on 2018/7/10
  * *
- * > Description: 系统默认播放器
+ *  Description: 系统默认播放器
  * *
  */
 public class SystemMediaPlayer extends AbsMediaPlayer implements MediaPlayer.OnPreparedListener, MediaPlayer.OnCompletionListener,

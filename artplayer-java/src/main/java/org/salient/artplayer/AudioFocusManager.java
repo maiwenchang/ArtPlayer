@@ -4,9 +4,9 @@ import android.media.AudioManager;
 import android.util.Log;
 
 /**
- * > Created by Mai on 2018/7/23
+ *  Created by Mai on 2018/7/23
  * *
- * > Description: 声音焦点变化管理类
+ *  Description: 声音焦点变化管理类
  * *
  */
 public class AudioFocusManager implements AudioManager.OnAudioFocusChangeListener {

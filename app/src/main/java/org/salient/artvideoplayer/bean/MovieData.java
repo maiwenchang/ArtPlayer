@@ -3,9 +3,9 @@ package org.salient.artvideoplayer.bean;
 import java.util.List;
 
 /**
- * > Created by Mai on 2018/7/17
+ * Created by Mai on 2018/7/17
  * *
- * > Description:
+ * Description:
  * *
  */
 public class MovieData {

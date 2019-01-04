@@ -20,9 +20,9 @@ import android.widget.FrameLayout;
 import java.util.Map;
 
 /**
- * > Created by Mai on 2018/7/10
+ *  Created by Mai on 2018/7/10
  * *
- * > Description: 视频播放视图
+ *  Description: 视频播放视图
  * *
  */
 public class VideoView extends FrameLayout {

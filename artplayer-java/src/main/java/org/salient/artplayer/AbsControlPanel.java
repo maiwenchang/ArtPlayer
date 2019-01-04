@@ -8,9 +8,9 @@ import android.widget.FrameLayout;
 import android.widget.SeekBar;
 
 /**
- * > Created by Mai on 2018/7/10
+ *  Created by Mai on 2018/7/10
  * *
- * > Description:视频播放控制面板的基类
+ *  Description:视频播放控制面板的基类
  * *
  */
 public abstract class AbsControlPanel extends FrameLayout implements MediaStateListener, View.OnClickListener, View.OnTouchListener, SeekBar.OnSeekBarChangeListener{

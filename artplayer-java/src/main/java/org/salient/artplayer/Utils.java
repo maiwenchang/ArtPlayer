@@ -16,9 +16,9 @@ import java.util.Formatter;
 import java.util.Locale;
 
 /**
- * > Created by Mai on 2018/7/10
+ *  Created by Mai on 2018/7/10
  * *
- * > Description:
+ *  Description:
  * *
  */
 public class Utils {
