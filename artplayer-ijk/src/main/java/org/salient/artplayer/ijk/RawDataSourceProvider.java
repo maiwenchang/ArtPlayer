@@ -22,7 +22,7 @@ public class RawDataSourceProvider implements IMediaDataSource {
 
     @Override
     public int readAt(long position, byte[] buffer, int offset, int size) {
-        if (position + 1 >= mMediaBytes.length) {
+        if (position >= mMediaBytes.length) {
             return -1;
         }
 
@@ -33,11 +33,8 @@ public class RawDataSourceProvider implements IMediaDataSource {
             length = (int) (mMediaBytes.length - position);
             if (length > buffer.length)
                 length = buffer.length;
-
-            length--;
         }
         System.arraycopy(mMediaBytes, (int) position, buffer, offset, length);
-
         return length;
     }
 
