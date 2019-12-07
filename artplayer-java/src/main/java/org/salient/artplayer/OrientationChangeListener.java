@@ -37,7 +37,7 @@ public class OrientationChangeListener implements OrientationEventManager.OnOrie
         newVideoView.setControlPanel(videoView.getControlPanel());
         //start fullscreen
         newVideoView.startFullscreen(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
-        Utils.setRequestedOrientation(videoView.getContext(),ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        Utils.setRequestedOrientation(videoView.getContext(), ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
     }
 
     @Override
@@ -47,7 +47,9 @@ public class OrientationChangeListener implements OrientationEventManager.OnOrie
         if (parentVideoView != null) {
             parentVideoView.setControlPanel(videoView.getControlPanel());
         }
-        videoView.exitFullscreen();
+        if (videoView.getWindowType() == VideoView.WindowType.FULLSCREEN) {
+            videoView.exitFullscreen();
+        }
     }
 
 }
