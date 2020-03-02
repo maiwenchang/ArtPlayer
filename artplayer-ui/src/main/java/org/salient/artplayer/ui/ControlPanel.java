@@ -321,19 +321,7 @@ public class ControlPanel extends AbsControlPanel {
                 mTarget.exitTinyWindow();
             }
         } else if (id == R.id.ivRight) {//全屏
-            if (mTarget == null) return;
-            if (mTarget.getWindowType() != VideoView.WindowType.FULLSCREEN) {
-                //new VideoView
-                VideoView videoView = new VideoView(getContext());
-                //set parent
-                videoView.setParentVideoView(mTarget);
-                videoView.setUp(mTarget.getDataSourceObject(), VideoView.WindowType.FULLSCREEN, mTarget.getData());
-                videoView.setControlPanel(new ControlPanel(getContext()));
-                //start fullscreen0
-                videoView.startFullscreen(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-                //MediaPlayerManager.instance().startFullscreen(videoView, ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-            }
-
+            enterFullScreen(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
         } else if (id == R.id.ivVolume) {//音量
             if (ivVolume.isChecked()) {
                 MediaPlayerManager.instance().setMute(false);
@@ -379,6 +367,22 @@ public class ControlPanel extends AbsControlPanel {
             }
         }
         startDismissTask();
+    }
+
+    @Override
+    public void enterFullScreen(int screenOrientation) {
+        if (mTarget == null) return;
+        if (mTarget.getWindowType() != VideoView.WindowType.FULLSCREEN) {
+            //new VideoView
+            VideoView videoView = new VideoView(getContext());
+            //set parent
+            videoView.setParentVideoView(mTarget);
+            videoView.setUp(mTarget.getDataSourceObject(), VideoView.WindowType.FULLSCREEN, mTarget.getData());
+            videoView.setControlPanel(new ControlPanel(getContext()));
+            //start fullscreen0
+            videoView.startFullscreen(screenOrientation);
+            //MediaPlayerManager.instance().startFullscreen(videoView, ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        }
     }
 
     @Override

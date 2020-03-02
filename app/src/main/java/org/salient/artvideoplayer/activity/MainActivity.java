@@ -24,6 +24,7 @@ import org.salient.artplayer.VideoView;
 import org.salient.artplayer.exo.ExoPlayer;
 import org.salient.artplayer.ijk.IjkPlayer;
 import org.salient.artplayer.ui.ControlPanel;
+import org.salient.artplayer.ui.listener.OrientationChangeListener;
 import org.salient.artvideoplayer.BaseActivity;
 import org.salient.artvideoplayer.R;
 import org.salient.artvideoplayer.activity.api.ApiActivity;
@@ -44,6 +45,9 @@ public class MainActivity extends BaseActivity {
         edUrl = findViewById(R.id.edUrl);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //设置重力监听
+        MediaPlayerManager.instance().setOnOrientationChangeListener(new OrientationChangeListener());
 
         // note : usage sample
         videoView = findViewById(R.id.salientVideoView);

@@ -182,4 +182,10 @@ public abstract class AbsControlPanel extends FrameLayout implements MediaStateL
     public void onStopTrackingTouch(SeekBar seekBar) {
 
     }
+
+    /**
+     * 进入全屏
+     * @param screenOrientation 屏幕方向
+     */
+    public abstract void enterFullScreen(int screenOrientation);
 }

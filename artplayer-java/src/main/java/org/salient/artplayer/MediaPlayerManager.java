@@ -52,7 +52,6 @@ public class MediaPlayerManager implements TextureView.SurfaceTextureListener {
         if (mediaPlayer == null) {
             mediaPlayer = new SystemMediaPlayer();
             mOrientationEventManager = new OrientationEventManager();
-            mOnOrientationChangeListener = new OrientationChangeListener();
         }
     }
 

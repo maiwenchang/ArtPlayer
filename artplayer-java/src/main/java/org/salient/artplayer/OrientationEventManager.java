@@ -32,39 +32,37 @@ public class OrientationEventManager {
     }
 
     public void orientationEnable(final Context context, OnOrientationChangeListener orientationChangeListener) {
-        if (orientationEventListener == null) {
-            this.mOrientationChangeListener = orientationChangeListener;
-            orientationEventListener = new OrientationEventListener(context, 5) { // 加速度传感器监听，用于自动旋转屏幕
-                @Override
-                public void onOrientationChanged(int orientation) {
-                    //Log.d(getClass().getSimpleName(), "onOrientationChanged: " + orientation);
-                    try {
-                        //系统是否开启方向锁定
-                        isRotate = Settings.System.getInt(context.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION);
-                    } catch (Settings.SettingNotFoundException e) {
-                        e.printStackTrace();
-                    }
-                    if (isRotate == 0) return;//方向被锁定，直接返回
-                    if ((orientation >= 300 || orientation <= 30) && System.currentTimeMillis() - orientationListenerDelayTime > 1000) {
-                        //屏幕顶部朝上
-                        onOrientationPortrait();
-                        orientationListenerDelayTime = System.currentTimeMillis();
-                    } else if (orientation >= 260 && orientation <= 280
-                            && System.currentTimeMillis() - orientationListenerDelayTime > 1000) {
-                        //屏幕左边朝上
-                        onOrientationLandscape();
-                        orientationListenerDelayTime = System.currentTimeMillis();
-                    } else if (orientation >= 70 && orientation <= 90
-                            && System.currentTimeMillis() - orientationListenerDelayTime > 1000) {
-                        //屏幕右边朝上
-                        onOrientationReverseLandscape();
-                        orientationListenerDelayTime = System.currentTimeMillis();
-                    }
+        this.mOrientationChangeListener = orientationChangeListener;
+        orientationEventListener = new OrientationEventListener(context, 5) { // 加速度传感器监听，用于自动旋转屏幕
+            @Override
+            public void onOrientationChanged(int orientation) {
+                //Log.d(getClass().getSimpleName(), "onOrientationChanged: " + orientation);
+                try {
+                    //系统是否开启方向锁定
+                    isRotate = Settings.System.getInt(context.getContentResolver(), Settings.System.ACCELEROMETER_ROTATION);
+                } catch (Settings.SettingNotFoundException e) {
+                    e.printStackTrace();
                 }
-            };
-            currentOrientation = Utils.getRequestedOrientation(context);
-            orientationEventListener.enable();
-        }
+                if (isRotate == 0) return;//方向被锁定，直接返回
+                if ((orientation >= 300 || orientation <= 30) && System.currentTimeMillis() - orientationListenerDelayTime > 1000) {
+                    //屏幕顶部朝上
+                    onOrientationPortrait();
+                    orientationListenerDelayTime = System.currentTimeMillis();
+                } else if (orientation >= 260 && orientation <= 280
+                        && System.currentTimeMillis() - orientationListenerDelayTime > 1000) {
+                    //屏幕左边朝上
+                    onOrientationLandscape();
+                    orientationListenerDelayTime = System.currentTimeMillis();
+                } else if (orientation >= 70 && orientation <= 90
+                        && System.currentTimeMillis() - orientationListenerDelayTime > 1000) {
+                    //屏幕右边朝上
+                    onOrientationReverseLandscape();
+                    orientationListenerDelayTime = System.currentTimeMillis();
+                }
+            }
+        };
+        currentOrientation = Utils.getRequestedOrientation(context);
+        orientationEventListener.enable();
     }
 
 
@@ -136,6 +134,13 @@ public class OrientationEventManager {
             }
         }
 
+    }
+
+    /**
+     *  设置重力感应横竖屏管理
+     */
+    public void setOnOrientationChangeListener(OrientationEventManager.OnOrientationChangeListener orientationChangeListener) {
+        mOrientationChangeListener = orientationChangeListener;
     }
 
     public interface OnOrientationChangeListener {
