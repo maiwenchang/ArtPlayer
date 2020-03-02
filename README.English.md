@@ -109,6 +109,12 @@ protected void onDestroy() {
 }
  ```
 
+
+setup orientation listener
+  ``` java
+MediaPlayerManager.instance().setOnOrientationChangeListener(new OrientationChangeListener());
+ ```
+
 ### ON-PLAN
 - Audio playback
 - Kotlin version

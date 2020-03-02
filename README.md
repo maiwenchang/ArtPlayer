@@ -102,6 +102,11 @@ protected void onDestroy() {
 }
  ```
 
+设置重力监听
+  ``` java
+MediaPlayerManager.instance().setOnOrientationChangeListener(new OrientationChangeListener());
+ ```
+
 ### 计划中
 - 音频播放
 - Kotlin版本
