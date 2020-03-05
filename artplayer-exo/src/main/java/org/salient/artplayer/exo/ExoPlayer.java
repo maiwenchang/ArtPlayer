@@ -42,7 +42,7 @@ import java.util.TimerTask;
 /**
  * Created by Mai on 2018/8/13
  * *
- * Description:
+ * Description: Exoplayer 封装
  * *
  */
 public class ExoPlayer extends AbsMediaPlayer implements Player.EventListener, AnalyticsListener {
