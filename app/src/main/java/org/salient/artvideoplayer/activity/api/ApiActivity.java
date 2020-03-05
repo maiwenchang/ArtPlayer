@@ -1,16 +1,10 @@
 package org.salient.artvideoplayer.activity.api;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.support.annotation.Nullable;
-import android.util.Log;
-import android.view.OrientationEventListener;
+
+import androidx.annotation.Nullable;
+
 import android.view.View;
 
 import org.salient.artvideoplayer.BaseActivity;

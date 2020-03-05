@@ -2,27 +2,18 @@ package org.salient.artvideoplayer.activity;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import org.salient.artplayer.AbsMediaPlayer;
 import org.salient.artplayer.MediaPlayerManager;
-import org.salient.artplayer.SystemMediaPlayer;
 import org.salient.artplayer.VideoView;
-import org.salient.artplayer.exo.ExoPlayer;
-import org.salient.artplayer.ijk.IjkPlayer;
 import org.salient.artplayer.ui.ControlPanel;
 import org.salient.artplayer.ui.listener.OrientationChangeListener;
 import org.salient.artvideoplayer.BaseActivity;

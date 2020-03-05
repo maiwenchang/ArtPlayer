@@ -1,13 +1,11 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 27
-
-
+    compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 27
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
         versionCode rootProject.libraryVersionCode
         versionName rootProject.libraryVersionName
 
@@ -20,19 +18,20 @@ android {
         }
     }
 
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+    }
+
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    compileOnly "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    implementation("androidx.appcompat:appcompat:$rootProject.androidxLibraryVersion")
 
-    api("com.google.android.exoplayer:exoplayer:$rootProject.exoPlayerVersion") {
-        exclude group: 'com.android.support'
-    }
-    api("com.google.android.exoplayer:extension-rtmp:$rootProject.exoPlayerVersion") {
-        exclude group: 'com.android.support'
-    }
+    api("com.google.android.exoplayer:exoplayer:$rootProject.exoPlayerVersion")
+    api("com.google.android.exoplayer:extension-rtmp:$rootProject.exoPlayerVersion")
 
     compileOnly project(':artplayer-java')
 }

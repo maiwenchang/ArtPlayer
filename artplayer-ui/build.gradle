@@ -1,10 +1,11 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion rootProject.compileSdkVersion
+
     defaultConfig {
-        minSdkVersion 16
-        targetSdkVersion 27
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
         versionCode rootProject.libraryVersionCode
         versionName rootProject.libraryVersionName
     }
@@ -24,7 +25,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    compileOnly "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    compileOnly "androidx.appcompat:appcompat:$rootProject.androidxLibraryVersion"
     compileOnly project(':artplayer-java')
 }
 

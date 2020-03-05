@@ -2,14 +2,13 @@ package org.salient.artvideoplayer.activity.tiny;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.RadioButton;
 
-import org.salient.artplayer.MediaPlayerManager;
 import org.salient.artplayer.VideoView;
 import org.salient.artplayer.ui.ControlPanel;
 import org.salient.artvideoplayer.BaseActivity;

@@ -128,11 +128,11 @@ MediaPlayerManager.instance().setOnOrientationChangeListener(new OrientationChan
 
 
 ### My Build Environment
-- Java 1.7
-- Android Studio 3.1.2
-- Gradle 4.4
+- Java 1.8
+- Android Studio 3.6.0
+- Gradle 5.6.4
 - IjkPlayer 0.8.8
-- ExoPlayer 2.8.3
+- ExoPlayer 2.11.3
 
 ### Authors
 - [maiwenchang](https://github.com/maiwenchang)

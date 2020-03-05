@@ -7,7 +7,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.2'
+        classpath 'com.android.tools.build:gradle:3.6.1'
         classpath 'com.novoda:bintray-release:0.8.1'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -25,7 +25,7 @@ allprojects {
         options {
             encoding "UTF-8"
             charSet 'UTF-8'
-            links "http://docs.oracle.com/javase/7/docs/api"
+            links "http://docs.oracle.com/javase/8/docs/api"
         }
     }
 }
@@ -36,9 +36,12 @@ task clean(type: Delete) {
 
 ext {
     // App dependencies
-    supportLibraryVersion = '27.1.1'
+    compileSdkVersion = 29
+    minSdkVersion = 21
+    targetSdkVersion = 29
+    androidxLibraryVersion = '1.1.0'
     ijkPlayerVersion = '0.8.8'
-    exoPlayerVersion = '2.8.3'
+    exoPlayerVersion = '2.11.3'
 
     libraryVersionCode = 7
     libraryVersionName = "0.7.0"

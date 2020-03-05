@@ -2,7 +2,7 @@ package org.salient.artplayer.exo;
 
 import android.content.Context;
 import android.net.Uri;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.google.android.exoplayer2.C;
@@ -25,6 +25,7 @@ import com.google.android.exoplayer2.upstream.cache.CacheDataSource;
 import com.google.android.exoplayer2.upstream.cache.CacheDataSourceFactory;
 import com.google.android.exoplayer2.upstream.cache.CacheSpan;
 import com.google.android.exoplayer2.upstream.cache.CacheUtil;
+import com.google.android.exoplayer2.upstream.cache.ContentMetadata;
 import com.google.android.exoplayer2.upstream.cache.LeastRecentlyUsedCacheEvictor;
 import com.google.android.exoplayer2.upstream.cache.SimpleCache;
 import com.google.android.exoplayer2.util.Util;
@@ -142,7 +143,7 @@ public class ExoSourceManager {
             try {
                 mCache.release();
                 mCache = null;
-            } catch (Cache.CacheException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -224,7 +225,7 @@ public class ExoSourceManager {
                 if (cachedSpans.size() == 0) {
                     isCache = false;
                 } else {
-                    long contentLength = cache.getContentLength(key);
+                    long contentLength = ContentMetadata.getContentLength(cache.getContentMetadata(key));
                     long currentLength = 0;
                     for (CacheSpan cachedSpan : cachedSpans) {
                         currentLength += cache.getCachedLength(key, cachedSpan.position, cachedSpan.length);

@@ -2,12 +2,10 @@ package org.salient.artplayer.exo;
 
 import android.app.Service;
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
-import android.content.res.AssetManager;
 import android.media.AudioManager;
 import android.net.NetworkInfo;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.util.Log;
 import android.view.Surface;
 
@@ -91,7 +89,11 @@ public class ExoPlayer extends AbsMediaPlayer implements Player.EventListener, A
 
             DefaultRenderersFactory rendererFactory = new DefaultRenderersFactory(mAppContext, extensionRendererMode);
             DefaultLoadControl loadControl = new DefaultLoadControl();
-            mediaPlayer = ExoPlayerFactory.newSimpleInstance(rendererFactory, mTrackSelector, loadControl, null);
+            SimpleExoPlayer.Builder builder = new SimpleExoPlayer.Builder(mAppContext,rendererFactory);
+            mediaPlayer = builder.setTrackSelector(mTrackSelector)
+                    .setLoadControl(loadControl)
+                    .build();
+//            mediaPlayer = ExoPlayerFactory.newSimpleInstance(rendererFactory, mTrackSelector, loadControl, null);
             mediaPlayer.addListener(this);
             mediaPlayer.addAnalyticsListener(this);
             if (MediaPlayerManager.instance().isMute()) {
@@ -453,16 +455,6 @@ public class ExoPlayer extends AbsMediaPlayer implements Player.EventListener, A
 
     @Override
     public void onBandwidthEstimate(EventTime eventTime, int totalLoadTimeMs, long totalBytesLoaded, long bitrateEstimate) {
-
-    }
-
-    @Override
-    public void onViewportSizeChange(EventTime eventTime, int width, int height) {
-
-    }
-
-    @Override
-    public void onNetworkTypeChanged(EventTime eventTime, @Nullable NetworkInfo networkInfo) {
 
     }
 
