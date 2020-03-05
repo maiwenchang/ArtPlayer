@@ -33,6 +33,6 @@ dependencies {
     api("com.google.android.exoplayer:exoplayer:$rootProject.exoPlayerVersion")
     api("com.google.android.exoplayer:extension-rtmp:$rootProject.exoPlayerVersion")
 
-    compileOnly project(':artplayer-java')
+    implementation project(':artplayer-java')
 }
 apply from: './bintary_push.gradle'
