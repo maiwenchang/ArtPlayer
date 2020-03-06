@@ -108,7 +108,6 @@ MediaPlayerManager.instance().setOnOrientationChangeListener(new OrientationChan
  ```
 
 ### 计划中
-- 音频播放
 - Kotlin版本
 
 ### 不在计划
