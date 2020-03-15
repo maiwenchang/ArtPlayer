@@ -116,7 +116,6 @@ MediaPlayerManager.instance().setOnOrientationChangeListener(new OrientationChan
  ```
 
 ### ON-PLAN
-- Audio playback
 - Kotlin version
 
 ### NOT-ON-PLAN
