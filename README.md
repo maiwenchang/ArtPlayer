@@ -107,6 +107,14 @@ protected void onDestroy() {
 MediaPlayerManager.instance().setOnOrientationChangeListener(new OrientationChangeListener());
  ```
 
+设置封面
+``` java
+//如果使用默认的ControlPanel，因为它是一个FrameLayout，所以视频的封面可以通过`findViewById()`找到：
+Glide.with(MainActivity.this)
+        .load("http://img5.mtime.cn/mg/2018/07/06/093947.51483272.jpg")
+        .into((ImageView) controlPanel.findViewById(R.id.video_cover));
+```
+
 ### 计划中
 - Kotlin版本
 

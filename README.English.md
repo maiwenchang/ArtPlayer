@@ -115,6 +115,17 @@ setup orientation listener
 MediaPlayerManager.instance().setOnOrientationChangeListener(new OrientationChangeListener());
  ```
 
+ setup cover
+ ``` java
+ //If using the ControlPanel，we can get the ImageView of the cover by `findViewById()` method
+ //of the ControlPanel which extends FrameLayout：
+ Glide.with(MainActivity.this)
+         .load("http://img5.mtime.cn/mg/2018/07/06/093947.51483272.jpg")
+         .into((ImageView) controlPanel.findViewById(R.id.video_cover));
+ ```
+
+
+
 ### ON-PLAN
 - Kotlin version
 
