@@ -38,20 +38,20 @@
 ```
 dependencies {
     // required
-    implementation 'org.salient.artvideoplayer:artplayer-java:0.7.0'
+    implementation 'org.salient.artvideoplayer:artplayer-java:0.8.0'
     // Default control panel: optional
-    implementation 'org.salient.artvideoplayer:artplayer-ui:0.7.0'
+    implementation 'org.salient.artvideoplayer:artplayer-ui:0.8.0'
      //ijkPlayer: optional
-     implementation 'org.salient.artvideoplayer:artplayer-ijk:0.7.0'
-     implementation "org.salient.artvideoplayer:artplayer-armv7a:0.7.0"
+     implementation 'org.salient.artvideoplayer:artplayer-ijk:0.8.0'
+     implementation "org.salient.artvideoplayer:artplayer-armv7a:0.8.0"
       //Other ABIs: optional
-     implementation "org.salient.artvideoplayer:artplayer-armv5:0.7.0"
-     implementation "org.salient.artvideoplayer:artplayer-x86:0.7.0"
+     implementation "org.salient.artvideoplayer:artplayer-armv5:0.8.0"
+     implementation "org.salient.artvideoplayer:artplayer-x86:0.8.0"
      // Other ABIs: optional (minSdk version >= 21)
-     implementation "org.salient.artvideoplayer:artplayer-arm64:0.7.0"
-     implementation "org.salient.artvideoplayer:artplayer-x86_64:0.7.0"
+     implementation "org.salient.artvideoplayer:artplayer-arm64:0.8.0"
+     implementation "org.salient.artvideoplayer:artplayer-x86_64:0.8.0"
      //ExoPlayer2 : optional
-     implementation "org.salient.artvideoplayer:artplayer-exo:0.7.0"
+     implementation "org.salient.artvideoplayer:artplayer-exo:0.8.0"
 }
 ```
 

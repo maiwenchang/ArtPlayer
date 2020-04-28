@@ -48,6 +48,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
     }
 
+    lintOptions {
+        abortOnError false
+    }
+
     dependencies {
         implementation fileTree(include: ['*.jar'], dir: 'libs')
         implementation "androidx.appcompat:appcompat:$rootProject.androidxLibraryVersion"
@@ -76,15 +80,15 @@ android {
         implementation project(':artplayer-exo')
 
         //ijkPlayer : optional
-        implementation "org.salient.artvideoplayer:artplayer-armv7a:$rootProject.libraryVersionName"
+        implementation "org.salient.artvideoplayer:artplayer-armv7a:$rootProject.artPlayerVersion"
 
         //ijkPlayer : required for ijkPlayer, enough for most devices.
         //implementation "org.salient.artvideoplayer:artplayer-ijk:$rootProject.libraryVersionName"
         implementation project(':artplayer-ijk')
 
         // Other ABIs for ijkPlayer : optional
-        implementation "org.salient.artvideoplayer:artplayer-armv5:$rootProject.libraryVersionName"
-        implementation "org.salient.artvideoplayer:artplayer-x86:$rootProject.libraryVersionName"
+        implementation "org.salient.artvideoplayer:artplayer-armv5:$rootProject.artPlayerVersion"
+        implementation "org.salient.artvideoplayer:artplayer-x86:$rootProject.artPlayerVersion"
         //implementation project(':artplayer-x86_64')
         //implementation project(':artplayer-arm64')
 
