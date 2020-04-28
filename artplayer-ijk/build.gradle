@@ -31,9 +31,9 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    compileOnly "androidx.appcompat:appcompat:$rootProject.androidxLibraryVersion"
-    implementation "tv.danmaku.ijk.media:ijkplayer-java:$rootProject.ijkPlayerVersion"
-    compileOnly project(':artplayer-java')
+    compileOnly "androidx.appcompat:appcompat:$androidxLibraryVersion"
+    implementation "tv.danmaku.ijk.media:ijkplayer-java:$ijkPlayerVersion"
+    compileOnly project(':artplayer-kotlin')
 }
 
 apply from: './bintary_push.gradle'

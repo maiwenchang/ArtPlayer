@@ -38,7 +38,7 @@ This is a flexible video player. MediaPlayer is completely separate from VideoVi
 ```
 dependencies {
     // required
-    implementation 'org.salient.artvideoplayer:artplayer-java:0.8.0'
+    implementation 'org.salient.artvideoplayer:artplayer-kotlin:0.8.0'
 
     // Default control panel: optional
     implementation 'org.salient.artvideoplayer:artplayer-ui:0.8.0'

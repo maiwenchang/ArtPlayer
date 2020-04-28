@@ -1,4 +1,7 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -10,6 +13,8 @@ android {
         versionName rootProject.libraryVersionName
 
     }
+
+    resourcePrefix("artplayer_java")
 
     buildTypes {
         debug {
@@ -40,7 +45,13 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    compileOnly "androidx.appcompat:appcompat:$rootProject.androidxLibraryVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    implementation "androidx.appcompat:appcompat:$androidxLibraryVersion"
+    implementation "androidx.core:core-ktx:1.2.0"
+    implementation "androidx.core:core-ktx:$ktx_version"
+    implementation "androidx.activity:activity-ktx:$ktx_version"
 }
 
 apply from: './bintary_push.gradle'
+

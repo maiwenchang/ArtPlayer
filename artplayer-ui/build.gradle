@@ -29,8 +29,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    compileOnly "androidx.appcompat:appcompat:$rootProject.androidxLibraryVersion"
-    compileOnly project(':artplayer-java')
+    compileOnly "androidx.appcompat:appcompat:$androidxLibraryVersion"
+    compileOnly project(':artplayer-kotlin')
 }
 
 apply from: './bintary_push.gradle'

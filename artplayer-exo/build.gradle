@@ -32,11 +32,11 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation("androidx.appcompat:appcompat:$rootProject.androidxLibraryVersion")
+    implementation("androidx.appcompat:appcompat:$androidxLibraryVersion")
 
-    api("com.google.android.exoplayer:exoplayer:$rootProject.exoPlayerVersion")
-    api("com.google.android.exoplayer:extension-rtmp:$rootProject.exoPlayerVersion")
+    api("com.google.android.exoplayer:exoplayer:$exoPlayerVersion")
+    api("com.google.android.exoplayer:extension-rtmp:$exoPlayerVersion")
 
-    implementation project(':artplayer-java')
+    implementation project(':artplayer-kotlin')
 }
 apply from: './bintary_push.gradle'

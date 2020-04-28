@@ -36,6 +36,6 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "tv.danmaku.ijk.media:ijkplayer-armv7a:$rootProject.ijkPlayerVersion"
+    implementation "tv.danmaku.ijk.media:ijkplayer-armv7a:$ijkPlayerVersion"
 }
 apply from: './bintary_push.gradle'

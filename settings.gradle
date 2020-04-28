@@ -1,2 +1,12 @@
-include ':app', ':artplayer-ui', ':artplayer-java', ':artplayer-armv7a', ':artplayer-ijk', ':artplayer-exo',
-        ':artplayer-armv5', ':artplayer-arm64', ':artplayer-x86', ':artplayer-x86_64'
+include ':app'
+include ':artplayer-ui'
+include ':artplayer-kotlin'
+include ':artplayer-armv7a'
+include ':artplayer-ijk'
+include ':artplayer-exo'
+include ':artplayer-armv5'
+include ':artplayer-arm64'
+include ':artplayer-x86'
+include ':artplayer-x86_64'
+
+
