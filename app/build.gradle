@@ -73,27 +73,9 @@ android {
         //required
         implementation project(':artplayer-kotlin')
         //default controller panel: optional
-        implementation project(':artplayer-ui')
+//        implementation project(':artplayer-ui')
 
-        //ExoPlayer : optional
-        //implementation "org.salient.artvideoplayer:artplayer-exo:$libraryVersionName"
-        implementation project(':artplayer-exo')
 
-        //ijkPlayer : optional
-        implementation "org.salient.artvideoplayer:artplayer-armv7a:$artPlayerVersion"
-
-        //ijkPlayer : required for ijkPlayer, enough for most devices.
-        //implementation "org.salient.artvideoplayer:artplayer-ijk:$libraryVersionName"
-        implementation project(':artplayer-ijk')
-
-        // Other ABIs for ijkPlayer : optional
-        implementation "org.salient.artvideoplayer:artplayer-armv5:$artPlayerVersion"
-        implementation "org.salient.artvideoplayer:artplayer-x86:$artPlayerVersion"
-        //implementation project(':artplayer-x86_64')
-        //implementation project(':artplayer-arm64')
-
-        //implementation "org.salient.artvideoplayer:artplayer-kotlin:$libraryVersionName"
-        //implementation "org.salient.artvideoplayer:artplayer-ui:$libraryVersionName"
     }
 }
 

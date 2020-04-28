@@ -3,19 +3,18 @@ package org.salient.artvideoplayer;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
 import org.salient.artplayer.AbsMediaPlayer;
 import org.salient.artplayer.MediaPlayerManager;
 import org.salient.artplayer.SystemMediaPlayer;
-import org.salient.artplayer.exo.ExoPlayer;
-import org.salient.artplayer.ijk.IjkPlayer;
 import org.salient.artvideoplayer.bean.MovieData;
 import org.salient.artvideoplayer.bean.VideoBean;
 
@@ -139,17 +138,17 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     private void refreshMenuState(){
         if (mMenu != null) {
-            AbsMediaPlayer mediaPlayer = MediaPlayerManager.instance().getMediaPlayer();
+            AbsMediaPlayer mediaPlayer = MediaPlayerManager.instance().mediaPlayer;
             if (mediaPlayer instanceof SystemMediaPlayer) {
                 mMenu.getItem(1).getSubMenu().getItem(0).setChecked(true);
                 mMenu.getItem(0).setTitle("Using: MediaPlayer");
-            } else if (mediaPlayer instanceof IjkPlayer) {
+            } /*else if (mediaPlayer instanceof IjkPlayer) {
                 mMenu.getItem(1).getSubMenu().getItem(1).setChecked(true);
                 mMenu.getItem(0).setTitle("Using: IjkPlayer");
             } else if (mediaPlayer instanceof ExoPlayer) {
                 mMenu.getItem(1).getSubMenu().getItem(2).setChecked(true);
                 mMenu.getItem(0).setTitle("Using: ExoPlayer");
-            }
+            }*/
         }
     }
 
@@ -181,9 +180,9 @@ public abstract class BaseActivity extends AppCompatActivity {
             case R.id.menu_MediaPlayer:
                 mMenu.getItem(0).setTitle("Using: MediaPlayer");
                 MediaPlayerManager.instance().releasePlayerAndView(this);
-                MediaPlayerManager.instance().setMediaPlayer(new SystemMediaPlayer());
+                MediaPlayerManager.instance().mediaPlayer = new SystemMediaPlayer();
                 break;
-            case R.id.menu_IjkPlayer:
+            /*case R.id.menu_IjkPlayer:
                 mMenu.getItem(0).setTitle("Using: IjkPlayer");
                 MediaPlayerManager.instance().releasePlayerAndView(this);
                 MediaPlayerManager.instance().setMediaPlayer(new IjkPlayer());
@@ -192,7 +191,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 mMenu.getItem(0).setTitle("Using: ExoPlayer");
                 MediaPlayerManager.instance().releasePlayerAndView(this);
                 MediaPlayerManager.instance().setMediaPlayer(new ExoPlayer(this));
-                break;
+                break;*/
         }
         return super.onOptionsItemSelected(item);
     }
