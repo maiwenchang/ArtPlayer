@@ -41,7 +41,7 @@ abstract class AbsControlPanel : FrameLayout, MediaStateListener, View.OnClickLi
     }
 
     fun notifyStateChange() {
-        when (MediaPlayerManager.Companion.instance().getPlayerState()) {
+        when (MediaPlayerManager.playerState) {
             PlayerState.ERROR -> onStateError()
             PlayerState.IDLE -> onStateIdle()
             PlayerState.PAUSED -> onStatePaused()

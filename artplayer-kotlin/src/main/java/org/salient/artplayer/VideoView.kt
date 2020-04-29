@@ -29,17 +29,21 @@ class VideoView : FrameLayout {
     var data: Any? = null //video data like id, title, cover picture...
     var dataSourceObject // video dataSource (Http url or Android assets file) would be posted to MediaPlayer.
             : Any? = null
-    var headers //当前视频地址的请求头
-            : Map<String?, String?>? = null
+    //当前视频地址的请求头
+    var headers: Map<String, String>? = null
     private var mControlPanel: AbsControlPanel? = null
     var windowType = WindowType.NORMAL
     var detachedListener: OnWindowDetachedListener? = null
         private set
     var parentVideoView: VideoView? = null
-    var comparator = Comparator { videoView ->
-        val dataSource: Any = MediaPlayerManager.Companion.instance().getDataSource()
-        dataSource != null && videoView != null && dataSource === videoView.dataSourceObject
+
+    var comparator = object : Comparator {
+        override fun compare(videoView: VideoView?): Boolean {
+            val dataSource = MediaPlayerManager.dataSource
+            return dataSource != null && videoView != null && dataSource === videoView.dataSourceObject
+        }
     }
+
 
     constructor(context: Context) : super(context) {
         init(context)
@@ -92,12 +96,12 @@ class VideoView : FrameLayout {
         if (windowType != WindowType.LIST) {
             return
         }
-        val currentVideoView: VideoView = MediaPlayerManager.Companion.instance().getCurrentVideoView()
+        val currentVideoView = MediaPlayerManager.currentVideoView
         if (isCurrentPlaying) { //quit tiny window
             if (currentVideoView != null && currentVideoView.windowType == WindowType.TINY) { //play at this video view
-                MediaPlayerManager.Companion.instance().playAt(this)
+                MediaPlayerManager.playAt(this)
                 //自动退出小窗
-                MediaPlayerManager.Companion.instance().clearTinyLayout(context)
+                MediaPlayerManager.clearTinyLayout(context)
                 if (mControlPanel != null) {
                     mControlPanel!!.onExitSecondScreen()
                     mControlPanel!!.notifyStateChange()
@@ -106,13 +110,13 @@ class VideoView : FrameLayout {
                 if (mControlPanel != null) { //mControlPanel.onStateIdle();
                 }
             } else { //play at this video view
-                MediaPlayerManager.Companion.instance().playAt(this)
+                MediaPlayerManager.playAt(this)
                 if (mControlPanel != null) {
                     mControlPanel!!.notifyStateChange()
                 }
             }
         } else if (currentVideoView === this) { // 该VideoView被复用了，设置了别的dataSource
-            MediaPlayerManager.Companion.instance().removeTextureView()
+            MediaPlayerManager.removeTextureView()
             if (mControlPanel != null) {
                 mControlPanel!!.onStateIdle()
             }
@@ -128,18 +132,18 @@ class VideoView : FrameLayout {
      */
     fun exitFullscreen() {
         Utils.setRequestedOrientation(context, screenOrientation)
-        MediaPlayerManager.Companion.instance().clearFullscreenLayout(context)
+        MediaPlayerManager.clearFullscreenLayout(context)
         Utils.showSupportActionBar(context)
         val parent = parentVideoView
         if (parent != null && parent.isCurrentPlaying) { //在常规窗口继续播放
-            MediaPlayerManager.Companion.instance().playAt(parent)
+            MediaPlayerManager.playAt(parent)
             val controlPanel = parent.controlPanel
             if (controlPanel != null) {
                 controlPanel.notifyStateChange()
                 controlPanel.onExitSecondScreen()
             }
         } else { //直接开启的全屏，没有常规窗口
-            MediaPlayerManager.Companion.instance().releasePlayerAndView(context)
+            MediaPlayerManager.releasePlayerAndView(context)
         }
     }
 
@@ -147,17 +151,17 @@ class VideoView : FrameLayout {
      * 退出小窗
      */
     fun exitTinyWindow() {
-        MediaPlayerManager.Companion.instance().clearTinyLayout(context)
+        MediaPlayerManager.clearTinyLayout(context)
         val parent = parentVideoView
         if (parent != null && parent.isCurrentPlaying) { //在常规窗口继续播放
-            MediaPlayerManager.Companion.instance().playAt(parent)
+            MediaPlayerManager.playAt(parent)
             val controlPanel = parent.controlPanel
             if (controlPanel != null) {
                 controlPanel.notifyStateChange()
                 controlPanel.onExitSecondScreen()
             }
         } else { //直接开启的小屏，没有常规窗口
-            MediaPlayerManager.Companion.instance().releasePlayerAndView(context)
+            MediaPlayerManager.releasePlayerAndView(context)
         }
     }
 
@@ -176,13 +180,13 @@ class VideoView : FrameLayout {
             return
         }
         if (isCurrentPlaying) {
-            when (MediaPlayerManager.Companion.instance().getPlayerState()) {
+            when (MediaPlayerManager.playerState) {
                 PlayerState.IDLE, PlayerState.ERROR -> play()
                 PlayerState.PLAYBACK_COMPLETED -> {
-                    MediaPlayerManager.Companion.instance().seekTo(0)
-                    MediaPlayerManager.Companion.instance().start()
+                    MediaPlayerManager.seekTo(0)
+                    MediaPlayerManager.start()
                 }
-                PlayerState.PREPARED, PlayerState.PAUSED -> MediaPlayerManager.Companion.instance().start()
+                PlayerState.PREPARED, PlayerState.PAUSED -> MediaPlayerManager.start()
             }
         } else {
             play()
@@ -198,28 +202,28 @@ class VideoView : FrameLayout {
         //get context
         val context = context
         //clear videoView opened before
-        val currentVideoView: VideoView = MediaPlayerManager.Companion.instance().getCurrentVideoView()
+        val currentVideoView = MediaPlayerManager.currentVideoView
         if (currentVideoView != null && currentVideoView !== this) {
             if (windowType != WindowType.TINY) {
-                MediaPlayerManager.Companion.instance().clearTinyLayout(context)
+                MediaPlayerManager.clearTinyLayout(context)
             } else if (windowType != WindowType.FULLSCREEN) {
-                MediaPlayerManager.Companion.instance().clearFullscreenLayout(context)
+                MediaPlayerManager.clearFullscreenLayout(context)
             }
         }
         // releaseMediaPlayer
-        MediaPlayerManager.Companion.instance().releaseMediaPlayer()
+        MediaPlayerManager.releaseMediaPlayer()
         //pass data to MediaPlayer
-        MediaPlayerManager.Companion.instance().setDataSource(dataSourceObject, headers)
-        MediaPlayerManager.Companion.instance().setCurrentData(data)
+        MediaPlayerManager.setDataSource(dataSourceObject, headers)
+        MediaPlayerManager.currentData = data
         //keep screen on
         Utils.scanForActivity(context)!!.window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         //bind {@link AudioManager#OnAudioFocusChangeListener}
-        MediaPlayerManager.Companion.instance().bindAudioFocus(context)
+        MediaPlayerManager.bindAudioFocus(context)
         //bind OrientationEventManager
-        MediaPlayerManager.Companion.instance().bindOrientationManager(context)
+        MediaPlayerManager.bindOrientationManager(context, this)
         //init TextureView, we will prepare and start the player when surfaceTextureAvailable.
-        MediaPlayerManager.Companion.instance().initTextureView(context)
-        MediaPlayerManager.Companion.instance().addTextureView(this)
+        MediaPlayerManager.initTextureView(context)
+        MediaPlayerManager.addTextureView(this)
     }
 
     /**
@@ -227,9 +231,9 @@ class VideoView : FrameLayout {
      */
     fun pause() {
         if (isCurrentPlaying) {
-            if (MediaPlayerManager.Companion.instance().getPlayerState() == PlayerState.PLAYING) {
+            if (MediaPlayerManager.playerState == PlayerState.PLAYING) {
                 Log.d(TAG, "pause [" + this.hashCode() + "] ")
-                MediaPlayerManager.Companion.instance().pause()
+                MediaPlayerManager.pause()
             }
         }
     }
@@ -267,7 +271,7 @@ class VideoView : FrameLayout {
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         if (detachedListener != null) {
-            if (isCurrentPlaying && this === MediaPlayerManager.Companion.instance().getCurrentVideoView()) {
+            if (isCurrentPlaying && this === MediaPlayerManager.currentVideoView) {
                 detachedListener!!.onDetached(this)
             }
         }
@@ -315,8 +319,8 @@ class VideoView : FrameLayout {
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         vp.addView(this, lp)
         //add TextureView
-        MediaPlayerManager.Companion.instance().removeTextureView()
-        MediaPlayerManager.Companion.instance().addTextureView(this)
+        MediaPlayerManager.removeTextureView()
+        MediaPlayerManager.addTextureView(this)
         //update ControlPanel State
         val controlPanel = controlPanel
         controlPanel?.onEnterSecondScreen()
@@ -334,7 +338,7 @@ class VideoView : FrameLayout {
             View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_FULLSCREEN
         }
         Utils.setRequestedOrientation(context, screenOrientation)
-        MediaPlayerManager.Companion.instance().updateState(MediaPlayerManager.Companion.instance().getPlayerState())
+        MediaPlayerManager.updateState(MediaPlayerManager.playerState)
     }
 
     /**
@@ -377,8 +381,8 @@ class VideoView : FrameLayout {
             vp.addView(this)
         }
         //add TextureView
-        MediaPlayerManager.Companion.instance().removeTextureView()
-        MediaPlayerManager.Companion.instance().addTextureView(this)
+        MediaPlayerManager.removeTextureView()
+        MediaPlayerManager.addTextureView(this)
         //update ControlPanel State
         val controlPanel = controlPanel
         controlPanel?.onEnterSecondScreen()
@@ -388,7 +392,7 @@ class VideoView : FrameLayout {
             val parentControlPanel = parentVideoView.controlPanel
             parentControlPanel?.onEnterSecondScreen()
         }
-        MediaPlayerManager.Companion.instance().updateState(MediaPlayerManager.Companion.instance().getPlayerState())
+        MediaPlayerManager.updateState(MediaPlayerManager.playerState)
     }
 
     enum class WindowType {

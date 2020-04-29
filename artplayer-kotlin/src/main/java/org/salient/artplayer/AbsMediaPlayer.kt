@@ -14,10 +14,8 @@ abstract class AbsMediaPlayer {
      *
      * @param dataSource 播放地址
      */
-    var dataSource //正在播放的当前url或uri
-            : Any? = null
+    var dataSource: Any? = null //正在播放的当前url或uri: Any? = null
     var headers: Map<String, String>? = null
-        private set
 
     abstract fun start()
     abstract fun prepare()
@@ -32,12 +30,4 @@ abstract class AbsMediaPlayer {
     abstract fun mute(isMute: Boolean)
     abstract fun setLooping(isLoop: Boolean)
 
-    /**
-     * 设置请求头
-     *
-     * @param headers 播放地址请求头
-     */
-    fun setHeaders(headers: Map<String?, String?>?) {
-        this.headers = this.headers
-    }
 }

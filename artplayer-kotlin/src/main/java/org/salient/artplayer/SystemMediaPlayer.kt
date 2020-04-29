@@ -20,7 +20,7 @@ class SystemMediaPlayer : AbsMediaPlayer(), OnPreparedListener, OnCompletionList
         try {
             if (mediaPlayer != null) {
                 mediaPlayer!!.start()
-                MediaPlayerManager.Companion.instance().updateState(PlayerState.PLAYING)
+                MediaPlayerManager.updateState(PlayerState.PLAYING)
             }
         } catch (e: IllegalStateException) {
             e.printStackTrace()
@@ -29,7 +29,7 @@ class SystemMediaPlayer : AbsMediaPlayer(), OnPreparedListener, OnCompletionList
 
     override fun prepare() {
         try {
-            MediaPlayerManager.Companion.instance().updateState(PlayerState.PREPARING)
+            MediaPlayerManager.updateState(PlayerState.PREPARING)
             mediaPlayer = MediaPlayer()
             mediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
             mediaPlayer!!.setOnPreparedListener(this)
@@ -40,10 +40,10 @@ class SystemMediaPlayer : AbsMediaPlayer(), OnPreparedListener, OnCompletionList
             mediaPlayer!!.setOnErrorListener(this)
             mediaPlayer!!.setOnInfoListener(this)
             mediaPlayer!!.setOnVideoSizeChangedListener(this)
-            if (MediaPlayerManager.Companion.instance().isMute()) {
+            if (MediaPlayerManager.isMute) {
                 mute(true)
             }
-            if (MediaPlayerManager.Companion.instance().isLooping()) {
+            if (MediaPlayerManager.isLooping) {
                 setLooping(true)
             }
             val dataSource = dataSource
@@ -60,7 +60,7 @@ class SystemMediaPlayer : AbsMediaPlayer(), OnPreparedListener, OnCompletionList
             mediaPlayer!!.prepareAsync()
         } catch (e: Exception) {
             e.printStackTrace()
-            MediaPlayerManager.Companion.instance().updateState(PlayerState.ERROR)
+            MediaPlayerManager.updateState(PlayerState.ERROR)
         }
     }
 
@@ -68,7 +68,7 @@ class SystemMediaPlayer : AbsMediaPlayer(), OnPreparedListener, OnCompletionList
         try {
             if (mediaPlayer != null) {
                 mediaPlayer!!.pause()
-                MediaPlayerManager.Companion.instance().updateState(PlayerState.PAUSED)
+                MediaPlayerManager.updateState(PlayerState.PAUSED)
             }
         } catch (e: IllegalStateException) {
             e.printStackTrace()
@@ -99,7 +99,7 @@ class SystemMediaPlayer : AbsMediaPlayer(), OnPreparedListener, OnCompletionList
         try {
             if (mediaPlayer != null) {
                 mediaPlayer!!.release()
-                MediaPlayerManager.Companion.instance().updateState(PlayerState.IDLE)
+                MediaPlayerManager.updateState(PlayerState.IDLE)
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -157,7 +157,7 @@ class SystemMediaPlayer : AbsMediaPlayer(), OnPreparedListener, OnCompletionList
     private fun OpenVolume() {
         try {
             if (mediaPlayer != null) {
-                val currentFloor: VideoView = MediaPlayerManager.Companion.instance().getCurrentVideoView()
+                val currentFloor: VideoView = MediaPlayerManager.currentVideoView
                         ?: return
                 val context = currentFloor.context ?: return
                 val audioManager = context.getSystemService(Service.AUDIO_SERVICE) as AudioManager
@@ -201,39 +201,33 @@ class SystemMediaPlayer : AbsMediaPlayer(), OnPreparedListener, OnCompletionList
     }
 
     override fun onPrepared(mediaPlayer: MediaPlayer) {
-        MediaPlayerManager.Companion.instance().updateState(PlayerState.PREPARED)
-        MediaPlayerManager.Companion.instance().start()
+        MediaPlayerManager.updateState(PlayerState.PREPARED)
+        MediaPlayerManager.start()
     }
 
     override fun onCompletion(mediaPlayer: MediaPlayer) {
-        MediaPlayerManager.Companion.instance().updateState(PlayerState.PLAYBACK_COMPLETED)
+        MediaPlayerManager.updateState(PlayerState.PLAYBACK_COMPLETED)
     }
 
     override fun onBufferingUpdate(mediaPlayer: MediaPlayer, percent: Int) {
-        if (MediaPlayerManager.Companion.instance().getCurrentControlPanel() != null) {
-            MediaPlayerManager.Companion.instance().getCurrentControlPanel().onBufferingUpdate(percent)
-        }
+        MediaPlayerManager.currentControlPanel?.onBufferingUpdate(percent)
     }
 
     override fun onSeekComplete(mediaPlayer: MediaPlayer) {
-        if (MediaPlayerManager.Companion.instance().getCurrentControlPanel() != null) {
-            MediaPlayerManager.Companion.instance().getCurrentControlPanel().onSeekComplete()
-        }
+        MediaPlayerManager.currentControlPanel?.onSeekComplete()
     }
 
     override fun onError(mediaPlayer: MediaPlayer, what: Int, extra: Int): Boolean {
-        MediaPlayerManager.Companion.instance().updateState(PlayerState.ERROR)
+        MediaPlayerManager.updateState(PlayerState.ERROR)
         return true
     }
 
     override fun onInfo(mediaPlayer: MediaPlayer, what: Int, extra: Int): Boolean {
-        if (MediaPlayerManager.Companion.instance().getCurrentControlPanel() != null) {
-            MediaPlayerManager.Companion.instance().getCurrentControlPanel().onInfo(what, extra)
-        }
+        MediaPlayerManager.currentControlPanel?.onInfo(what, extra)
         return false
     }
 
     override fun onVideoSizeChanged(mediaPlayer: MediaPlayer, width: Int, height: Int) {
-        MediaPlayerManager.Companion.instance().onVideoSizeChanged(width, height)
+        MediaPlayerManager.onVideoSizeChanged(width, height)
     }
 }

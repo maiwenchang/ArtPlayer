@@ -7,5 +7,5 @@ package org.salient.artplayer
  * *
  */
 interface Comparator {
-    fun compare(obj: VideoView?): Boolean
+    fun compare(videoView: VideoView?): Boolean
 }

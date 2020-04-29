@@ -82,7 +82,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (MediaPlayerManager.instance().backPress()) {
+        if (MediaPlayerManager.INSTANCE.backPress()) {
             return;
         }
         super.onBackPressed();
@@ -92,7 +92,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         hideSoftInput();
-        MediaPlayerManager.instance().pause();
+        MediaPlayerManager.INSTANCE.pause();
     }
 
     @Override
@@ -104,7 +104,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        MediaPlayerManager.instance().releasePlayerAndView(this);
+        MediaPlayerManager.INSTANCE.releasePlayerAndView(this);
     }
 
 
@@ -138,7 +138,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     private void refreshMenuState(){
         if (mMenu != null) {
-            AbsMediaPlayer mediaPlayer = MediaPlayerManager.instance().mediaPlayer;
+            AbsMediaPlayer mediaPlayer = MediaPlayerManager.INSTANCE.getMediaPlayer();
             if (mediaPlayer instanceof SystemMediaPlayer) {
                 mMenu.getItem(1).getSubMenu().getItem(0).setChecked(true);
                 mMenu.getItem(0).setTitle("Using: MediaPlayer");
@@ -179,18 +179,18 @@ public abstract class BaseActivity extends AppCompatActivity {
         switch (id) {
             case R.id.menu_MediaPlayer:
                 mMenu.getItem(0).setTitle("Using: MediaPlayer");
-                MediaPlayerManager.instance().releasePlayerAndView(this);
-                MediaPlayerManager.instance().mediaPlayer = new SystemMediaPlayer();
+                MediaPlayerManager.INSTANCE.releasePlayerAndView(this);
+                MediaPlayerManager.INSTANCE.setMediaPlayer(new SystemMediaPlayer());
                 break;
             /*case R.id.menu_IjkPlayer:
                 mMenu.getItem(0).setTitle("Using: IjkPlayer");
-                MediaPlayerManager.instance().releasePlayerAndView(this);
-                MediaPlayerManager.instance().setMediaPlayer(new IjkPlayer());
+                MediaPlayerManager.releasePlayerAndView(this);
+                MediaPlayerManager.setMediaPlayer(new IjkPlayer());
                 break;
             case R.id.menu_ExoPlayer:
                 mMenu.getItem(0).setTitle("Using: ExoPlayer");
-                MediaPlayerManager.instance().releasePlayerAndView(this);
-                MediaPlayerManager.instance().setMediaPlayer(new ExoPlayer(this));
+                MediaPlayerManager.releasePlayerAndView(this);
+                MediaPlayerManager.setMediaPlayer(new ExoPlayer(this));
                 break;*/
         }
         return super.onOptionsItemSelected(item);

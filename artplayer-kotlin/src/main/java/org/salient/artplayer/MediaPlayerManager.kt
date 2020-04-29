@@ -17,7 +17,7 @@ import java.util.*
  * Description: 视频播放器管理类
  * *
  */
-class MediaPlayerManager private constructor() : SurfaceTextureListener {
+object MediaPlayerManager : SurfaceTextureListener {
     private val TAG = javaClass.simpleName
     private val CLICK_EVENT_SPAN = 300
     //surface
@@ -35,8 +35,8 @@ class MediaPlayerManager private constructor() : SurfaceTextureListener {
             : OnAudioFocusChangeListener? = null
     private var mOnOrientationChangeListener //重力感应事件监听
             : OnOrientationChangeListener? = null
-    private var mOrientationEventManager //重力感应事件管理
-            : OrientationEventManager? = null
+    private var mOrientationEventManager = OrientationEventManager //重力感应事件管理
+
     var mediaPlayer //播放器内核
             : AbsMediaPlayer? = null
     /**
@@ -62,15 +62,15 @@ class MediaPlayerManager private constructor() : SurfaceTextureListener {
 
     //正在播放的url或者uri
     val dataSource: Any?
-        get() = mediaPlayer.getDataSource()
+        get() = mediaPlayer?.dataSource
 
-    fun setDataSource(dataSource: Any?, headers: Map<String?, String?>?) {
-        mediaPlayer.setDataSource(dataSource)
-        mediaPlayer!!.headers = headers
+    fun setDataSource(dataSource: Any?, headers: Map<String, String>?) {
+        mediaPlayer?.dataSource = dataSource
+        mediaPlayer?.headers = headers
     }
 
     val duration: Long
-        get() = mediaPlayer.getDuration()
+        get() = mediaPlayer?.duration ?: 0
 
     fun seekTo(time: Long) {
         mediaPlayer!!.seekTo(time)
@@ -155,9 +155,9 @@ class MediaPlayerManager private constructor() : SurfaceTextureListener {
 
     fun releaseMediaPlayer() {
         cancelProgressTimer()
-        mediaPlayer!!.release()
-        mediaPlayer!!.headers = null
-        mediaPlayer.setDataSource(null)
+        mediaPlayer?.release()
+        mediaPlayer?.headers = null
+        mediaPlayer?.dataSource = null
         currentData = null
         updateState(PlayerState.IDLE)
     }
@@ -166,13 +166,13 @@ class MediaPlayerManager private constructor() : SurfaceTextureListener {
      * go into prepare and start
      */
     private fun prepare() {
-        mediaPlayer!!.prepare()
+        mediaPlayer?.prepare()
         if (surfaceTexture != null) {
             if (surface != null) {
-                surface!!.release()
+                surface?.release()
             }
             surface = Surface(surfaceTexture)
-            mediaPlayer!!.setSurface(surface)
+            mediaPlayer?.setSurface(surface)
         }
     }
 
@@ -207,15 +207,15 @@ class MediaPlayerManager private constructor() : SurfaceTextureListener {
      * 解绑重力感应横竖屏管理
      */
     fun unbindOrientationManager() {
-        mOrientationEventManager!!.orientationDisable()
+        mOrientationEventManager?.orientationDisable()
     }
 
     /**
      * 绑定重力感应横竖屏管理
      */
-    fun bindOrientationManager(context: Context) {
-        mOrientationEventManager!!.orientationDisable()
-        mOrientationEventManager!!.orientationEnable(context, mOnOrientationChangeListener)
+    fun bindOrientationManager(context: Context, videoView: VideoView) {
+        mOrientationEventManager?.orientationDisable()
+        mOrientationEventManager?.orientationEnable(context,videoView, mOnOrientationChangeListener)
     }
 
     /**
@@ -242,13 +242,13 @@ class MediaPlayerManager private constructor() : SurfaceTextureListener {
     fun onVideoSizeChanged(width: Int, height: Int) {
         Log.i(TAG, "onVideoSizeChanged " + " [" + this.hashCode() + "] ")
         if (textureView != null) {
-            textureView!!.setVideoSize(width, height)
+            textureView?.setVideoSize(width, height)
         }
     }
 
     fun setScreenScale(scaleType: ScaleType?) {
         if (textureView != null) {
-            textureView!!.setScreenScale(scaleType)
+            textureView?.setScreenScale(scaleType)
         }
     }
 
@@ -256,7 +256,7 @@ class MediaPlayerManager private constructor() : SurfaceTextureListener {
         removeTextureView()
         surfaceTexture = null
         textureView = ResizeTextureView(context)
-        textureView!!.surfaceTextureListener = instance()
+        textureView?.surfaceTextureListener = this
     }
 
     fun addTextureView(videoView: VideoView) {
@@ -268,12 +268,12 @@ class MediaPlayerManager private constructor() : SurfaceTextureListener {
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 Gravity.CENTER)
-        videoView.textureViewContainer.addView(textureView, layoutParams)
+        videoView.textureViewContainer?.addView(textureView, layoutParams)
     }
 
     fun removeTextureView() {
-        if (textureView != null && textureView!!.parent != null) {
-            (textureView!!.parent as ViewGroup).removeView(textureView)
+        if (textureView != null && textureView?.parent != null) {
+            (textureView?.parent as ViewGroup).removeView(textureView)
         }
     }
 
@@ -284,7 +284,7 @@ class MediaPlayerManager private constructor() : SurfaceTextureListener {
             this.surfaceTexture = surfaceTexture
             prepare()
         } else {
-            textureView!!.surfaceTexture = this.surfaceTexture
+            textureView?.surfaceTexture = this.surfaceTexture
         }
     }
 
@@ -321,15 +321,15 @@ class MediaPlayerManager private constructor() : SurfaceTextureListener {
         cancelProgressTimer()
         mProgressTimer = Timer()
         mProgressTimerTask = ProgressTimerTask()
-        mProgressTimer!!.schedule(mProgressTimerTask, 0, 300)
+        mProgressTimer?.schedule(mProgressTimerTask, 0, 300)
     }
 
     fun cancelProgressTimer() {
         if (mProgressTimerTask != null) {
-            mProgressTimerTask!!.cancel()
+            mProgressTimerTask?.cancel()
         }
         if (mProgressTimer != null) {
-            mProgressTimer!!.cancel()
+            mProgressTimer?.cancel()
         }
     }
 
@@ -338,7 +338,7 @@ class MediaPlayerManager private constructor() : SurfaceTextureListener {
             var position: Long = 0
             if (playerState == PlayerState.PLAYING || playerState == PlayerState.PAUSED) {
                 try {
-                    position = mediaPlayer.getCurrentPosition()
+                    position = mediaPlayer?.currentPosition ?: 0
                 } catch (e: IllegalStateException) {
                     e.printStackTrace()
                 }
@@ -354,7 +354,7 @@ class MediaPlayerManager private constructor() : SurfaceTextureListener {
     val currentVideoView: VideoView?
         get() {
             if (textureView == null) return null
-            val surfaceContainer = textureView!!.parent ?: return null
+            val surfaceContainer = textureView?.parent ?: return null
             val parent = surfaceContainer.parent
             return if (parent != null && parent is VideoView) {
                 parent
@@ -372,12 +372,7 @@ class MediaPlayerManager private constructor() : SurfaceTextureListener {
         ERROR, IDLE, PREPARING, PREPARED, PLAYING, PAUSED, PLAYBACK_COMPLETED
     }
 
-    //内部类实现单例模式
-    private object ManagerHolder {
-        val INSTANCE = MediaPlayerManager()
-    }
-
-    inner class ProgressTimerTask : TimerTask() {
+    class ProgressTimerTask : TimerTask() {
         override fun run() {
             if (playerState == PlayerState.PLAYING || playerState == PlayerState.PAUSED) {
                 val position = currentPositionWhenPlaying
@@ -390,17 +385,9 @@ class MediaPlayerManager private constructor() : SurfaceTextureListener {
         }
     }
 
-    companion object {
-        @JvmStatic
-        fun instance(): MediaPlayerManager {
-            return ManagerHolder.INSTANCE
-        }
-    }
-
     init {
         if (mediaPlayer == null) {
             mediaPlayer = SystemMediaPlayer()
-            mOrientationEventManager = OrientationEventManager()
         }
     }
 }

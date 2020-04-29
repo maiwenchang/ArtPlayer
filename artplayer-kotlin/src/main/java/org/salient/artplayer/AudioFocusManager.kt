@@ -16,12 +16,12 @@ class AudioFocusManager : OnAudioFocusChangeListener {
         when (focusChange) {
             AudioManager.AUDIOFOCUS_GAIN -> Log.d(TAG, "AUDIOFOCUS_GAIN [" + this.hashCode() + "]")
             AudioManager.AUDIOFOCUS_LOSS -> {
-                MediaPlayerManager.Companion.instance().pause()
+                MediaPlayerManager.pause()
                 Log.d(TAG, "AUDIOFOCUS_LOSS [" + this.hashCode() + "]")
             }
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
                 Log.d(TAG, "AUDIOFOCUS_LOSS_TRANSIENT [" + this.hashCode() + "]")
-                MediaPlayerManager.Companion.instance().pause()
+                MediaPlayerManager.pause()
             }
             AudioManager.AUDIOFOCUS_GAIN_TRANSIENT -> Log.d(TAG, "AUDIOFOCUS_GAIN_TRANSIENT [" + this.hashCode() + "]")
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> Log.d(TAG, "AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK [" + this.hashCode() + "]")

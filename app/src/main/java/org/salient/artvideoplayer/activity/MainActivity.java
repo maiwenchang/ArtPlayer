@@ -31,7 +31,7 @@ public class MainActivity extends BaseActivity {
         setSupportActionBar(toolbar);
 
         //设置重力监听
-//        MediaPlayerManager.instance().setOnOrientationChangeListener(new OrientationChangeListener());
+//        MediaPlayerManager.INSTANCE.setOnOrientationChangeListener(new OrientationChangeListener());
 //
 //        // note : usage sample
 //        videoView = findViewById(R.id.salientVideoView);
@@ -57,7 +57,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (MediaPlayerManager.instance().backPress()) {
+        if (MediaPlayerManager.INSTANCE.backPress()) {
             return;
         }
         super.onBackPressed();
@@ -67,13 +67,13 @@ public class MainActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         hideSoftInput();
-        MediaPlayerManager.instance().pause();
+        MediaPlayerManager.INSTANCE.pause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        MediaPlayerManager.instance().releasePlayerAndView(this);
+        MediaPlayerManager.INSTANCE.releasePlayerAndView(this);
     }
 
     public void onClick(View view) {
