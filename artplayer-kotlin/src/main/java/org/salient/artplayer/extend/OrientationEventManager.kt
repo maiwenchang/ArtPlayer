@@ -61,55 +61,55 @@ object OrientationEventManager {
      * 横屏(屏幕左边朝上)
      */
     private fun onOrientationLandscape(videoViewOld: VideoViewOld) {
-        if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) return
-        if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                && videoViewOld.windowType == VideoViewOld.WindowType.FULLSCREEN) {
-            currentOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-            return
-        }
-        currentOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-        if (videoViewOld.windowType != VideoViewOld.WindowType.FULLSCREEN) {
-            if (mOrientationChangeListener != null) {
-                mOrientationChangeListener!!.onOrientationLandscape(videoViewOld)
-            }
-        }
+//        if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) return
+//        if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+//                && videoViewOld.windowType == VideoViewOld.WindowType.FULLSCREEN) {
+//            currentOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+//            return
+//        }
+//        currentOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+//        if (videoViewOld.windowType != VideoViewOld.WindowType.FULLSCREEN) {
+//            if (mOrientationChangeListener != null) {
+//                mOrientationChangeListener!!.onOrientationLandscape(videoViewOld)
+//            }
+//        }
     }
 
     /**
      * 反向横屏(屏幕右边朝上)
      */
     private fun onOrientationReverseLandscape(videoViewOld: VideoViewOld) {
-        if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) return
-        if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                && videoViewOld.windowType == VideoViewOld.WindowType.FULLSCREEN) {
-            currentOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-            return
-        }
-        currentOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-        if (videoViewOld.windowType != VideoViewOld.WindowType.FULLSCREEN) {
-            if (mOrientationChangeListener != null) {
-                mOrientationChangeListener!!.onOrientationReverseLandscape(videoViewOld)
-            }
-        }
+//        if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) return
+//        if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+//                && videoViewOld.windowType == VideoViewOld.WindowType.FULLSCREEN) {
+//            currentOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+//            return
+//        }
+//        currentOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+//        if (videoViewOld.windowType != VideoViewOld.WindowType.FULLSCREEN) {
+//            if (mOrientationChangeListener != null) {
+//                mOrientationChangeListener!!.onOrientationReverseLandscape(videoViewOld)
+//            }
+//        }
     }
 
     /**
      * 竖屏
      */
     private fun onOrientationPortrait(videoViewOld: VideoViewOld) {
-        if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
-            return
-        }
-        if ((currentOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                        || currentOrientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE)
-                && videoViewOld.windowType != VideoViewOld.WindowType.FULLSCREEN) {
-            currentOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            return
-        }
-        currentOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        if (mOrientationChangeListener != null) {
-            mOrientationChangeListener!!.onOrientationPortrait(videoViewOld)
-        }
+//        if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+//            return
+//        }
+//        if ((currentOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+//                        || currentOrientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE)
+//                && videoViewOld.windowType != VideoViewOld.WindowType.FULLSCREEN) {
+//            currentOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+//            return
+//        }
+//        currentOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+//        if (mOrientationChangeListener != null) {
+//            mOrientationChangeListener!!.onOrientationPortrait(videoViewOld)
+//        }
     }
 
     /**

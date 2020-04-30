@@ -7,7 +7,4 @@ package org.salient.artplayer.bean
  * @author wenchang.mai@casstime.com
  * @date 2020-02-14 15:24.
  */
-class VideoInfo {
-    val what: Int = 0
-    val extra: Int = 0
-}
+class VideoInfo(val what: Int = 0, val extra: Int = 0)

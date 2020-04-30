@@ -3,16 +3,17 @@ package org.salient.artplayer.ui
 import android.content.Context
 import android.graphics.Color
 import android.graphics.SurfaceTexture
-import android.media.MediaPlayer
 import android.util.AttributeSet
 import android.util.Log
-import android.view.*
+import android.view.Gravity
+import android.view.Surface
+import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import org.salient.artplayer.audio.DefaultAudioManager
 import org.salient.artplayer.audio.IAudioManager
-import org.salient.artplayer.bean.VideoBean
 import org.salient.artplayer.conduction.PlayerState
 import org.salient.artplayer.extend.Utils
 import org.salient.artplayer.player.IMediaPlayer
@@ -39,67 +40,59 @@ class VideoView : FrameLayout, IVideoView {
     private var surface: Surface? = null
 
     override var mediaPlayer: IMediaPlayer<*>? = null
-    override var videoBean: VideoBean? = null
-    override var playingState = PlayerState.IDLE
+        set(value) {
+            field = value
+            registerListener()
+        }
+
     override var audioManager: IAudioManager = DefaultAudioManager(context, mediaPlayer)
 
     init {
-
         val params = LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT)
         addView(textureViewContainer, TEXTURE_VIEW_POSITION, params)
-
-        if (context is FragmentActivity) {
-            val activity = (context as FragmentActivity)
-            registerListener(activity)
-        }
+        registerListener()
     }
 
     val isPlaying: Boolean
-        get() = playingState == PlayerState.PLAYING && mediaPlayer?.isPlaying == true
-
-    fun setUp(url: String?) {
-        videoBean = VideoBean().also { it.url = url }
-    }
+        get() = mediaPlayer?.isPlaying == true
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
 
     }
 
-    private fun registerListener(activity: FragmentActivity) {
+    private fun registerListener() {
+        val activity = if (context is FragmentActivity) context as FragmentActivity else return
+        mediaPlayer?.videoSizeLD
         mediaPlayer?.videoSizeLD?.observe(activity, Observer {
 
+        })
+        mediaPlayer?.playerStateLD?.observe(activity, Observer {
+            when (it) {
+                PlayerState.PREPARED -> {
+                    audioManager.requestAudioFocus()
+                    mediaPlayer?.start()
+                }
+                PlayerState.STOP->{
+                    audioManager.abandonAudioFocus()
+                }
+            }
         })
     }
 
     override fun start() {
         Log.d(tag, "play [" + hashCode() + "] ")
-        if (videoBean == null) {
-            Log.w(tag, "VideoView needs a url or a dataSource to initialize playing")
-            return
-        }
-
-        when (playingState) {
+        when (mediaPlayer?.playerStateLD?.value) {
             PlayerState.IDLE, PlayerState.ERROR -> initialPlay()
-            PlayerState.PREPARING -> {
-            }
             PlayerState.PREPARED, PlayerState.PAUSED -> play()
             PlayerState.PLAYING -> pause()
-            PlayerState.PLAYBACK_COMPLETED -> replay()
+            PlayerState.COMPLETED -> replay()
         }
 
         //keep screen on
         Utils.scanForActivity(context)?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-
-    }
-
-    private fun initialPlay() {
-        videoBean?.url?.let {
-            mediaPlayer?.prepare()
-            return
-        }
 
     }
 
@@ -135,12 +128,13 @@ class VideoView : FrameLayout, IVideoView {
         release()
     }
 
-
-    fun initTextureView() {
+    private fun initialPlay() {
         (textureView?.parent as ViewGroup?)?.removeView(textureView)
         surfaceTexture = null
         textureView = ResizeTextureView(context)
         textureView?.surfaceTextureListener = this
+        val layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER)
+        textureViewContainer.addView(textureView, layoutParams)
     }
 
     /**
@@ -171,17 +165,19 @@ class VideoView : FrameLayout, IVideoView {
 
     override fun onSurfaceTextureAvailable(surfaceTexture: SurfaceTexture, i: Int, i1: Int) {
         Log.i(tag, "onSurfaceTextureAvailable [" + "] ")
-//        if (this.surfaceTexture == null) {
-//            this.surfaceTexture = surfaceTexture
-//
-//        } else {
-//        }
-        textureView?.surfaceTexture = surfaceTexture
-        prepare()
+        if (this.surfaceTexture == null) {
+            this.surfaceTexture = surfaceTexture
+            prepare()
+        } else if (textureView?.surfaceTexture != surfaceTexture){
+            textureView?.surfaceTexture = surfaceTexture
+        }
     }
 
     override fun onSurfaceTextureSizeChanged(surfaceTexture: SurfaceTexture, i: Int, i1: Int) {
         Log.i(tag, "onSurfaceTextureSizeChanged [" + "] ")
+        if (textureView?.surfaceTexture != surfaceTexture){
+            textureView?.surfaceTexture = surfaceTexture
+        }
     }
 
     override fun onSurfaceTextureDestroyed(surfaceTexture: SurfaceTexture): Boolean {
@@ -191,37 +187,9 @@ class VideoView : FrameLayout, IVideoView {
     }
 
     override fun onSurfaceTextureUpdated(surfaceTexture: SurfaceTexture) {
-        textureView?.surfaceTexture = surfaceTexture
+        if (textureView?.surfaceTexture != surfaceTexture){
+            textureView?.surfaceTexture = surfaceTexture
+        }
     }
 
-    override fun onPrepared(mediaPlayer: MediaPlayer) {
-//        MediaPlayerManagerOld.updateState(PlayerState.PREPARED)
-        audioManager.requestAudioFocus()
-    }
-
-    override fun onCompletion(mediaPlayer: MediaPlayer) {
-//        MediaPlayerManagerOld.updateState(PlayerState.PLAYBACK_COMPLETED)
-    }
-
-    override fun onBufferingUpdate(mediaPlayer: MediaPlayer, percent: Int) {
-//        MediaPlayerManagerOld.currentControlPanel?.onBufferingUpdate(percent)
-    }
-
-    override fun onSeekComplete(mediaPlayer: MediaPlayer) {
-//        MediaPlayerManagerOld.currentControlPanel?.onSeekComplete()
-    }
-
-    override fun onError(mediaPlayer: MediaPlayer, what: Int, extra: Int): Boolean {
-//        MediaPlayerManagerOld.updateState(PlayerState.ERROR)
-        return true
-    }
-
-    override fun onInfo(mediaPlayer: MediaPlayer, what: Int, extra: Int): Boolean {
-//        MediaPlayerManagerOld.currentControlPanel?.onInfo(what, extra)
-        return false
-    }
-
-    override fun onVideoSizeChanged(mediaPlayer: MediaPlayer, width: Int, height: Int) {
-//        MediaPlayerManagerOld.onVideoSizeChanged(width, height)
-    }
 }

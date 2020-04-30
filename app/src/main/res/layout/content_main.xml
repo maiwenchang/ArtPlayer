@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <org.salient.artplayer.VideoViewOld
+            <org.salient.artplayer.ui.VideoView
                 android:id="@+id/salientVideoView"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -47,6 +47,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/btn_start"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="start"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <LinearLayout

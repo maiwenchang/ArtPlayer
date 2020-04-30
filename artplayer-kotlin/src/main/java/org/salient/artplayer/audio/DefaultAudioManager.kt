@@ -56,7 +56,7 @@ class DefaultAudioManager(context: Context, mediaPlayer: IMediaPlayer<*>?) : IAu
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             audioFocusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
                     .setAudioAttributes(audioAttributes)
-                    .setAcceptsDelayedFocusGain(true)
+                    .setAcceptsDelayedFocusGain(false)
                     .setOnAudioFocusChangeListener(onAudioFocusChangeListener)
                     .build()
                     .also {

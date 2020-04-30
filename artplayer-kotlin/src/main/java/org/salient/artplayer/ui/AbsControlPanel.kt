@@ -9,7 +9,6 @@ import android.widget.FrameLayout
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import org.salient.artplayer.MediaPlayerManagerOld
-import org.salient.artplayer.MediaPlayerManagerOld.PlayerState
 import org.salient.artplayer.VideoViewOld
 import org.salient.artplayer.conduction.PlayerState
 import org.salient.artplayer.listener.MediaStateListener
@@ -45,15 +44,15 @@ abstract class AbsControlPanel : FrameLayout, MediaStateListener, View.OnClickLi
     }
 
     fun notifyStateChange() {
-        when (MediaPlayerManagerOld.playerState) {
-            PlayerState.ERROR -> onStateError()
-            PlayerState.IDLE -> onStateIdle()
-            PlayerState.PAUSED -> onStatePaused()
-            PlayerState.PLAYING -> onStatePlaying()
-            PlayerState.PREPARED -> onStatePrepared()
-            PlayerState.PREPARING -> onStatePreparing()
-            PlayerState.PLAYBACK_COMPLETED -> onStatePlaybackCompleted()
-        }
+//        when (MediaPlayerManagerOld.playerState) {
+//            PlayerState.ERROR -> onStateError()
+//            PlayerState.IDLE -> onStateIdle()
+//            PlayerState.PAUSED -> onStatePaused()
+//            PlayerState.PLAYING -> onStatePlaying()
+//            PlayerState.PREPARED -> onStatePrepared()
+//            PlayerState.PREPARING -> onStatePreparing()
+//            PlayerState.PLAYBACK_COMPLETED -> onStatePlaybackCompleted()
+//        }
     }
 
     fun hideUI(vararg views: View?) {

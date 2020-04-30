@@ -1,17 +1,13 @@
 package org.salient.artplayer.player
 
-import android.app.Service
-import android.content.Context
 import android.media.AudioAttributes
-import android.media.AudioManager
 import android.media.MediaPlayer
 import android.media.MediaPlayer.*
 import android.view.Surface
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import org.salient.artplayer.audio.DefaultAudioManager
 import org.salient.artplayer.bean.VideoInfo
 import org.salient.artplayer.bean.VideoSize
+import org.salient.artplayer.conduction.PlayerState
 
 /**
  * Created by Mai on 2018/7/10
@@ -19,20 +15,36 @@ import org.salient.artplayer.bean.VideoSize
  * Description: 系统默认播放器
  * *
  */
-class SystemMediaPlayer : IMediaPlayer<MediaPlayer> {
+class SystemMediaPlayer : IMediaPlayer<MediaPlayer>, OnPreparedListener,
+        OnCompletionListener,
+        OnBufferingUpdateListener,
+        OnSeekCompleteListener,
+        OnErrorListener,
+        OnInfoListener,
+        OnVideoSizeChangedListener {
+
     override var impl: MediaPlayer = MediaPlayer()
 
+    override val playerStateLD: MutableLiveData<PlayerState> = MutableLiveData()
     override val videoSizeLD: MutableLiveData<VideoSize> = MutableLiveData()
     override val bufferingProgressLD: MutableLiveData<Int> = MutableLiveData()
     override val videoInfoLD: MutableLiveData<VideoInfo> = MutableLiveData()
     override val videoErrorLD: MutableLiveData<VideoInfo> = MutableLiveData()
 
     init {
+        playerStateLD.value = PlayerState.IDLE
         impl.setAudioAttributes(AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_MEDIA)
                 .setContentType(AudioAttributes.CONTENT_TYPE_MUSIC)
                 .build())
         impl.setScreenOnWhilePlaying(true)
+        impl.setOnPreparedListener(this)
+        impl.setOnCompletionListener(this)
+        impl.setOnBufferingUpdateListener(this)
+        impl.setOnSeekCompleteListener(this)
+        impl.setOnErrorListener(this)
+        impl.setOnInfoListener(this)
+        impl.setOnVideoSizeChangedListener(this)
     }
 
     override fun prepare() {
@@ -52,14 +64,14 @@ class SystemMediaPlayer : IMediaPlayer<MediaPlayer> {
             impl.prepareAsync()
         } catch (e: Exception) {
             e.printStackTrace()
-//            MediaPlayerManagerOld.updateState(PlayerState.ERROR)
+            playerStateLD.value = PlayerState.ERROR
         }
     }
 
     override fun start() {
         try {
             impl.start()
-//            MediaPlayerManagerOld.updateState(PlayerState.PLAYING)
+            playerStateLD.value = PlayerState.PLAYING
         } catch (e: IllegalStateException) {
             e.printStackTrace()
         }
@@ -68,7 +80,7 @@ class SystemMediaPlayer : IMediaPlayer<MediaPlayer> {
     override fun pause() {
         try {
             impl.pause()
-//            MediaPlayerManagerOld.updateState(PlayerState.PAUSED)
+            playerStateLD.value = PlayerState.PAUSED
         } catch (e: IllegalStateException) {
             e.printStackTrace()
         }
@@ -77,6 +89,7 @@ class SystemMediaPlayer : IMediaPlayer<MediaPlayer> {
     override fun stop() {
         try {
             impl.stop()
+            playerStateLD.value = PlayerState.STOP
         } catch (e: Exception) {
         }
     }
@@ -102,7 +115,7 @@ class SystemMediaPlayer : IMediaPlayer<MediaPlayer> {
     override fun release() {
         try {
             impl.release()
-//            MediaPlayerManagerOld.updateState(PlayerState.IDLE)
+            playerStateLD.value = PlayerState.IDLE
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -144,6 +157,36 @@ class SystemMediaPlayer : IMediaPlayer<MediaPlayer> {
         } catch (e: Exception) {
             e.printStackTrace()
         }
+    }
+
+    override fun onPrepared(mp: MediaPlayer?) {
+        playerStateLD.value = PlayerState.PREPARED
+    }
+
+    override fun onCompletion(mp: MediaPlayer?) {
+        playerStateLD.value = PlayerState.COMPLETED
+    }
+
+    override fun onBufferingUpdate(mp: MediaPlayer?, percent: Int) {
+        bufferingProgressLD.value = percent
+    }
+
+    override fun onSeekComplete(mp: MediaPlayer?) {
+        playerStateLD.value = PlayerState.SEEK_COMPLETE
+    }
+
+    override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
+        videoErrorLD.value = VideoInfo(what, extra)
+        return false
+    }
+
+    override fun onInfo(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
+        videoInfoLD.value = VideoInfo(what, extra)
+        return false
+    }
+
+    override fun onVideoSizeChanged(mp: MediaPlayer?, width: Int, height: Int) {
+        videoSizeLD.value = VideoSize(width, height)
     }
 
 

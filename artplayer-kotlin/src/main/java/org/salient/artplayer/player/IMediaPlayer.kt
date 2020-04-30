@@ -5,6 +5,7 @@ import android.view.Surface
 import androidx.lifecycle.LiveData
 import org.salient.artplayer.bean.VideoInfo
 import org.salient.artplayer.bean.VideoSize
+import org.salient.artplayer.conduction.PlayerState
 
 /**
  * Created by Mai on 2018/7/10
@@ -18,6 +19,11 @@ interface IMediaPlayer<T> {
     val isPlaying: Boolean
     val currentPosition: Long
     val duration: Long
+    val playerStateLD: LiveData<PlayerState> //播放状态
+    val videoSizeLD: LiveData<VideoSize>
+    val bufferingProgressLD: LiveData<Int>
+    val videoInfoLD: LiveData<VideoInfo>
+    val videoErrorLD: LiveData<VideoInfo>
     fun start()
     fun prepare()
     fun pause()
@@ -27,23 +33,5 @@ interface IMediaPlayer<T> {
     fun setVolume(volume: Float)
     fun setLooping(isLoop: Boolean)
     fun setSurface(surface: Surface?)
-
-    val videoSizeLD : LiveData<VideoSize>
-    val bufferingProgressLD : LiveData<Int>
-    val videoInfoLD : LiveData<VideoInfo>
-    val videoErrorLD : LiveData<VideoInfo>
-
-//    interface OnPreparedListener {
-//        fun onPrepared(mediaPlayer: IMediaPlayer<*>?)
-//    }
-//
-//    interface OnCompletionListener {
-//        fun onCompletion(mediaPlayer: IMediaPlayer<*>?)
-//    }
-//
-//    interface OnSeekCompleteListener {
-//        fun onSeekComplete(mediaPlayer: IMediaPlayer<*>?)
-//    }
-
 
 }

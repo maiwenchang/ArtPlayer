@@ -1,5 +1,7 @@
 package org.salient.artvideoplayer.activity;
 
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -8,8 +10,12 @@ import androidx.appcompat.widget.Toolbar;
 
 import org.salient.artplayer.MediaPlayerManagerOld;
 import org.salient.artplayer.VideoViewOld;
+import org.salient.artplayer.player.SystemMediaPlayer;
+import org.salient.artplayer.ui.VideoView;
 import org.salient.artvideoplayer.BaseActivity;
 import org.salient.artvideoplayer.R;
+
+import java.io.IOException;
 
 public class MainActivity extends BaseActivity {
 
@@ -23,6 +29,26 @@ public class MainActivity extends BaseActivity {
         edUrl = findViewById(R.id.edUrl);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        try {
+            VideoView videoView = findViewById(R.id.salientVideoView);
+            SystemMediaPlayer systemMediaPlayer = new SystemMediaPlayer();
+            systemMediaPlayer.getImpl().setDataSource(this,Uri.parse("http://vfx.mtime.cn/Video/2018/07/06/mp4/180706094003288023.mp4"));
+            videoView.setMediaPlayer(systemMediaPlayer);
+
+            findViewById(R.id.btn_start).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    videoView.start();
+                }
+            });
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
 
         //设置重力监听
 //        MediaPlayerManager.INSTANCE.setOnOrientationChangeListener(new OrientationChangeListener());
@@ -51,9 +77,9 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (MediaPlayerManagerOld.INSTANCE.backPress()) {
-            return;
-        }
+//        if (MediaPlayerManagerOld.INSTANCE.backPress()) {
+//            return;
+//        }
         super.onBackPressed();
     }
 
@@ -61,13 +87,13 @@ public class MainActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         hideSoftInput();
-        MediaPlayerManagerOld.INSTANCE.pause();
+//        MediaPlayerManagerOld.INSTANCE.pause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        MediaPlayerManagerOld.INSTANCE.releasePlayerAndView(this);
+//        MediaPlayerManagerOld.INSTANCE.releasePlayerAndView(this);
     }
 
     public void onClick(View view) {

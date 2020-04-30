@@ -12,9 +12,6 @@ import android.view.inputmethod.InputMethodManager;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.salient.artplayer.player.IMediaPlayer;
-import org.salient.artplayer.MediaPlayerManagerOld;
-import org.salient.artplayer.player.SystemMediaPlayer;
 import org.salient.artvideoplayer.bean.MovieData;
 import org.salient.artvideoplayer.bean.VideoBean;
 
@@ -82,9 +79,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (MediaPlayerManagerOld.INSTANCE.backPress()) {
-            return;
-        }
+//        if (MediaPlayerManagerOld.INSTANCE.backPress()) {
+//            return;
+//        }
         super.onBackPressed();
     }
 
@@ -92,7 +89,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         hideSoftInput();
-        MediaPlayerManagerOld.INSTANCE.pause();
+//        MediaPlayerManagerOld.INSTANCE.pause();
     }
 
     @Override
@@ -104,7 +101,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        MediaPlayerManagerOld.INSTANCE.releasePlayerAndView(this);
+//        MediaPlayerManagerOld.INSTANCE.releasePlayerAndView(this);
     }
 
 
@@ -138,17 +135,17 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     private void refreshMenuState(){
         if (mMenu != null) {
-            IMediaPlayer mediaPlayer = MediaPlayerManagerOld.INSTANCE.getMediaPlayer();
-            if (mediaPlayer instanceof SystemMediaPlayer) {
-                mMenu.getItem(1).getSubMenu().getItem(0).setChecked(true);
-                mMenu.getItem(0).setTitle("Using: MediaPlayer");
-            } /*else if (mediaPlayer instanceof IjkPlayer) {
-                mMenu.getItem(1).getSubMenu().getItem(1).setChecked(true);
-                mMenu.getItem(0).setTitle("Using: IjkPlayer");
-            } else if (mediaPlayer instanceof ExoPlayer) {
-                mMenu.getItem(1).getSubMenu().getItem(2).setChecked(true);
-                mMenu.getItem(0).setTitle("Using: ExoPlayer");
-            }*/
+//            IMediaPlayer mediaPlayer = MediaPlayerManagerOld.INSTANCE.getMediaPlayer();
+//            if (mediaPlayer instanceof SystemMediaPlayer) {
+//                mMenu.getItem(1).getSubMenu().getItem(0).setChecked(true);
+//                mMenu.getItem(0).setTitle("Using: MediaPlayer");
+//            } else if (mediaPlayer instanceof IjkPlayer) {
+//                mMenu.getItem(1).getSubMenu().getItem(1).setChecked(true);
+//                mMenu.getItem(0).setTitle("Using: IjkPlayer");
+//            } else if (mediaPlayer instanceof ExoPlayer) {
+//                mMenu.getItem(1).getSubMenu().getItem(2).setChecked(true);
+//                mMenu.getItem(0).setTitle("Using: ExoPlayer");
+//            }
         }
     }
 
@@ -177,21 +174,21 @@ public abstract class BaseActivity extends AppCompatActivity {
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         switch (id) {
-            case R.id.menu_MediaPlayer:
-                mMenu.getItem(0).setTitle("Using: MediaPlayer");
-                MediaPlayerManagerOld.INSTANCE.releasePlayerAndView(this);
-                MediaPlayerManagerOld.INSTANCE.setMediaPlayer(new SystemMediaPlayer());
-                break;
-            /*case R.id.menu_IjkPlayer:
-                mMenu.getItem(0).setTitle("Using: IjkPlayer");
-                MediaPlayerManager.releasePlayerAndView(this);
-                MediaPlayerManager.setMediaPlayer(new IjkPlayer());
-                break;
-            case R.id.menu_ExoPlayer:
-                mMenu.getItem(0).setTitle("Using: ExoPlayer");
-                MediaPlayerManager.releasePlayerAndView(this);
-                MediaPlayerManager.setMediaPlayer(new ExoPlayer(this));
-                break;*/
+//            case R.id.menu_MediaPlayer:
+//                mMenu.getItem(0).setTitle("Using: MediaPlayer");
+//                MediaPlayerManagerOld.INSTANCE.releasePlayerAndView(this);
+//                MediaPlayerManagerOld.INSTANCE.setMediaPlayer(new SystemMediaPlayer());
+//                break;
+//            case R.id.menu_IjkPlayer:
+//                mMenu.getItem(0).setTitle("Using: IjkPlayer");
+//                MediaPlayerManager.releasePlayerAndView(this);
+//                MediaPlayerManager.setMediaPlayer(new IjkPlayer());
+//                break;
+//            case R.id.menu_ExoPlayer:
+//                mMenu.getItem(0).setTitle("Using: ExoPlayer");
+//                MediaPlayerManager.releasePlayerAndView(this);
+//                MediaPlayerManager.setMediaPlayer(new ExoPlayer(this));
+//                break;
         }
         return super.onOptionsItemSelected(item);
     }

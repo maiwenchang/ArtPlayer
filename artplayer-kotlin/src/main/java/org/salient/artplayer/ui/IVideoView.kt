@@ -15,17 +15,8 @@ import org.salient.artplayer.player.IMediaPlayer
  *
  * @date 2020-02-14 15:24.
  */
-interface IVideoView : TextureView.SurfaceTextureListener,
-        MediaPlayer.OnPreparedListener,
-        MediaPlayer.OnCompletionListener,
-        MediaPlayer.OnBufferingUpdateListener,
-        MediaPlayer.OnSeekCompleteListener,
-        MediaPlayer.OnErrorListener,
-        MediaPlayer.OnInfoListener,
-        MediaPlayer.OnVideoSizeChangedListener {
+interface IVideoView : TextureView.SurfaceTextureListener {
 
-    var videoBean: VideoBean?
-    var playingState : PlayerState
     var mediaPlayer: IMediaPlayer<*>?
     var audioManager : IAudioManager
 

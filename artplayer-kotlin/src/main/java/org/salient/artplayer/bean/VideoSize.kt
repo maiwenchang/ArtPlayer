@@ -7,7 +7,4 @@ package org.salient.artplayer.bean
  * @author wenchang.mai@casstime.com
  * @date 2020-02-14 15:24.
  */
-class VideoSize {
-    val width: Int = 0
-    val height: Int = 0
-}
+class VideoSize(val width: Int = 0, val height: Int = 0)
