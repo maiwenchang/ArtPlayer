@@ -1,25 +1,19 @@
 package org.salient.artvideoplayer.activity;
 
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
 
-import com.bumptech.glide.Glide;
-
-import org.salient.artplayer.MediaPlayerManager;
-import org.salient.artplayer.VideoView;
+import org.salient.artplayer.MediaPlayerManagerOld;
+import org.salient.artplayer.VideoViewOld;
 import org.salient.artvideoplayer.BaseActivity;
 import org.salient.artvideoplayer.R;
 
 public class MainActivity extends BaseActivity {
 
-    private VideoView videoView;
+    private VideoViewOld videoViewOld;
     private EditText edUrl;
 
     @Override
@@ -57,7 +51,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (MediaPlayerManager.INSTANCE.backPress()) {
+        if (MediaPlayerManagerOld.INSTANCE.backPress()) {
             return;
         }
         super.onBackPressed();
@@ -67,13 +61,13 @@ public class MainActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         hideSoftInput();
-        MediaPlayerManager.INSTANCE.pause();
+        MediaPlayerManagerOld.INSTANCE.pause();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        MediaPlayerManager.INSTANCE.releasePlayerAndView(this);
+        MediaPlayerManagerOld.INSTANCE.releasePlayerAndView(this);
     }
 
     public void onClick(View view) {

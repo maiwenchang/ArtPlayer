@@ -1,10 +1,11 @@
-package org.salient.artplayer
+package org.salient.artplayer.extend
 
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.provider.Settings
 import android.provider.Settings.SettingNotFoundException
 import android.view.OrientationEventListener
+import org.salient.artplayer.VideoViewOld
 
 /**
  * Created by Mai on 2018/11/14
@@ -29,7 +30,7 @@ object OrientationEventManager {
         }
     }
 
-    fun orientationEnable(context: Context,videoView: VideoView, orientationChangeListener: OnOrientationChangeListener?) {
+    fun orientationEnable(context: Context, videoViewOld: VideoViewOld, orientationChangeListener: OnOrientationChangeListener?) {
         mOrientationChangeListener = orientationChangeListener
         orientationEventListener = object : OrientationEventListener(context, 5) {
             // 加速度传感器监听，用于自动旋转屏幕
@@ -41,13 +42,13 @@ object OrientationEventManager {
                 }
                 if (isRotate == 0) return  //方向被锁定，直接返回
                 if ((orientation >= 300 || orientation <= 30) && System.currentTimeMillis() - orientationListenerDelayTime > 1000) { //屏幕顶部朝上
-                    onOrientationPortrait(videoView)
+                    onOrientationPortrait(videoViewOld)
                     orientationListenerDelayTime = System.currentTimeMillis()
                 } else if (orientation >= 260 && orientation <= 280 && System.currentTimeMillis() - orientationListenerDelayTime > 1000) { //屏幕左边朝上
-                    onOrientationLandscape(videoView)
+                    onOrientationLandscape(videoViewOld)
                     orientationListenerDelayTime = System.currentTimeMillis()
                 } else if (orientation >= 70 && orientation <= 90 && System.currentTimeMillis() - orientationListenerDelayTime > 1000) { //屏幕右边朝上
-                    onOrientationReverseLandscape(videoView)
+                    onOrientationReverseLandscape(videoViewOld)
                     orientationListenerDelayTime = System.currentTimeMillis()
                 }
             }
@@ -59,17 +60,17 @@ object OrientationEventManager {
     /**
      * 横屏(屏幕左边朝上)
      */
-    private fun onOrientationLandscape(videoView: VideoView) {
+    private fun onOrientationLandscape(videoViewOld: VideoViewOld) {
         if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) return
         if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                && videoView.windowType == VideoView.WindowType.FULLSCREEN) {
+                && videoViewOld.windowType == VideoViewOld.WindowType.FULLSCREEN) {
             currentOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
             return
         }
         currentOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-        if (videoView.windowType != VideoView.WindowType.FULLSCREEN) {
+        if (videoViewOld.windowType != VideoViewOld.WindowType.FULLSCREEN) {
             if (mOrientationChangeListener != null) {
-                mOrientationChangeListener!!.onOrientationLandscape(videoView)
+                mOrientationChangeListener!!.onOrientationLandscape(videoViewOld)
             }
         }
     }
@@ -77,17 +78,17 @@ object OrientationEventManager {
     /**
      * 反向横屏(屏幕右边朝上)
      */
-    private fun onOrientationReverseLandscape(videoView: VideoView) {
+    private fun onOrientationReverseLandscape(videoViewOld: VideoViewOld) {
         if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) return
         if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                && videoView.windowType == VideoView.WindowType.FULLSCREEN) {
+                && videoViewOld.windowType == VideoViewOld.WindowType.FULLSCREEN) {
             currentOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
             return
         }
         currentOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-        if (videoView.windowType != VideoView.WindowType.FULLSCREEN) {
+        if (videoViewOld.windowType != VideoViewOld.WindowType.FULLSCREEN) {
             if (mOrientationChangeListener != null) {
-                mOrientationChangeListener!!.onOrientationReverseLandscape(videoView)
+                mOrientationChangeListener!!.onOrientationReverseLandscape(videoViewOld)
             }
         }
     }
@@ -95,19 +96,19 @@ object OrientationEventManager {
     /**
      * 竖屏
      */
-    private fun onOrientationPortrait(videoView: VideoView) {
+    private fun onOrientationPortrait(videoViewOld: VideoViewOld) {
         if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
             return
         }
         if ((currentOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
                         || currentOrientation == ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE)
-                && videoView.windowType != VideoView.WindowType.FULLSCREEN) {
+                && videoViewOld.windowType != VideoViewOld.WindowType.FULLSCREEN) {
             currentOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             return
         }
         currentOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         if (mOrientationChangeListener != null) {
-            mOrientationChangeListener!!.onOrientationPortrait(videoView)
+            mOrientationChangeListener!!.onOrientationPortrait(videoViewOld)
         }
     }
 
@@ -119,8 +120,8 @@ object OrientationEventManager {
     }
 
     interface OnOrientationChangeListener {
-        fun onOrientationLandscape(videoView: VideoView?)
-        fun onOrientationReverseLandscape(videoView: VideoView?)
-        fun onOrientationPortrait(videoView: VideoView?)
+        fun onOrientationLandscape(videoViewOld: VideoViewOld?)
+        fun onOrientationReverseLandscape(videoViewOld: VideoViewOld?)
+        fun onOrientationPortrait(videoViewOld: VideoViewOld?)
     }
 }

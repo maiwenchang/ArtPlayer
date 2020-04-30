@@ -1,4 +1,4 @@
-package org.salient.artplayer
+package org.salient.artplayer.extend
 
 import android.annotation.SuppressLint
 import android.app.Activity

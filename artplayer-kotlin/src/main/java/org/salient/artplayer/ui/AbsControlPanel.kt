@@ -1,4 +1,4 @@
-package org.salient.artplayer
+package org.salient.artplayer.ui
 
 import android.content.Context
 import android.util.AttributeSet
@@ -8,7 +8,11 @@ import android.view.View.OnTouchListener
 import android.widget.FrameLayout
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
-import org.salient.artplayer.MediaPlayerManager.PlayerState
+import org.salient.artplayer.MediaPlayerManagerOld
+import org.salient.artplayer.MediaPlayerManagerOld.PlayerState
+import org.salient.artplayer.VideoViewOld
+import org.salient.artplayer.conduction.PlayerState
+import org.salient.artplayer.listener.MediaStateListener
 
 /**
  * Created by Mai on 2018/7/10
@@ -17,7 +21,7 @@ import org.salient.artplayer.MediaPlayerManager.PlayerState
  * *
  */
 abstract class AbsControlPanel : FrameLayout, MediaStateListener, View.OnClickListener, OnTouchListener, OnSeekBarChangeListener {
-    var target: VideoView? = null
+    var target: VideoViewOld? = null
 
     constructor(context: Context?) : super(context!!) {
         init(context)
@@ -41,7 +45,7 @@ abstract class AbsControlPanel : FrameLayout, MediaStateListener, View.OnClickLi
     }
 
     fun notifyStateChange() {
-        when (MediaPlayerManager.playerState) {
+        when (MediaPlayerManagerOld.playerState) {
             PlayerState.ERROR -> onStateError()
             PlayerState.IDLE -> onStateIdle()
             PlayerState.PAUSED -> onStatePaused()

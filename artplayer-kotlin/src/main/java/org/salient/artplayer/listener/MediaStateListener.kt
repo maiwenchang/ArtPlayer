@@ -1,4 +1,4 @@
-package org.salient.artplayer
+package org.salient.artplayer.listener
 
 /**
  * Created by Mai on 2018/7/10

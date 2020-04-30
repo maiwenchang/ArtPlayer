@@ -12,9 +12,9 @@ import android.view.inputmethod.InputMethodManager;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.salient.artplayer.AbsMediaPlayer;
-import org.salient.artplayer.MediaPlayerManager;
-import org.salient.artplayer.SystemMediaPlayer;
+import org.salient.artplayer.player.IMediaPlayer;
+import org.salient.artplayer.MediaPlayerManagerOld;
+import org.salient.artplayer.player.SystemMediaPlayer;
 import org.salient.artvideoplayer.bean.MovieData;
 import org.salient.artvideoplayer.bean.VideoBean;
 
@@ -82,7 +82,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (MediaPlayerManager.INSTANCE.backPress()) {
+        if (MediaPlayerManagerOld.INSTANCE.backPress()) {
             return;
         }
         super.onBackPressed();
@@ -92,7 +92,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         hideSoftInput();
-        MediaPlayerManager.INSTANCE.pause();
+        MediaPlayerManagerOld.INSTANCE.pause();
     }
 
     @Override
@@ -104,7 +104,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        MediaPlayerManager.INSTANCE.releasePlayerAndView(this);
+        MediaPlayerManagerOld.INSTANCE.releasePlayerAndView(this);
     }
 
 
@@ -138,7 +138,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     private void refreshMenuState(){
         if (mMenu != null) {
-            AbsMediaPlayer mediaPlayer = MediaPlayerManager.INSTANCE.getMediaPlayer();
+            IMediaPlayer mediaPlayer = MediaPlayerManagerOld.INSTANCE.getMediaPlayer();
             if (mediaPlayer instanceof SystemMediaPlayer) {
                 mMenu.getItem(1).getSubMenu().getItem(0).setChecked(true);
                 mMenu.getItem(0).setTitle("Using: MediaPlayer");
@@ -179,8 +179,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         switch (id) {
             case R.id.menu_MediaPlayer:
                 mMenu.getItem(0).setTitle("Using: MediaPlayer");
-                MediaPlayerManager.INSTANCE.releasePlayerAndView(this);
-                MediaPlayerManager.INSTANCE.setMediaPlayer(new SystemMediaPlayer());
+                MediaPlayerManagerOld.INSTANCE.releasePlayerAndView(this);
+                MediaPlayerManagerOld.INSTANCE.setMediaPlayer(new SystemMediaPlayer());
                 break;
             /*case R.id.menu_IjkPlayer:
                 mMenu.getItem(0).setTitle("Using: IjkPlayer");
