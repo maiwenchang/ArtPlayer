@@ -1,24 +1,21 @@
 package org.salient.artplayer.ui
 
-import android.media.AudioManager
-import android.media.MediaPlayer
 import android.view.TextureView
 import org.salient.artplayer.audio.IAudioManager
-import org.salient.artplayer.bean.VideoBean
-import org.salient.artplayer.conduction.PlayerState
 import org.salient.artplayer.player.IMediaPlayer
 
 /**
- * description:
+ * description: 视频播放容器抽象类
  *
- * @author 麦文昌(A01031)
- *
- * @date 2020-02-14 15:24.
+ * @author Maiwenchang
+ * email: cv.stronger@gmail.com
+ * date: 2020-05-04 10:06 AM.
  */
 interface IVideoView : TextureView.SurfaceTextureListener {
 
     var mediaPlayer: IMediaPlayer<*>?
     var audioManager : IAudioManager
+    val isPlaying: Boolean
 
     /**
      * 开始播放

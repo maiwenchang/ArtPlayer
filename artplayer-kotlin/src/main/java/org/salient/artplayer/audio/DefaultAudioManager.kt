@@ -11,23 +11,11 @@ import org.salient.artplayer.player.IMediaPlayer
 /**
  * description: 音频管理
  *
- * @author 麦文昌(A01031)
- *
- * @date 2020-02-14 15:24.
+ * @author Maiwenchang
+ * email: cv.stronger@gmail.com
+ * date: 2020-05-04 10:06 AM.
  */
 class DefaultAudioManager(context: Context, mediaPlayer: IMediaPlayer<*>?) : IAudioManager {
-
-    companion object {
-        /**
-         * 获取当前系统音量
-         */
-        fun getCurrentVolume(context: Context): Float {
-            val audioManager = context.getSystemService(Service.AUDIO_SERVICE) as AudioManager
-            val streamVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC).toFloat()
-            val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC).toFloat()
-            return streamVolume * 1.000f / maxVolume
-        }
-    }
 
     private val audioManager: AudioManager = context.getSystemService(Service.AUDIO_SERVICE) as AudioManager
     private val audioAttributes = AudioAttributes.Builder()

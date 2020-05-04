@@ -1,17 +1,17 @@
 package org.salient.artplayer.audio
 
+import android.app.Service
 import android.content.Context
 import android.media.AudioManager
 import android.media.AudioManager.OnAudioFocusChangeListener
-import android.util.Log
-import org.salient.artplayer.MediaPlayerManagerOld
 import org.salient.artplayer.player.IMediaPlayer
 
 /**
- * Created by Mai on 2018/7/23
- * *
- * Description: 声音焦点变化管理类
- * *
+ * description: 声音焦点变化管理类
+ *
+ * @author Maiwenchang
+ * email: cv.stronger@gmail.com
+ * date: 2020-05-04 10:06 AM.
  */
 class DefaultAudioFocusChangeListener(
         private val context: Context,
@@ -26,13 +26,13 @@ class DefaultAudioFocusChangeListener(
                 if (playOnAudioFocus && mediaPlayer?.isPlaying != true) {
                     mediaPlayer?.start();
                 } else if (mediaPlayer?.isPlaying == true) {
-                    mediaPlayer.setVolume(DefaultAudioManager.getCurrentVolume(context));
+                    mediaPlayer.setVolume(getCurrentVolume(context));
                 }
                 playOnAudioFocus = false;
             }
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
                 //短暂失去焦点，无须停止播放，只适当降低播放器音量
-                val duckVolume = DefaultAudioManager.getCurrentVolume(context) * 0.8f
+                val duckVolume = getCurrentVolume(context) * 0.8f
                 mediaPlayer?.setVolume(duckVolume);
             }
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT -> {
@@ -49,5 +49,15 @@ class DefaultAudioFocusChangeListener(
                 mediaPlayer?.stop()
             }
         }
+    }
+
+    /**
+     * 获取当前系统音量
+     */
+    fun getCurrentVolume(context: Context): Float {
+        val audioManager = context.getSystemService(Service.AUDIO_SERVICE) as AudioManager
+        val streamVolume = audioManager.getStreamVolume(AudioManager.STREAM_MUSIC).toFloat()
+        val maxVolume = audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC).toFloat()
+        return streamVolume * 1.000f / maxVolume
     }
 }

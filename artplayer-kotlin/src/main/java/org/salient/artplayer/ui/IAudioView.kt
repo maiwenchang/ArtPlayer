@@ -3,9 +3,9 @@ package org.salient.artplayer.ui
 /**
  * description:
  *
- * @author 麦文昌(A01031)
- *
- * @date 2020-02-14 15:24.
+ * @author Maiwenchang
+ * email: cv.stronger@gmail.com
+ * date: 2020-05-04 10:06 AM.
  */
 interface IAudioView {
 

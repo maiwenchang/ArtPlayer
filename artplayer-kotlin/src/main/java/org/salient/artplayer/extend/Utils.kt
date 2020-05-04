@@ -13,10 +13,11 @@ import androidx.appcompat.view.ContextThemeWrapper
 import java.util.*
 
 /**
- * Created by Mai on 2018/7/10
- * *
- * Description:
- * *
+ * description: 工具类
+ *
+ * @author Maiwenchang
+ * email: cv.stronger@gmail.com
+ * date: 2020-05-04 10:06 AM.
  */
 object Utils {
     fun stringForTime(timeMs: Long): String {

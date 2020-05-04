@@ -1,6 +1,12 @@
 package org.salient.artplayer.conduction
 
-// all possible MediaPlayer states
+/**
+ * description: 播放状态
+ *
+ * @author Maiwenchang
+ * email: cv.stronger@gmail.com
+ * date: 2020-05-04 10:06 AM.
+ */
 sealed class PlayerState {
     object ERROR : PlayerState()
     object IDLE : PlayerState()

@@ -1,10 +1,10 @@
 package org.salient.artplayer.bean
 
 /**
- * description:
+ * description: 视频信息
  *
- * @author 麦文昌(A01031)
- * @author wenchang.mai@casstime.com
- * @date 2020-02-14 15:24.
+ * @author Maiwenchang
+ * email: cv.stronger@gmail.com
+ * date: 2020-05-04 10:06 AM.
  */
 class VideoInfo(val what: Int = 0, val extra: Int = 0)

@@ -8,10 +8,11 @@ import android.view.OrientationEventListener
 import org.salient.artplayer.VideoViewOld
 
 /**
- * Created by Mai on 2018/11/14
- * *
- * Description: 重力感应方向管理器
- * *
+ * description: 重力感应方向管理器
+ *
+ * @author Maiwenchang
+ * email: cv.stronger@gmail.com
+ * date: 2020-05-04 10:06 AM.
  */
 object OrientationEventManager {
     private var currentOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT

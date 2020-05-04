@@ -10,10 +10,11 @@ import org.salient.artplayer.bean.VideoSize
 import org.salient.artplayer.conduction.PlayerState
 
 /**
- * Created by Mai on 2018/7/10
- * *
- * Description: 系统默认播放器
- * *
+ * description: 系统视频播放器的封装
+ *
+ * @author Maiwenchang
+ * email: cv.stronger@gmail.com
+ * date: 2020-05-04 10:06 AM.
  */
 class SystemMediaPlayer : IMediaPlayer<MediaPlayer>, OnPreparedListener,
         OnCompletionListener,
@@ -49,19 +50,8 @@ class SystemMediaPlayer : IMediaPlayer<MediaPlayer>, OnPreparedListener,
 
     override fun prepare() {
         try {
-//            MediaPlayerManagerOld.updateState(PlayerState.PREPARING)
-//            if (dataSource is AssetFileDescriptor) { //Android assets file
-//                val fd = dataSource
-//                mediaPlayer.setDataSource(fd.fileDescriptor, fd.startOffset, fd.length)
-//            } else if (dataSource != null && headers != null) { //url with headers
-//                val clazz = MediaPlayer::class.java
-//                val method = clazz.getDeclaredMethod("setDataSource", String::class.java, MutableMap::class.java)
-//                method.invoke(mediaPlayer, dataSource.toString(), headers)
-//            } else if (dataSource != null) {
-//                mediaPlayer.setDataSource(dataSource.toString())
-//            }
-
             impl.prepareAsync()
+            playerStateLD.value = PlayerState.PREPARING
         } catch (e: Exception) {
             e.printStackTrace()
             playerStateLD.value = PlayerState.ERROR

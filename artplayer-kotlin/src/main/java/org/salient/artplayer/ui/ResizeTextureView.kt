@@ -7,12 +7,16 @@ import android.view.View
 import org.salient.artplayer.conduction.ScaleType
 
 /**
- * 用于显示video的，做了横屏与竖屏的匹配，还有需要rotation需求的
+ * description: 可改变大小的视频播放容器，可设置缩放模式
+ *
+ * @author Maiwenchang
+ * email: cv.stronger@gmail.com
+ * date: 2020-05-04 10:06 AM.
  */
 class ResizeTextureView : TextureView {
     private var mVideoWidth = 0
     private var mVideoHeight = 0
-    private var screenType: ScaleType? = ScaleType.DEFAULT
+    private var screenType: ScaleType = ScaleType.DEFAULT
 
     constructor(context: Context?) : super(context) {}
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {}
@@ -23,22 +27,21 @@ class ResizeTextureView : TextureView {
         requestLayout()
     }
 
-    fun setScreenScale(type: ScaleType?) {
+    fun setScreenScale(type: ScaleType) {
         screenType = type
         requestLayout()
     }
 
-    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) { //        Log.i("@@@@", "onMeasure(" + MeasureSpec.toString(widthMeasureSpec) + ", "
-//                + MeasureSpec.toString(heightMeasureSpec) + ")");
-        var widthMeasureSpec = widthMeasureSpec
-        var heightMeasureSpec = heightMeasureSpec
-        if (rotation == 90f || rotation == 270f) { // 软解码时处理旋转信息，交换宽高
-            widthMeasureSpec = widthMeasureSpec + heightMeasureSpec
-            heightMeasureSpec = widthMeasureSpec - heightMeasureSpec
-            widthMeasureSpec = widthMeasureSpec - heightMeasureSpec
+    override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
+        var widthSpec: Int = widthMeasureSpec
+        var heightSpec = heightMeasureSpec
+        if (rotation == 90f || rotation == 270f) {
+            // 软解码时处理旋转信息，交换宽高
+            widthSpec = heightMeasureSpec
+            heightSpec = widthMeasureSpec
         }
-        var width = View.getDefaultSize(mVideoWidth, widthMeasureSpec)
-        var height = View.getDefaultSize(mVideoHeight, heightMeasureSpec)
+        var width = View.getDefaultSize(mVideoWidth, widthSpec)
+        var height = View.getDefaultSize(mVideoHeight, heightSpec)
         when (screenType) {
             ScaleType.SCALE_ORIGINAL -> {
                 width = mVideoWidth
@@ -55,8 +58,8 @@ class ResizeTextureView : TextureView {
                 width = height / 3 * 4
             }
             ScaleType.SCALE_MATCH_PARENT -> {
-                width = widthMeasureSpec
-                height = heightMeasureSpec
+                width = widthSpec
+                height = heightSpec
             }
             ScaleType.SCALE_CENTER_CROP -> if (mVideoWidth > 0 && mVideoHeight > 0) {
                 if (mVideoWidth * height > width * mVideoHeight) {
@@ -66,10 +69,10 @@ class ResizeTextureView : TextureView {
                 }
             }
             ScaleType.DEFAULT -> if (mVideoWidth > 0 && mVideoHeight > 0) {
-                val widthSpecMode = MeasureSpec.getMode(widthMeasureSpec)
-                val widthSpecSize = MeasureSpec.getSize(widthMeasureSpec)
-                val heightSpecMode = MeasureSpec.getMode(heightMeasureSpec)
-                val heightSpecSize = MeasureSpec.getSize(heightMeasureSpec)
+                val widthSpecMode = MeasureSpec.getMode(widthSpec)
+                val widthSpecSize = MeasureSpec.getSize(widthSpec)
+                val heightSpecMode = MeasureSpec.getMode(heightSpec)
+                val heightSpecSize = MeasureSpec.getSize(heightSpec)
                 if (widthSpecMode == MeasureSpec.EXACTLY && heightSpecMode == MeasureSpec.EXACTLY) { // the size is fixed
                     width = widthSpecSize
                     height = heightSpecSize
@@ -103,7 +106,6 @@ class ResizeTextureView : TextureView {
                         height = width * mVideoHeight / mVideoWidth
                     }
                 }
-            } else { // no size yet, just adopt the given spec sizes
             }
         }
         setMeasuredDimension(width, height)

@@ -34,7 +34,7 @@ public class MainActivity extends BaseActivity {
         try {
             VideoView videoView = findViewById(R.id.salientVideoView);
             SystemMediaPlayer systemMediaPlayer = new SystemMediaPlayer();
-            systemMediaPlayer.getImpl().setDataSource(this,Uri.parse("http://vfx.mtime.cn/Video/2018/07/06/mp4/180706094003288023.mp4"));
+            systemMediaPlayer.getImpl().setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/07/06/mp4/180706094003288023.mp4"));
             videoView.setMediaPlayer(systemMediaPlayer);
 
             findViewById(R.id.btn_start).setOnClickListener(new View.OnClickListener() {
@@ -47,7 +47,6 @@ public class MainActivity extends BaseActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
 
 
         //设置重力监听

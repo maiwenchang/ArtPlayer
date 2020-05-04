@@ -1,6 +1,5 @@
 package org.salient.artplayer.player
 
-import android.media.MediaPlayer
 import android.view.Surface
 import androidx.lifecycle.LiveData
 import org.salient.artplayer.bean.VideoInfo
@@ -8,10 +7,11 @@ import org.salient.artplayer.bean.VideoSize
 import org.salient.artplayer.conduction.PlayerState
 
 /**
- * Created by Mai on 2018/7/10
- * *
- * Description: 视频播放器的抽象基类
- * *
+ * description: 视频播放器的抽象基类
+ *
+ * @author Maiwenchang
+ * email: cv.stronger@gmail.com
+ * date: 2020-05-04 10:06 AM.
  */
 interface IMediaPlayer<T> {
 
@@ -19,7 +19,7 @@ interface IMediaPlayer<T> {
     val isPlaying: Boolean
     val currentPosition: Long
     val duration: Long
-    val playerStateLD: LiveData<PlayerState> //播放状态
+    val playerStateLD: LiveData<PlayerState>
     val videoSizeLD: LiveData<VideoSize>
     val bufferingProgressLD: LiveData<Int>
     val videoInfoLD: LiveData<VideoInfo>
