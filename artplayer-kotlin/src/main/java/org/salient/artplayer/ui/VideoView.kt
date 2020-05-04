@@ -3,12 +3,12 @@ package org.salient.artplayer.ui
 import android.content.Context
 import android.graphics.Color
 import android.graphics.SurfaceTexture
+import android.media.MediaPlayer
 import android.util.AttributeSet
 import android.util.Log
 import android.view.Gravity
 import android.view.Surface
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.FrameLayout
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
@@ -30,7 +30,6 @@ class VideoView : FrameLayout, IVideoView {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
-
     //const
     private val TAG = javaClass.simpleName
     private val TEXTURE_VIEW_POSITION = 0 //视频播放视图层
@@ -60,9 +59,8 @@ class VideoView : FrameLayout, IVideoView {
         registerMediaPlayerObserver(mediaPlayer)
     }
 
-    override fun start() {
-        Log.d(TAG, "start() called")
-        mediaPlayer?.release()
+    override fun init() {
+        Log.d(TAG, "init() called")
         textureViewContainer.removeView(textureView)
         surfaceTexture = null
         textureView = ResizeTextureView(context)
@@ -74,8 +72,8 @@ class VideoView : FrameLayout, IVideoView {
     /**
      * 开始播放
      */
-    override fun play() {
-        Log.d(TAG, "play() called")
+    override fun start() {
+        Log.d(TAG, "start() called")
         mediaPlayer?.start()
     }
 
@@ -98,7 +96,7 @@ class VideoView : FrameLayout, IVideoView {
      */
     override fun stop() {
         Log.d(TAG, "stop() called")
-        mediaPlayer?.release()
+        mediaPlayer?.stop()
     }
 
     /**
@@ -111,25 +109,17 @@ class VideoView : FrameLayout, IVideoView {
         surfaceTexture = null
     }
 
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        release()
+    /**
+     * 重置
+     */
+    override fun reset() {
+        mediaPlayer?.reset()
     }
 
     /**
-     * go into prepare and start
+     * 跳转
      */
-    private fun prepare() {
-        Log.d(TAG, "prepare() called")
-        surfaceTexture?.let {
-            surface?.release()
-            surface = Surface(it)
-            mediaPlayer?.setSurface(surface)
-        }
-        mediaPlayer?.prepare()
-    }
-
-    fun seekTo(time: Long) {
+    override fun seekTo(time: Long) {
         Log.d(TAG, "seekTo() called with: time = $time")
         mediaPlayer?.seekTo(time)
     }
@@ -137,10 +127,8 @@ class VideoView : FrameLayout, IVideoView {
     /**
      * 设置音量
      *
-     * @param leftVolume  左声道
-     * @param rightVolume 右声道
      */
-    fun setVolume(volume: Int) {
+    override fun setVolume(volume: Int) {
         Log.d(TAG, "setVolume() called with: volume = $volume")
         audioManager.setVolume(volume)
     }
@@ -164,7 +152,6 @@ class VideoView : FrameLayout, IVideoView {
 
     override fun onSurfaceTextureDestroyed(surfaceTexture: SurfaceTexture): Boolean {
         Log.d(TAG, "onSurfaceTextureDestroyed() called with: surfaceTexture = $surfaceTexture")
-        mediaPlayer?.release()
         this.surfaceTexture = null
         return true
     }
@@ -173,6 +160,24 @@ class VideoView : FrameLayout, IVideoView {
         if (textureView?.surfaceTexture != surfaceTexture) {
             textureView?.surfaceTexture = surfaceTexture
         }
+    }
+
+    override fun onDetachedFromWindow() {
+        super.onDetachedFromWindow()
+        release()
+    }
+
+    /**
+     * go into prepare and start
+     */
+    private fun prepare() {
+        Log.d(TAG, "prepare() called")
+        surfaceTexture?.let {
+            surface?.release()
+            surface = Surface(it)
+            mediaPlayer?.setSurface(surface)
+        }
+        mediaPlayer?.prepare()
     }
 
     /**
@@ -188,7 +193,7 @@ class VideoView : FrameLayout, IVideoView {
     /**
      * 移除播放器内核监听
      */
-    private fun removeMediaPlayerObserver(mediaPlayer: IMediaPlayer<*>?){
+    private fun removeMediaPlayerObserver(mediaPlayer: IMediaPlayer<*>?) {
         mediaPlayer?.videoSizeLD?.removeObserver(videoSizeObserver)
         mediaPlayer?.playerStateLD?.removeObserver(playerStateObserver)
     }
@@ -211,7 +216,7 @@ class VideoView : FrameLayout, IVideoView {
                 audioManager.requestAudioFocus()
                 mediaPlayer?.start()
             }
-            PlayerState.STOP -> {
+            PlayerState.STOPPED -> {
                 audioManager.abandonAudioFocus()
             }
             PlayerState.ERROR -> {

@@ -1,6 +1,5 @@
 package org.salient.artvideoplayer.activity;
 
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -9,7 +8,6 @@ import android.widget.EditText;
 
 import androidx.appcompat.widget.Toolbar;
 
-import org.salient.artplayer.MediaPlayerManagerOld;
 import org.salient.artplayer.VideoViewOld;
 import org.salient.artplayer.extend.Utils;
 import org.salient.artplayer.player.SystemMediaPlayer;
@@ -32,27 +30,24 @@ public class MainActivity extends BaseActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
+        VideoView videoView = findViewById(R.id.salientVideoView);
+        SystemMediaPlayer systemMediaPlayer = new SystemMediaPlayer();
         try {
-            VideoView videoView = findViewById(R.id.salientVideoView);
-            SystemMediaPlayer systemMediaPlayer = new SystemMediaPlayer();
             systemMediaPlayer.getImpl().setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/07/06/mp4/180706094003288023.mp4"));
-            videoView.setMediaPlayer(systemMediaPlayer);
-
-            findViewById(R.id.btn_start).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    videoView.start();
-                    //保持屏幕常量
-                    Utils.INSTANCE.scanForActivity(MainActivity.this)
-                            .getWindow()
-                            .addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                }
-            });
-
         } catch (IOException e) {
             e.printStackTrace();
         }
+        videoView.setMediaPlayer(systemMediaPlayer);
+
+        findViewById(R.id.btn_start).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //保持屏幕常量
+                Utils.INSTANCE.scanForActivity(MainActivity.this).getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+                //开始播放
+                videoView.init();
+            }
+        });
 
 
         //设置重力监听

@@ -1,5 +1,6 @@
 package org.salient.artplayer.ui
 
+import android.util.Log
 import android.view.TextureView
 import org.salient.artplayer.audio.IAudioManager
 import org.salient.artplayer.player.IMediaPlayer
@@ -18,14 +19,14 @@ interface IVideoView : TextureView.SurfaceTextureListener {
     val isPlaying: Boolean
 
     /**
-     * 开始播放
+     * 初始化播放
      */
-    fun start()
+    fun init()
 
     /**
      * 播放
      */
-    fun play()
+    fun start()
 
     /**
      * 重播
@@ -46,5 +47,21 @@ interface IVideoView : TextureView.SurfaceTextureListener {
      * 释放资源
      */
     fun release()
+
+    /**
+     * 重置
+     */
+    fun reset()
+
+    /**
+     * 跳转
+     */
+    fun seekTo(time: Long)
+
+    /**
+     * 设置音量
+     *
+     */
+    fun setVolume(volume: Int)
 
 }

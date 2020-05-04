@@ -4,6 +4,7 @@ import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.media.MediaPlayer.*
 import android.view.Surface
+import android.view.SurfaceHolder
 import androidx.lifecycle.MutableLiveData
 import org.salient.artplayer.bean.VideoInfo
 import org.salient.artplayer.bean.VideoSize
@@ -48,6 +49,48 @@ class SystemMediaPlayer : IMediaPlayer<MediaPlayer>, OnPreparedListener,
         impl.setOnVideoSizeChangedListener(this)
     }
 
+    override val isPlaying: Boolean
+        get() {
+            try {
+                return impl.isPlaying
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            return false
+        }
+
+    override val currentPosition: Long
+        get() = try {
+            impl.currentPosition.toLong()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            0
+        }
+
+    override val duration: Long
+        get() = try {
+            impl.duration.toLong()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            0
+        }
+
+    override val videoHeight: Int
+        get() = try {
+            impl.videoHeight
+        } catch (e: Exception) {
+            e.printStackTrace()
+            0
+        }
+
+    override val videoWidth: Int
+        get() = try {
+            impl.videoHeight
+        } catch (e: Exception) {
+            e.printStackTrace()
+            0
+        }
+
     override fun prepare() {
         try {
             impl.prepareAsync()
@@ -79,20 +122,11 @@ class SystemMediaPlayer : IMediaPlayer<MediaPlayer>, OnPreparedListener,
     override fun stop() {
         try {
             impl.stop()
-            playerStateLD.value = PlayerState.STOP
+            playerStateLD.value = PlayerState.STOPPED
         } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
-
-    override val isPlaying: Boolean
-        get() {
-            try {
-                return impl.isPlaying
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            return false
-        }
 
     override fun seekTo(time: Long) {
         try {
@@ -111,23 +145,26 @@ class SystemMediaPlayer : IMediaPlayer<MediaPlayer>, OnPreparedListener,
         }
     }
 
-    override val currentPosition: Long
-        get() = try {
-            impl.currentPosition.toLong()
+    override fun reset() {
+        try {
+            impl.reset()
+            playerStateLD.value = PlayerState.IDLE
         } catch (e: Exception) {
-            0
+            e.printStackTrace()
         }
-
-    override val duration: Long
-        get() = try {
-            impl.duration.toLong()
-        } catch (e: Exception) {
-            0
-        }
+    }
 
     override fun setSurface(surface: Surface?) {
         try {
             impl.setSurface(surface)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun setDisplay(surfaceHolder: SurfaceHolder) {
+        try {
+            impl.setDisplay(surfaceHolder)
         } catch (e: Exception) {
             e.printStackTrace()
         }
