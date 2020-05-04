@@ -91,50 +91,50 @@ object Utils {
 
     fun getRequestedOrientation(context: Context?): Int {
         return if (getAppCompActivity(context) != null) {
-            getAppCompActivity(context)!!.requestedOrientation
+            getAppCompActivity(context)?.requestedOrientation ?: 0
         } else {
-            scanForActivity(context)!!.requestedOrientation
+            scanForActivity(context)?.requestedOrientation ?: 0
         }
     }
 
     fun setRequestedOrientation(context: Context?, orientation: Int) {
         if (getAppCompActivity(context) != null) {
-            getAppCompActivity(context)!!.requestedOrientation = orientation
+            getAppCompActivity(context)?.requestedOrientation = orientation
         } else {
-            scanForActivity(context)!!.requestedOrientation = orientation
+            scanForActivity(context)?.requestedOrientation = orientation
         }
     }
 
-    fun getWindow(context: Context?): Window {
+    fun getWindow(context: Context?): Window? {
         return if (getAppCompActivity(context) != null) {
-            getAppCompActivity(context)!!.window
+            getAppCompActivity(context)?.window
         } else {
-            scanForActivity(context)!!.window
+            scanForActivity(context)?.window
         }
     }
 
     @SuppressLint("RestrictedApi")
     fun hideSupportActionBar(context: Context?) {
         if (getAppCompActivity(context) != null) {
-            val ab = getAppCompActivity(context)!!.supportActionBar
+            val ab = getAppCompActivity(context)?.supportActionBar
             if (ab != null) {
                 ab.setShowHideAnimationEnabled(false)
                 ab.hide()
             }
         }
-        getWindow(context).setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+        getWindow(context)?.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN)
     }
 
     @SuppressLint("RestrictedApi")
     fun showSupportActionBar(context: Context?) {
         if (getAppCompActivity(context) != null) {
-            val ab = getAppCompActivity(context)!!.supportActionBar
+            val ab = getAppCompActivity(context)?.supportActionBar
             if (ab != null) {
                 ab.setShowHideAnimationEnabled(false)
                 ab.show()
             }
         }
-        getWindow(context).clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
+        getWindow(context)?.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
     }
 }

@@ -4,12 +4,14 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import androidx.appcompat.widget.Toolbar;
 
 import org.salient.artplayer.MediaPlayerManagerOld;
 import org.salient.artplayer.VideoViewOld;
+import org.salient.artplayer.extend.Utils;
 import org.salient.artplayer.player.SystemMediaPlayer;
 import org.salient.artplayer.ui.VideoView;
 import org.salient.artvideoplayer.BaseActivity;
@@ -41,6 +43,10 @@ public class MainActivity extends BaseActivity {
                 @Override
                 public void onClick(View v) {
                     videoView.start();
+                    //保持屏幕常量
+                    Utils.INSTANCE.scanForActivity(MainActivity.this)
+                            .getWindow()
+                            .addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                 }
             });
 

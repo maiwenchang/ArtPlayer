@@ -62,16 +62,13 @@ class VideoView : FrameLayout, IVideoView {
 
     override fun start() {
         Log.d(TAG, "start() called")
-        when (mediaPlayer?.playerStateLD?.value) {
-            PlayerState.IDLE, PlayerState.ERROR -> initialPlay()
-            PlayerState.PREPARED, PlayerState.PAUSED -> play()
-            PlayerState.PLAYING -> pause()
-            PlayerState.COMPLETED -> replay()
-        }
-
-        //keep screen on
-        Utils.scanForActivity(context)?.window?.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-
+        mediaPlayer?.release()
+        textureViewContainer.removeView(textureView)
+        surfaceTexture = null
+        textureView = ResizeTextureView(context)
+        textureView?.surfaceTextureListener = this
+        val layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER)
+        textureViewContainer.addView(textureView, layoutParams)
     }
 
     /**
@@ -110,21 +107,13 @@ class VideoView : FrameLayout, IVideoView {
     override fun release() {
         Log.d(TAG, "release() called")
         mediaPlayer?.release()
+        textureViewContainer.removeView(textureView)
+        surfaceTexture = null
     }
 
     override fun onDetachedFromWindow() {
         super.onDetachedFromWindow()
         release()
-    }
-
-    private fun initialPlay() {
-        Log.d(TAG, "initialPlay() called")
-        (textureView?.parent as ViewGroup?)?.removeView(textureView)
-        surfaceTexture = null
-        textureView = ResizeTextureView(context)
-        textureView?.surfaceTextureListener = this
-        val layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER)
-        textureViewContainer.addView(textureView, layoutParams)
     }
 
     /**
