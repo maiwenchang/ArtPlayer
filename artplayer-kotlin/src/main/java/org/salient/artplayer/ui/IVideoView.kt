@@ -21,7 +21,7 @@ interface IVideoView : TextureView.SurfaceTextureListener {
     /**
      * 初始化播放
      */
-    fun init()
+    fun prepare()
 
     /**
      * 播放
@@ -64,4 +64,5 @@ interface IVideoView : TextureView.SurfaceTextureListener {
      */
     fun setVolume(volume: Int)
 
+    fun attach()
 }

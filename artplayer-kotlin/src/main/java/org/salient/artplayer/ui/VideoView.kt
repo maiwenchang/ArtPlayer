@@ -29,11 +29,8 @@ class VideoView : FrameLayout, IVideoView {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
-    //const
+
     private val TAG = javaClass.simpleName
-    private val TEXTURE_VIEW_POSITION = 0 //视频播放视图层
-    //surface an layout
-    private val textureViewContainer = FrameLayout(context).apply { setBackgroundColor(Color.BLACK) }
     private var textureView: ResizeTextureView? = null
     private var surfaceTexture: SurfaceTexture? = null
     private var surface: Surface? = null
@@ -51,21 +48,18 @@ class VideoView : FrameLayout, IVideoView {
         get() = mediaPlayer?.isPlaying == true
 
     init {
-        val params = LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT)
-        addView(textureViewContainer, TEXTURE_VIEW_POSITION, params)
-        registerMediaPlayerObserver(mediaPlayer)
-    }
-
-    override fun init() {
-        Log.d(TAG, "init() called")
-        textureViewContainer.removeView(textureView)
-        surfaceTexture = null
+        setBackgroundColor(Color.BLACK)
         textureView = ResizeTextureView(context)
         textureView?.surfaceTextureListener = this
         val layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER)
-        textureViewContainer.addView(textureView, layoutParams)
+        addView(textureView, layoutParams)
+        registerMediaPlayerObserver(mediaPlayer)
+    }
+
+    override fun prepare() {
+        Log.d(TAG, "prepare() called")
+        attach()
+        mediaPlayer?.prepare()
     }
 
     /**
@@ -104,7 +98,6 @@ class VideoView : FrameLayout, IVideoView {
     override fun release() {
         Log.d(TAG, "release() called")
         mediaPlayer?.release()
-        textureViewContainer.removeView(textureView)
         surfaceTexture = null
     }
 
@@ -112,6 +105,7 @@ class VideoView : FrameLayout, IVideoView {
      * 重置
      */
     override fun reset() {
+        Log.d(TAG, "reset() called")
         mediaPlayer?.reset()
     }
 
@@ -132,11 +126,20 @@ class VideoView : FrameLayout, IVideoView {
         audioManager.setVolume(volume)
     }
 
+    override fun attach() {
+        Log.d(TAG, "attach() called")
+        surfaceTexture?.let {
+            surface?.release()
+            surface = Surface(it)
+            mediaPlayer?.setSurface(surface)
+        }
+    }
+
     override fun onSurfaceTextureAvailable(surfaceTexture: SurfaceTexture, width: Int, height: Int) {
         Log.d(TAG, "onSurfaceTextureAvailable() called with: surfaceTexture = $surfaceTexture, width = $width, height = $height")
         if (this.surfaceTexture == null) {
             this.surfaceTexture = surfaceTexture
-            prepare()
+            attach()
         } else if (textureView?.surfaceTexture != surfaceTexture) {
             textureView?.surfaceTexture = surfaceTexture
         }
@@ -159,24 +162,6 @@ class VideoView : FrameLayout, IVideoView {
         if (textureView?.surfaceTexture != surfaceTexture) {
             textureView?.surfaceTexture = surfaceTexture
         }
-    }
-
-    override fun onDetachedFromWindow() {
-        super.onDetachedFromWindow()
-        release()
-    }
-
-    /**
-     * go into prepare and start
-     */
-    private fun prepare() {
-        Log.d(TAG, "prepare() called")
-        surfaceTexture?.let {
-            surface?.release()
-            surface = Surface(it)
-            mediaPlayer?.setSurface(surface)
-        }
-        mediaPlayer?.prepare()
     }
 
     /**
@@ -209,7 +194,7 @@ class VideoView : FrameLayout, IVideoView {
      * 视频播放器状态监听
      */
     private val playerStateObserver = Observer<PlayerState> {
-        Log.d(TAG, "PlayerState: $it")
+        Log.d(TAG, "PlayerState: ${it.javaClass.canonicalName}")
         when (it) {
             PlayerState.PREPARED -> {
                 audioManager.requestAudioFocus()
