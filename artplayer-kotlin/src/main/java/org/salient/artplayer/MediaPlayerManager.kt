@@ -4,7 +4,10 @@ import android.app.Activity
 import android.content.pm.ActivityInfo
 import android.view.ViewGroup
 import android.view.Window
+import org.salient.artplayer.conduction.WindowType
 import org.salient.artplayer.extend.Utils
+import org.salient.artplayer.ui.FullscreenVideoView
+import org.salient.artplayer.ui.TinyVideoView
 import org.salient.artplayer.ui.VideoView
 
 /**
@@ -16,16 +19,69 @@ import org.salient.artplayer.ui.VideoView
  */
 object MediaPlayerManager {
 
-    fun startFullscreen(activity: Activity, videoView: VideoView) {
+    /**
+     * 拦截返回事件
+     */
+    fun blockBackPress(activity: Activity): Boolean {
+        val decorView = activity.findViewById<ViewGroup>(Window.ID_ANDROID_CONTENT)
+        val videoView = decorView.findViewWithTag<VideoView?>(WindowType.FULLSCREEN)
+        videoView?.let {
+            dismissFullscreen(activity)
+            return true
+        }
+        return false
+    }
+
+    /**
+     * 开启全屏
+     */
+    fun startFullscreen(activity: Activity, fullscreenVideoView: VideoView) {
         Utils.hideSupportActionBar(activity)
         val decorView = activity.findViewById<ViewGroup>(Window.ID_ANDROID_CONTENT)
-        val lp = ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        decorView.addView(videoView, lp)
+        decorView.findViewWithTag<VideoView?>(WindowType.FULLSCREEN)?.let {
+            decorView.removeView(it)
+        }
+        val lp = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
+        decorView.addView(fullscreenVideoView, lp)
         Utils.setRequestedOrientation(activity, ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
     }
 
-    fun dismissFullscreen(activity: Activity, videoView: VideoView) {
-
+    /**
+     * 取消全屏
+     */
+    fun dismissFullscreen(activity: Activity) {
+        val decorView = activity.findViewById<ViewGroup>(Window.ID_ANDROID_CONTENT)
+        val fullscreenVideoView = decorView.findViewWithTag<FullscreenVideoView?>(WindowType.FULLSCREEN)
+        fullscreenVideoView?.let {
+            it.origin?.attach()
+            Utils.setRequestedOrientation(activity, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+            decorView.removeView(it)
+            Utils.showSupportActionBar(activity)
+        }
     }
+
+    /**
+     * 开启小窗
+     */
+    fun startTinyWindow(activity: Activity, tinyVideoView: TinyVideoView) {
+        val decorView = activity.findViewById<ViewGroup>(Window.ID_ANDROID_CONTENT)
+        decorView.findViewWithTag<VideoView?>(WindowType.TINY)?.let {
+            decorView.removeView(it)
+        }
+        decorView.addView(tinyVideoView)
+    }
+
+    /**
+     * 取消小窗
+     */
+    fun dismissTinyWindow(activity: Activity) {
+        val decorView = activity.findViewById<ViewGroup>(Window.ID_ANDROID_CONTENT)
+        val tinyVideoView = decorView.findViewWithTag<FullscreenVideoView?>(WindowType.TINY)
+        tinyVideoView?.let {
+            it.origin?.attach()
+            decorView.removeView(it)
+        }
+    }
+
+
 }

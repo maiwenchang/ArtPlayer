@@ -15,6 +15,7 @@ import org.salient.artplayer.audio.DefaultAudioManager
 import org.salient.artplayer.audio.IAudioManager
 import org.salient.artplayer.bean.VideoSize
 import org.salient.artplayer.conduction.PlayerState
+import org.salient.artplayer.conduction.WindowType
 import org.salient.artplayer.extend.Utils
 import org.salient.artplayer.player.IMediaPlayer
 
@@ -25,7 +26,7 @@ import org.salient.artplayer.player.IMediaPlayer
  * email: cv.stronger@gmail.com
  * date: 2020-05-04 10:06 AM.
  */
-class VideoView : FrameLayout, IVideoView {
+open class VideoView : FrameLayout, IVideoView {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
@@ -35,25 +36,26 @@ class VideoView : FrameLayout, IVideoView {
     private var surfaceTexture: SurfaceTexture? = null
     private var surface: Surface? = null
 
-    override var mediaPlayer: IMediaPlayer<*>? = null
+    final override var mediaPlayer: IMediaPlayer<*>? = null
         set(value) {
             removeMediaPlayerObserver(field)
             field = value
             registerMediaPlayerObserver(field)
         }
 
-    override var audioManager: IAudioManager = DefaultAudioManager(context, mediaPlayer)
+    override var audioManager: IAudioManager = DefaultAudioManager(context, this.mediaPlayer)
 
     override val isPlaying: Boolean
         get() = mediaPlayer?.isPlaying == true
 
     init {
-        setBackgroundColor(Color.BLACK)
+        tag = WindowType.NORMAL
+        this.setBackgroundColor(Color.BLACK)
         textureView = ResizeTextureView(context)
         textureView?.surfaceTextureListener = this
         val layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER)
-        addView(textureView, layoutParams)
-        registerMediaPlayerObserver(mediaPlayer)
+        this.addView(textureView, layoutParams)
+        registerMediaPlayerObserver(this.mediaPlayer)
     }
 
     override fun prepare() {

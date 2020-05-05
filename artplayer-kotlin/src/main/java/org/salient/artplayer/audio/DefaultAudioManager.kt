@@ -15,7 +15,7 @@ import org.salient.artplayer.player.IMediaPlayer
  * email: cv.stronger@gmail.com
  * date: 2020-05-04 10:06 AM.
  */
-class DefaultAudioManager(context: Context, mediaPlayer: IMediaPlayer<*>?) : IAudioManager {
+open class DefaultAudioManager(context: Context, mediaPlayer: IMediaPlayer<*>?) : IAudioManager {
 
     private val audioManager: AudioManager = context.getSystemService(Service.AUDIO_SERVICE) as AudioManager
     private val audioAttributes = AudioAttributes.Builder()

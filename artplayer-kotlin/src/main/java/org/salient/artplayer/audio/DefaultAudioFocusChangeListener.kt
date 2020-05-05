@@ -13,7 +13,7 @@ import org.salient.artplayer.player.IMediaPlayer
  * email: cv.stronger@gmail.com
  * date: 2020-05-04 10:06 AM.
  */
-class DefaultAudioFocusChangeListener(
+open class DefaultAudioFocusChangeListener(
         private val context: Context,
         private val audioManager: IAudioManager,
         private val mediaPlayer: IMediaPlayer<*>?

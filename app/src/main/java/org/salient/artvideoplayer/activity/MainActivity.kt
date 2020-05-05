@@ -10,9 +10,13 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.widget.Toolbar
 import kotlinx.android.synthetic.main.content_main.*
+import org.salient.artplayer.MediaPlayerManager
 import org.salient.artplayer.VideoViewOld
 import org.salient.artplayer.extend.Utils
 import org.salient.artplayer.player.SystemMediaPlayer
+import org.salient.artplayer.ui.FullscreenVideoView
+import org.salient.artplayer.ui.IVideoView
+import org.salient.artplayer.ui.TinyVideoView
 import org.salient.artplayer.ui.VideoView
 import org.salient.artvideoplayer.BaseActivity
 import org.salient.artvideoplayer.R
@@ -37,32 +41,19 @@ class MainActivity : BaseActivity() {
         videoView.mediaPlayer = systemMediaPlayer
         btn_start.setOnClickListener {
             //开始播放
-//            videoView.bindSurface()
             videoView.prepare()
         }
 
         btn_fullscreen.setOnClickListener {
-            //全屏
-            if (!videoView.isPlaying) return@setOnClickListener
-            val fullScreenVideoView = VideoView(this)
-
-            fullScreenVideoView.mediaPlayer = systemMediaPlayer
-            Utils.hideSupportActionBar(this)
-            val decorView = findViewById<ViewGroup>(Window.ID_ANDROID_CONTENT)
-            val lp = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-            decorView.addView(fullScreenVideoView, lp)
-
-            val back = Button(this)
-            back.text = "back"
-            back.setOnClickListener {
-                videoView.attach()
-                Utils.setRequestedOrientation(this, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
-                decorView.removeView(fullScreenVideoView)
-                decorView.removeView(it)
+            //是否正在播放
+            if (!videoView.isPlaying) {
+                videoView.prepare()
             }
+            //开启全屏
+            val fullScreenVideoView = FullscreenVideoView(this, origin = videoView)
+            fullScreenVideoView.mediaPlayer = systemMediaPlayer
+            MediaPlayerManager.startFullscreen(this, fullScreenVideoView)
 
-            decorView.addView(back, ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT))
-            Utils.setRequestedOrientation(this, ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
         }
 
         //设置重力监听
@@ -90,7 +81,9 @@ class MainActivity : BaseActivity() {
     }
 
     override fun onBackPressed() {
-
+        if (MediaPlayerManager.blockBackPress(this)) {
+            return
+        }
         super.onBackPressed()
     }
 
@@ -122,7 +115,7 @@ class MainActivity : BaseActivity() {
             }
             R.id.fullWindow -> {
                 hideSoftInput()
-                val fullScreenVideoView = VideoView(this)
+                val fullScreenVideoView = FullscreenVideoView(this)
                 val systemMediaPlayer = SystemMediaPlayer()
                 try {
                     systemMediaPlayer.impl.setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/06/29/mp4/180629124637890547.mp4"))
@@ -133,13 +126,22 @@ class MainActivity : BaseActivity() {
                 //开始播放
                 fullScreenVideoView.prepare()
 
-                Utils.hideSupportActionBar(this)
-                val decorView = findViewById<ViewGroup>(Window.ID_ANDROID_CONTENT)
-                val lp = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-                decorView.addView(fullScreenVideoView, lp)
-                Utils.setRequestedOrientation(this, ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
+                MediaPlayerManager.startFullscreen(this, fullScreenVideoView)
 
+            }
+            R.id.tinyWindow -> {
+                hideSoftInput()
+                val tinyVideoView = TinyVideoView(this)
+                val systemMediaPlayer = SystemMediaPlayer()
+                try {
+                    systemMediaPlayer.impl.setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/06/29/mp4/180629124637890547.mp4"))
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                }
+                tinyVideoView.mediaPlayer = systemMediaPlayer
+                tinyVideoView.prepare()
+
+                MediaPlayerManager.startTinyWindow(this, tinyVideoView)
             }
         }
     }

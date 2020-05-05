@@ -1,6 +1,5 @@
 package org.salient.artplayer.ui
 
-import android.util.Log
 import android.view.TextureView
 import org.salient.artplayer.audio.IAudioManager
 import org.salient.artplayer.player.IMediaPlayer
@@ -64,5 +63,8 @@ interface IVideoView : TextureView.SurfaceTextureListener {
      */
     fun setVolume(volume: Int)
 
+    /**
+     * 绑定视图
+     */
     fun attach()
 }
