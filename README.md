@@ -60,7 +60,8 @@ dependencies {
 
  java
  ``` kotlin
- import org.salient.artplayer.VideoView;
+ import org.salient.artplayer.VideoView
+
  val videoView = VideoView(context)
  val systemMediaPlayer = SystemMediaPlayer()
  systemMediaPlayer.impl.setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/07/06/mp4/180706094003288023.mp4"))
