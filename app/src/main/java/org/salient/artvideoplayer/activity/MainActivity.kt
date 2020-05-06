@@ -59,15 +59,16 @@ class MainActivity : BaseActivity() {
         }
 
         btn_fullscreen.setOnClickListener {
-            //是否正在播放
-            if (!videoView.isPlaying) {
-                videoView.prepare()
-            }
             //开启全屏
             val fullScreenVideoView = FullscreenVideoView(this, origin = videoView)
             fullScreenVideoView.mediaPlayer = systemMediaPlayer
             MediaPlayerManager.startFullscreen(this, fullScreenVideoView)
 
+            fullScreenVideoView.setOnClickListener {
+                if (!fullScreenVideoView.isPlaying) {
+                    fullScreenVideoView.start()
+                }
+            }
         }
 
         //设置重力监听

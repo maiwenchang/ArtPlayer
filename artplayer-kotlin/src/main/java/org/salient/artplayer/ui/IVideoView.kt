@@ -1,6 +1,9 @@
 package org.salient.artplayer.ui
 
+import android.graphics.Bitmap
 import android.view.TextureView
+import android.view.View
+import android.widget.ImageView
 import androidx.lifecycle.LifecycleObserver
 import org.salient.artplayer.audio.IAudioManager
 import org.salient.artplayer.player.IMediaPlayer
@@ -14,8 +17,21 @@ import org.salient.artplayer.player.IMediaPlayer
  */
 interface IVideoView : TextureView.SurfaceTextureListener, LifecycleObserver {
 
+    /**
+     * 封面
+     */
+    val cover: ImageView
+    /**
+     * 播放器内核
+     */
     var mediaPlayer: IMediaPlayer<*>?
+    /**
+     * 是否正在播放
+     */
     val isPlaying: Boolean
+    /**
+     * 音频管理器
+     */
     var audioManager : IAudioManager
 
     /**
@@ -68,4 +84,9 @@ interface IVideoView : TextureView.SurfaceTextureListener, LifecycleObserver {
      * 绑定视图
      */
     fun attach()
+
+    /**
+     * 获取当前视图Bitmap
+     */
+    fun getBitmap(): Bitmap?
 }

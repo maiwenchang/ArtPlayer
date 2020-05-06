@@ -1,15 +1,16 @@
 package org.salient.artplayer.ui
 
 import android.content.Context
-import android.graphics.Color
-import android.graphics.SurfaceTexture
+import android.graphics.*
+import android.graphics.drawable.BitmapDrawable
 import android.util.AttributeSet
 import android.util.Log
 import android.view.Gravity
 import android.view.Surface
+import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.FrameLayout
+import android.widget.ImageView
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -23,6 +24,8 @@ import org.salient.artplayer.conduction.PlayerState
 import org.salient.artplayer.conduction.WindowType
 import org.salient.artplayer.extend.Utils
 import org.salient.artplayer.player.IMediaPlayer
+import java.lang.Exception
+import java.lang.IllegalArgumentException
 
 /**
  * description: 视频播放视容器
@@ -40,6 +43,8 @@ open class VideoView : FrameLayout, IVideoView {
     private var textureView: ResizeTextureView? = null
     private var surfaceTexture: SurfaceTexture? = null
     private var surface: Surface? = null
+
+    override val cover: ImageView = ImageView(context).apply { visibility = View.GONE }
 
     final override var mediaPlayer: IMediaPlayer<*>? = null
         set(value) {
@@ -60,6 +65,7 @@ open class VideoView : FrameLayout, IVideoView {
         textureView?.surfaceTextureListener = this
         val layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER)
         this.addView(textureView, layoutParams)
+        this.addView(cover, layoutParams)
         registerLifecycleCallback()
         registerMediaPlayerObserver(this.mediaPlayer)
     }
@@ -141,6 +147,10 @@ open class VideoView : FrameLayout, IVideoView {
             surface = Surface(it)
             mediaPlayer?.setSurface(surface)
         }
+    }
+
+    override fun getBitmap(): Bitmap? {
+        return textureView?.bitmap
     }
 
     override fun onSurfaceTextureAvailable(surfaceTexture: SurfaceTexture, width: Int, height: Int) {
@@ -231,6 +241,9 @@ open class VideoView : FrameLayout, IVideoView {
             }
             PlayerState.PLAYING -> {
                 audioManager.requestAudioFocus()
+                postDelayed({
+                    cover.visibility = View.GONE
+                }, 50)
             }
             PlayerState.STOPPED -> {
                 audioManager.abandonAudioFocus()

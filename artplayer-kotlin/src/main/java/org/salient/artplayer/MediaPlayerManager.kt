@@ -2,6 +2,7 @@ package org.salient.artplayer
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
+import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import org.salient.artplayer.conduction.WindowType
@@ -35,7 +36,7 @@ object MediaPlayerManager {
     /**
      * 开启全屏
      */
-    fun startFullscreen(activity: Activity, fullscreenVideoView: VideoView) {
+    fun startFullscreen(activity: Activity, fullscreenVideoView: FullscreenVideoView) {
         Utils.hideSupportActionBar(activity)
         val decorView = activity.findViewById<ViewGroup>(Window.ID_ANDROID_CONTENT)
         decorView.findViewWithTag<VideoView?>(WindowType.FULLSCREEN)?.let {
@@ -43,6 +44,12 @@ object MediaPlayerManager {
         }
         val lp = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         decorView.addView(fullscreenVideoView, lp)
+        fullscreenVideoView.origin?.getBitmap()?.let {
+            if (!fullscreenVideoView.isPlaying) {
+                fullscreenVideoView.cover.setImageBitmap(it)
+                fullscreenVideoView.cover.visibility = View.VISIBLE
+            }
+        }
         Utils.setRequestedOrientation(activity, ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
     }
 
@@ -69,6 +76,12 @@ object MediaPlayerManager {
             decorView.removeView(it)
         }
         decorView.addView(tinyVideoView)
+        tinyVideoView.origin?.getBitmap()?.let {
+            if (!tinyVideoView.isPlaying) {
+                tinyVideoView.cover.setImageBitmap(it)
+                tinyVideoView.cover.visibility = View.VISIBLE
+            }
+        }
     }
 
     /**
