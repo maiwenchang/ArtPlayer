@@ -8,9 +8,14 @@ import android.util.Log
 import android.view.Gravity
 import android.view.Surface
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.FrameLayout
+import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
+import androidx.lifecycle.OnLifecycleEvent
+import org.salient.artplayer.MediaPlayerManager
 import org.salient.artplayer.audio.DefaultAudioManager
 import org.salient.artplayer.audio.IAudioManager
 import org.salient.artplayer.bean.VideoSize
@@ -55,6 +60,7 @@ open class VideoView : FrameLayout, IVideoView {
         textureView?.surfaceTextureListener = this
         val layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER)
         this.addView(textureView, layoutParams)
+        registerLifecycleCallback()
         registerMediaPlayerObserver(this.mediaPlayer)
     }
 
@@ -166,6 +172,28 @@ open class VideoView : FrameLayout, IVideoView {
         }
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+    fun onActivityPause() {
+        pause()
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    fun onActivityDestroy() {
+        stop()
+        release()
+        Utils.scanForActivity(context)?.let {
+            MediaPlayerManager.dismissFullscreen(it)
+            MediaPlayerManager.dismissTinyWindow(it)
+        }
+    }
+
+    private fun registerLifecycleCallback() {
+        val activity = Utils.scanForActivity(context) ?: return
+        if (activity is FragmentActivity) {
+            activity.lifecycle.addObserver(this)
+        }
+    }
+
     /**
      * 注册播放器内核的监听
      */
@@ -199,8 +227,10 @@ open class VideoView : FrameLayout, IVideoView {
         Log.d(TAG, "PlayerState: ${it.javaClass.canonicalName}")
         when (it) {
             PlayerState.PREPARED -> {
-                audioManager.requestAudioFocus()
                 mediaPlayer?.start()
+            }
+            PlayerState.PLAYING -> {
+                audioManager.requestAudioFocus()
             }
             PlayerState.STOPPED -> {
                 audioManager.abandonAudioFocus()

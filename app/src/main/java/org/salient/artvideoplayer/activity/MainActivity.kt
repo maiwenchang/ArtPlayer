@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar
 import kotlinx.android.synthetic.main.content_main.*
 import org.salient.artplayer.MediaPlayerManager
 import org.salient.artplayer.VideoViewOld
+import org.salient.artplayer.conduction.PlayerState
 import org.salient.artplayer.extend.Utils
 import org.salient.artplayer.player.SystemMediaPlayer
 import org.salient.artplayer.ui.FullscreenVideoView
@@ -41,7 +42,20 @@ class MainActivity : BaseActivity() {
         videoView.mediaPlayer = systemMediaPlayer
         btn_start.setOnClickListener {
             //开始播放
-            videoView.prepare()
+            val state = systemMediaPlayer.playerStateLD.value
+            if (state == PlayerState.IDLE || state == PlayerState.STOPPED) {
+                videoView.prepare()
+            } else if (!videoView.isPlaying) {
+                videoView.start()
+            }
+        }
+
+        btn_pause.setOnClickListener {
+            videoView.pause()
+        }
+
+        btn_stop.setOnClickListener {
+            videoView.stop()
         }
 
         btn_fullscreen.setOnClickListener {
@@ -76,26 +90,11 @@ class MainActivity : BaseActivity() {
 //                .into((ImageView) controlPanel.findViewById(R.id.video_cover));
     }
 
-    override fun onStart() {
-        super.onStart()
-    }
-
     override fun onBackPressed() {
         if (MediaPlayerManager.blockBackPress(this)) {
             return
         }
         super.onBackPressed()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        hideSoftInput()
-        //        MediaPlayerManagerOld.INSTANCE.pause();
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        //        MediaPlayerManagerOld.INSTANCE.releasePlayerAndView(this);
     }
 
     fun onClick(view: View) {
