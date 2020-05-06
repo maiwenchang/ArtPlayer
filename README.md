@@ -5,7 +5,7 @@
 [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)](https://github.com/maiwenchang/ArtVideoPlayer/blob/master/LICENSE)
 
 ### 简介
-这是一个灵活的视频播放器。 MediaPlayer与VideoView完全分开，可以替换为其他播放器内核，如ExoPlayer和ijkPlayer。 可以完全自定义播放器视图，我们称之为控制面板。 此外，可以使用MediaPlayerManager来控制播放行为，例如全屏模式，小屏幕模式以及RecyclerView中的智能匹配模式。
+Kotlin实现的视频播放器，将MediaPlayer与VideoView解耦合，支持切换播放器内核（如ExoPlayer和ijkPlayer），支持自定义控制视图，提供MediaPlayerManager实现全屏模式，小屏幕模式等。
 
 <p align="center">
 <img src="https://github.com/maiwenchang/ArtPlayer/raw/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png"/>
