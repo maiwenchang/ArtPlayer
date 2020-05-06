@@ -15,14 +15,15 @@ Kotlin实现的视频播放器，将MediaPlayer与VideoView解耦合，支持切
 - 全屏，小屏播放
 - 内部支持RecyclerView中播放
 - 自定义UI
-- APP内全局播放
 - 静音
 - 循环播放
 - 手势操作（小窗：单指拖动，双指缩放；全屏：音量，亮度，快进）
 - ijkPlayer支持
 - ExoPlayer支持
 - 重力感应支持
+- 多播放器同时播放
 - Raw/Assets，本地视频文件播放支持
+- Activity生命周期感知，实现了onPause暂停播放，onDestory停止播放并释放资源
 
 ### 预览
 <img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/main.png" height="500"/><img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/mediaplayer.png" height="500"/><img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/api.png" height="500"/><img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/list.png" height="500"/><img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/recyclerview.png" height="500"/><img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/extension.png" height="500"/>
@@ -58,12 +59,13 @@ dependencies {
 ### 使用方法
 
  java
- ``` java
+ ``` kotlin
  import org.salient.artplayer.VideoView;
- VideoView videoView = new VideoView(this);
- videoView.setUp("http://vfx.mtime.cn/Video/2018/06/27/mp4/180627094726195356.mp4");
- videoView.setControlPanel(new ControlPanel(this));
- videoView.start();
+ val videoView = VideoView(context)
+ val systemMediaPlayer = SystemMediaPlayer()
+ systemMediaPlayer.impl.setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/07/06/mp4/180706094003288023.mp4"))
+ videoView.mediaPlayer = systemMediaPlayer
+ videoView.prepare()
  ```
 
  xml
@@ -82,45 +84,25 @@ dependencies {
  ```
 
 Activity
-  ``` java
-@Override
-public void onBackPressed() {
-    if (MediaPlayerManager.instance().backPress(this)) {
-        return;
+  ``` kotlin
+override fun onBackPressed() {
+    if (MediaPlayerManager.blockBackPress(this)) {
+        return
     }
-    super.onBackPressed();
+    super.onBackPressed()
 }
-@Override
-protected void onPause() {
-    super.onPause();
-    MediaPlayerManager.instance().pause();
-}
-@Override
-protected void onDestroy() {
-    super.onDestroy();
-    MediaPlayerManager.instance().releasePlayerAndView(this);
-}
- ```
-
-设置重力监听
-  ``` java
-MediaPlayerManager.instance().setOnOrientationChangeListener(new OrientationChangeListener());
  ```
 
 设置封面
 ``` java
-//如果使用默认的ControlPanel，因为它是一个FrameLayout，所以视频的封面可以通过`findViewById()`找到：
-Glide.with(MainActivity.this)
+//绑定图片资源到Video到封面`cover`字段
+Glide.with(context)
         .load("http://img5.mtime.cn/mg/2018/07/06/093947.51483272.jpg")
-        .into((ImageView) controlPanel.findViewById(R.id.video_cover));
+        .into(videoView.cover);
 ```
 
-### 计划中
+### 开发中
 - Kotlin版本
-
-### 不在计划
-- 多播放器播放
-
 
 ### 支持
 - 请在 github 上公开讨论[技术问题](https://github.com/maiwenchang/ArtPlayer/issues)
