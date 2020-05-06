@@ -59,33 +59,33 @@ dependencies {
 ### 使用方法
 
 kotlin
- ``` kotlin
- import org.salient.artplayer.VideoView
+``` kotlin
+import org.salient.artplayer.VideoView
 
- val videoView = VideoView(context)
- val systemMediaPlayer = SystemMediaPlayer()
- systemMediaPlayer.impl.setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/07/06/mp4/180706094003288023.mp4"))
- videoView.mediaPlayer = systemMediaPlayer
- videoView.prepare()
- ```
+val videoView = VideoView(context)
+val systemMediaPlayer = SystemMediaPlayer()
+systemMediaPlayer.impl.setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/07/06/mp4/180706094003288023.mp4"))
+videoView.mediaPlayer = systemMediaPlayer
+videoView.prepare()
+```
 
  xml
-  ``` xml
- <org.salient.artplayer.VideoView
- 	android:id="@+id/video_view"
- 	android:layout_width="match_parent"
- 	android:layout_height="200dp"/>
- ```
+``` xml
+<org.salient.artplayer.VideoView
+	android:id="@+id/video_view"
+	android:layout_width="match_parent"
+	android:layout_height="200dp"/>
+```
 
 `AndroidManifest.xml`
-  ``` xml
+``` xml
 <activity
     android:name=".YourActivity"
     android:configChanges="orientation|screenSize" /> <!-- required -->
- ```
+```
 
 Activity
-  ``` kotlin
+``` kotlin
 //拦截全屏时的返回事件
 override fun onBackPressed() {
     if (MediaPlayerManager.blockBackPress(this)) {
