@@ -39,7 +39,7 @@ Kotlin实现的视频播放器，将MediaPlayer与VideoView解耦合，支持切
 ```
 dependencies {
     // required
-    implementation 'org.salient.artvideoplayer:artplayer-kotlin:0.8.0'
+    implementation 'org.salient.artvideoplayer:artplayer-java:0.8.0'
     // Default control panel: optional
     implementation 'org.salient.artvideoplayer:artplayer-ui:0.8.0'
      //ijkPlayer: optional
