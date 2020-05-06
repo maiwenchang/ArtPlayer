@@ -58,7 +58,7 @@ dependencies {
 
 ### 使用方法
 
- java
+kotlin
  ``` kotlin
  import org.salient.artplayer.VideoView
 
@@ -86,6 +86,7 @@ dependencies {
 
 Activity
   ``` kotlin
+//拦截全屏时的返回事件
 override fun onBackPressed() {
     if (MediaPlayerManager.blockBackPress(this)) {
         return
