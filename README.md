@@ -97,7 +97,7 @@ override fun onBackPressed() {
 
 设置封面
 ``` java
-//绑定图片资源到Video到封面`cover`字段
+//绑定封面图片资源到VideoView的`cover`字段
 Glide.with(context)
         .load("http://img5.mtime.cn/mg/2018/07/06/093947.51483272.jpg")
         .into(videoView.cover);
