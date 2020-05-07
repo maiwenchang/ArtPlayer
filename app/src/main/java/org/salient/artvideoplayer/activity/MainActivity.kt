@@ -71,6 +71,19 @@ class MainActivity : BaseActivity() {
             }
         }
 
+        btn_tiny.setOnClickListener {
+            //开启小窗
+            val tinyVideoView = TinyVideoView(this,origin = videoView)
+            tinyVideoView.mediaPlayer = systemMediaPlayer
+            MediaPlayerManager.startTinyWindow(this, tinyVideoView)
+
+            tinyVideoView.setOnClickListener {
+                if (!tinyVideoView.isPlaying) {
+                    tinyVideoView.start()
+                }
+            }
+        }
+
         //设置重力监听
 //        MediaPlayerManager.INSTANCE.setOnOrientationChangeListener(new OrientationChangeListener());
 //
