@@ -37,7 +37,7 @@ class MainActivity : BaseActivity() {
         btn_start.setOnClickListener {
             //开始播放
             val state = systemMediaPlayer.playerStateLD.value
-            if (state == PlayerState.IDLE || state == PlayerState.STOPPED) {
+            if (state == PlayerState.INITIALIZED) {
                 videoView.prepare()
             } else if (!videoView.isPlaying) {
                 videoView.start()

@@ -70,7 +70,7 @@ open class VideoView : FrameLayout, IVideoView {
     override fun prepare() {
         Log.d(TAG, "prepare() called")
         attach()
-        mediaPlayer?.prepare()
+        mediaPlayer?.prepareAsync()
     }
 
     /**
