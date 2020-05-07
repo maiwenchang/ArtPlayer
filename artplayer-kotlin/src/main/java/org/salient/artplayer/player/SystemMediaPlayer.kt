@@ -139,6 +139,15 @@ class SystemMediaPlayer : IMediaPlayer<MediaPlayer>, OnPreparedListener,
 
     override fun prepare() {
         try {
+            impl.prepare()
+            playerStateLD.value = PlayerState.PREPARED
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun prepareAsync() {
+        try {
             impl.prepareAsync()
             playerStateLD.value = PlayerState.PREPARING
         } catch (e: Exception) {

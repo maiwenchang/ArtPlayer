@@ -29,6 +29,7 @@ interface IMediaPlayer<T> {
     val videoErrorLD: LiveData<VideoInfo>
     fun start()
     fun prepare()
+    fun prepareAsync()
     fun pause()
     fun stop()
     fun seekTo(time: Long)
