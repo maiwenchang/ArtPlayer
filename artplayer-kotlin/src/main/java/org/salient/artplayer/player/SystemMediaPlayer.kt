@@ -1,14 +1,20 @@
 package org.salient.artplayer.player
 
+import android.content.Context
+import android.content.res.AssetFileDescriptor
 import android.media.AudioAttributes
+import android.media.MediaDataSource
 import android.media.MediaPlayer
 import android.media.MediaPlayer.*
+import android.net.Uri
 import android.view.Surface
 import android.view.SurfaceHolder
 import androidx.lifecycle.MutableLiveData
 import org.salient.artplayer.bean.VideoInfo
 import org.salient.artplayer.bean.VideoSize
 import org.salient.artplayer.conduction.PlayerState
+import java.io.FileDescriptor
+import java.net.HttpCookie
 
 /**
  * description: 系统视频播放器的封装
@@ -47,6 +53,46 @@ class SystemMediaPlayer : IMediaPlayer<MediaPlayer>, OnPreparedListener,
         impl.setOnErrorListener(this)
         impl.setOnInfoListener(this)
         impl.setOnVideoSizeChangedListener(this)
+    }
+
+    fun setDataSource(context: Context, uri: Uri) {
+        impl.setDataSource(context, uri)
+        playerStateLD.value = PlayerState.INITIALIZED
+    }
+
+    fun setDataSource(context: Context, uri: Uri, headers: Map<String, String>?) {
+        impl.setDataSource(context, uri, headers)
+        playerStateLD.value = PlayerState.INITIALIZED
+    }
+
+    fun setDataSource(context: Context, uri: Uri, headers: Map<String, String>?, cookies: List<HttpCookie>?) {
+        impl.setDataSource(context, uri, headers, cookies)
+        playerStateLD.value = PlayerState.INITIALIZED
+    }
+
+    fun setDataSource(path: String) {
+        impl.setDataSource(path)
+        playerStateLD.value = PlayerState.INITIALIZED
+    }
+
+    fun setDataSource(fd: FileDescriptor) {
+        impl.setDataSource(fd)
+        playerStateLD.value = PlayerState.INITIALIZED
+    }
+
+    fun setDataSource(fd: FileDescriptor, offset: Long, length: Long) {
+        impl.setDataSource(fd, offset, length)
+        playerStateLD.value = PlayerState.INITIALIZED
+    }
+
+    fun setDataSource(afd: AssetFileDescriptor) {
+        impl.setDataSource(afd)
+        playerStateLD.value = PlayerState.INITIALIZED
+    }
+
+    fun setDataSource(dataSource: MediaDataSource) {
+        impl.setDataSource(dataSource)
+        playerStateLD.value = PlayerState.INITIALIZED
     }
 
     override val isPlaying: Boolean
@@ -97,14 +143,13 @@ class SystemMediaPlayer : IMediaPlayer<MediaPlayer>, OnPreparedListener,
             playerStateLD.value = PlayerState.PREPARING
         } catch (e: Exception) {
             e.printStackTrace()
-            playerStateLD.value = PlayerState.ERROR
         }
     }
 
     override fun start() {
         try {
             impl.start()
-            playerStateLD.value = PlayerState.PLAYING
+            playerStateLD.value = PlayerState.STARTED
         } catch (e: IllegalStateException) {
             e.printStackTrace()
         }
@@ -139,7 +184,7 @@ class SystemMediaPlayer : IMediaPlayer<MediaPlayer>, OnPreparedListener,
     override fun release() {
         try {
             impl.release()
-            playerStateLD.value = PlayerState.IDLE
+            playerStateLD.value = PlayerState.END
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -204,6 +249,7 @@ class SystemMediaPlayer : IMediaPlayer<MediaPlayer>, OnPreparedListener,
 
     override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {
         videoErrorLD.value = VideoInfo(what, extra)
+        playerStateLD.value = PlayerState.ERROR
         return false
     }
 

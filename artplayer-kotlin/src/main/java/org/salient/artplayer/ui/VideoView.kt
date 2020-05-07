@@ -2,7 +2,6 @@ package org.salient.artplayer.ui
 
 import android.content.Context
 import android.graphics.*
-import android.graphics.drawable.BitmapDrawable
 import android.util.AttributeSet
 import android.util.Log
 import android.view.Gravity
@@ -24,8 +23,6 @@ import org.salient.artplayer.conduction.PlayerState
 import org.salient.artplayer.conduction.WindowType
 import org.salient.artplayer.extend.Utils
 import org.salient.artplayer.player.IMediaPlayer
-import java.lang.Exception
-import java.lang.IllegalArgumentException
 
 /**
  * description: 视频播放视容器
@@ -239,7 +236,7 @@ open class VideoView : FrameLayout, IVideoView {
             PlayerState.PREPARED -> {
                 mediaPlayer?.start()
             }
-            PlayerState.PLAYING -> {
+            PlayerState.STARTED -> {
                 audioManager.requestAudioFocus()
                 postDelayed({
                     cover.visibility = View.GONE

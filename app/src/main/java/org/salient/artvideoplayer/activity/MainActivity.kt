@@ -35,7 +35,7 @@ class MainActivity : BaseActivity() {
         val videoView = findViewById<VideoView>(R.id.salientVideoView)
         val systemMediaPlayer = SystemMediaPlayer()
         try {
-            systemMediaPlayer.impl.setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/07/06/mp4/180706094003288023.mp4"))
+            systemMediaPlayer.setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/07/06/mp4/180706094003288023.mp4"))
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -131,7 +131,7 @@ class MainActivity : BaseActivity() {
                 val fullScreenVideoView = FullscreenVideoView(this)
                 val systemMediaPlayer = SystemMediaPlayer()
                 try {
-                    systemMediaPlayer.impl.setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/06/29/mp4/180629124637890547.mp4"))
+                    systemMediaPlayer.setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/06/29/mp4/180629124637890547.mp4"))
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
@@ -147,7 +147,7 @@ class MainActivity : BaseActivity() {
                 val tinyVideoView = TinyVideoView(this)
                 val systemMediaPlayer = SystemMediaPlayer()
                 try {
-                    systemMediaPlayer.impl.setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/06/29/mp4/180629124637890547.mp4"))
+                    systemMediaPlayer.setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/06/29/mp4/180629124637890547.mp4"))
                 } catch (e: IOException) {
                     e.printStackTrace()
                 }
