@@ -23,7 +23,7 @@ import java.net.HttpCookie
  * email: cv.stronger@gmail.com
  * date: 2020-05-04 10:06 AM.
  */
-class SystemMediaPlayer : IMediaPlayer<MediaPlayer>, OnPreparedListener,
+class SystemPlayer : IMediaPlayer<MediaPlayer>, OnPreparedListener,
         OnCompletionListener,
         OnBufferingUpdateListener,
         OnSeekCompleteListener,
@@ -60,12 +60,12 @@ class SystemMediaPlayer : IMediaPlayer<MediaPlayer>, OnPreparedListener,
         playerStateLD.value = PlayerState.INITIALIZED
     }
 
-    fun setDataSource(context: Context, uri: Uri, headers: Map<String, String>?) {
+    fun setDataSource(context: Context, uri: Uri, headers: Map<String?, String?>?) {
         impl.setDataSource(context, uri, headers)
         playerStateLD.value = PlayerState.INITIALIZED
     }
 
-    fun setDataSource(context: Context, uri: Uri, headers: Map<String, String>?, cookies: List<HttpCookie>?) {
+    fun setDataSource(context: Context, uri: Uri, headers: Map<String?, String?>?, cookies: List<HttpCookie>?) {
         impl.setDataSource(context, uri, headers, cookies)
         playerStateLD.value = PlayerState.INITIALIZED
     }
@@ -208,22 +208,6 @@ class SystemMediaPlayer : IMediaPlayer<MediaPlayer>, OnPreparedListener,
         }
     }
 
-    override fun setSurface(surface: Surface?) {
-        try {
-            impl.setSurface(surface)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
-    override fun setDisplay(surfaceHolder: SurfaceHolder) {
-        try {
-            impl.setDisplay(surfaceHolder)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-
     override fun setVolume(volume: Float) {
         try {
             impl.setVolume(volume, volume)
@@ -235,6 +219,22 @@ class SystemMediaPlayer : IMediaPlayer<MediaPlayer>, OnPreparedListener,
     override fun setLooping(isLoop: Boolean) {
         try {
             impl.isLooping = isLoop
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun setSurface(surface: Surface?) {
+        try {
+            impl.setSurface(surface)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    override fun setDisplay(surfaceHolder: SurfaceHolder) {
+        try {
+            impl.setDisplay(surfaceHolder)
         } catch (e: Exception) {
             e.printStackTrace()
         }

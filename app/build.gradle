@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -74,6 +75,7 @@ android {
 
         //required
         implementation project(':artplayer-kotlin')
+        implementation project(':artplayer-ijk')
         //default controller panel: optional
 //        implementation project(':artplayer-ui')
 

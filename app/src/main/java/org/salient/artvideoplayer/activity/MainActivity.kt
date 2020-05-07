@@ -1,22 +1,16 @@
 package org.salient.artvideoplayer.activity
 
-import android.content.pm.ActivityInfo
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
-import android.view.Window
-import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.widget.Toolbar
 import kotlinx.android.synthetic.main.content_main.*
 import org.salient.artplayer.MediaPlayerManager
 import org.salient.artplayer.VideoViewOld
 import org.salient.artplayer.conduction.PlayerState
-import org.salient.artplayer.extend.Utils
-import org.salient.artplayer.player.SystemMediaPlayer
+import org.salient.artplayer.player.SystemPlayer
 import org.salient.artplayer.ui.FullscreenVideoView
-import org.salient.artplayer.ui.IVideoView
 import org.salient.artplayer.ui.TinyVideoView
 import org.salient.artplayer.ui.VideoView
 import org.salient.artvideoplayer.BaseActivity
@@ -33,7 +27,7 @@ class MainActivity : BaseActivity() {
         val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
         val videoView = findViewById<VideoView>(R.id.salientVideoView)
-        val systemMediaPlayer = SystemMediaPlayer()
+        val systemMediaPlayer = SystemPlayer()
         try {
             systemMediaPlayer.setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/07/06/mp4/180706094003288023.mp4"))
         } catch (e: IOException) {
@@ -115,7 +109,7 @@ class MainActivity : BaseActivity() {
         when (view.id) {
             R.id.play -> {
                 val url = edUrl!!.text.toString()
-                SystemMediaPlayer().also {
+                SystemPlayer().also {
                     try {
                         it.impl.setDataSource(this, Uri.parse(url))
                     } catch (e: IOException) {
@@ -129,7 +123,7 @@ class MainActivity : BaseActivity() {
             R.id.fullWindow -> {
                 hideSoftInput()
                 val fullScreenVideoView = FullscreenVideoView(this)
-                val systemMediaPlayer = SystemMediaPlayer()
+                val systemMediaPlayer = SystemPlayer()
                 try {
                     systemMediaPlayer.setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/06/29/mp4/180629124637890547.mp4"))
                 } catch (e: IOException) {
@@ -145,7 +139,7 @@ class MainActivity : BaseActivity() {
             R.id.tinyWindow -> {
                 hideSoftInput()
                 val tinyVideoView = TinyVideoView(this)
-                val systemMediaPlayer = SystemMediaPlayer()
+                val systemMediaPlayer = SystemPlayer()
                 try {
                     systemMediaPlayer.setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/06/29/mp4/180629124637890547.mp4"))
                 } catch (e: IOException) {

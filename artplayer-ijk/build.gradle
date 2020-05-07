@@ -1,4 +1,7 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -31,9 +34,16 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    compileOnly "androidx.appcompat:appcompat:$androidxLibraryVersion"
+    implementation "androidx.appcompat:appcompat:$androidxLibraryVersion"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "androidx.core:core-ktx:$ktx_version"
+
+    implementation project(':artplayer-kotlin')
+
     implementation "tv.danmaku.ijk.media:ijkplayer-java:$ijkPlayerVersion"
-    compileOnly project(':artplayer-kotlin')
 }
 
 apply from: './bintary_push.gradle'
+repositories {
+    mavenCentral()
+}
