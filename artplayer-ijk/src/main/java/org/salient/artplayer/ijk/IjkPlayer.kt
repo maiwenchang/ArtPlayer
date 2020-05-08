@@ -16,10 +16,11 @@ import java.io.FileDescriptor
 import java.io.IOException
 
 /**
- * Created by Mai on 2018/8/10
- * *
- * Description: IjkMediaPlayer for ArtVideoPlayer
- * *
+ * description: ijk视频播放器封装
+ *
+ * @author Maiwenchang
+ * email: cv.stronger@gmail.com
+ * date: 2020-05-04 10:06 AM.
  */
 class IjkPlayer : IMediaPlayer<IjkMediaPlayer>,
         tv.danmaku.ijk.media.player.IMediaPlayer.OnPreparedListener,
