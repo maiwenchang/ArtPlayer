@@ -2,13 +2,19 @@ package org.salient.artvideoplayer.activity
 
 import android.net.Uri
 import android.os.Bundle
+import android.view.MenuItem
 import android.view.View
 import android.widget.EditText
 import androidx.appcompat.widget.Toolbar
+import kotlinx.android.synthetic.main.activity_api.*
 import kotlinx.android.synthetic.main.content_main.*
 import org.salient.artplayer.MediaPlayerManager
 import org.salient.artplayer.VideoViewOld
 import org.salient.artplayer.conduction.PlayerState
+import org.salient.artplayer.exo.ExoPlayer
+import org.salient.artplayer.exo.ExoSourceBuilder
+import org.salient.artplayer.ijk.IjkPlayer
+import org.salient.artplayer.player.IMediaPlayer
 import org.salient.artplayer.player.SystemPlayer
 import org.salient.artplayer.ui.FullscreenVideoView
 import org.salient.artplayer.ui.TinyVideoView
@@ -18,44 +24,38 @@ import org.salient.artvideoplayer.R
 import java.io.IOException
 
 class MainActivity : BaseActivity() {
-    private val videoViewOld: VideoViewOld? = null
-    private var edUrl: EditText? = null
+    private var mediaPlayer: IMediaPlayer<*>? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        edUrl = findViewById(R.id.edUrl)
         val toolbar = findViewById<View>(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
-        val videoView = findViewById<VideoView>(R.id.salientVideoView)
-        val systemMediaPlayer = SystemPlayer()
-        try {
-            systemMediaPlayer.setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/07/06/mp4/180706094003288023.mp4"))
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-        videoView.mediaPlayer = systemMediaPlayer
+
+        setupMediaPlayer(SystemPlayer())
+
         btn_start.setOnClickListener {
             //开始播放
-            val state = systemMediaPlayer.playerStateLD.value
-            if (state == PlayerState.INITIALIZED) {
-                videoView.prepare()
-            } else if (!videoView.isPlaying) {
-                videoView.start()
+            if (artVideoView.playerState == PlayerState.INITIALIZED || artVideoView.playerState == PlayerState.STOPPED) {
+                artVideoView.prepare()
+            } else if (!artVideoView.isPlaying) {
+                artVideoView.start()
             }
         }
 
         btn_pause.setOnClickListener {
-            videoView.pause()
+            artVideoView.pause()
         }
 
         btn_stop.setOnClickListener {
-            videoView.stop()
+            artVideoView.stop()
         }
 
         btn_fullscreen.setOnClickListener {
             //开启全屏
-            val fullScreenVideoView = FullscreenVideoView(this, origin = videoView)
-            fullScreenVideoView.mediaPlayer = systemMediaPlayer
+            val fullScreenVideoView = FullscreenVideoView(this, origin = artVideoView)
+            fullScreenVideoView.mediaPlayer = mediaPlayer
             MediaPlayerManager.startFullscreen(this, fullScreenVideoView)
 
             fullScreenVideoView.setOnClickListener {
@@ -67,8 +67,8 @@ class MainActivity : BaseActivity() {
 
         btn_tiny.setOnClickListener {
             //开启小窗
-            val tinyVideoView = TinyVideoView(this,origin = videoView)
-            tinyVideoView.mediaPlayer = systemMediaPlayer
+            val tinyVideoView = TinyVideoView(this, origin = artVideoView)
+            tinyVideoView.mediaPlayer = mediaPlayer
             MediaPlayerManager.startTinyWindow(this, tinyVideoView)
 
             tinyVideoView.setOnClickListener {
@@ -78,31 +78,31 @@ class MainActivity : BaseActivity() {
             }
         }
 
-        //设置重力监听
-//        MediaPlayerManager.INSTANCE.setOnOrientationChangeListener(new OrientationChangeListener());
-//
-//        // note : usage sample
-//        videoView = findViewById(R.id.salientVideoView);
-//        //optional: set ControlPanel
-//        final ControlPanel controlPanel = new ControlPanel(this);
-//        videoView.setControlPanel(controlPanel);
-//        //optional: set title
-//        TextView tvTitle = controlPanel.findViewById(R.id.tvTitle);
-//        tvTitle.setText("西虹市首富 百变首富预告");
-//        //required: set url
-//        videoView.setUp("http://vfx.mtime.cn/Video/2018/07/06/mp4/180706094003288023.mp4");
-//        //videoView.start();
-//        //optional: set cover
-//        Glide.with(MainActivity.this)
-//                .load("http://img5.mtime.cn/mg/2018/07/06/093947.51483272.jpg")
-//                .into((ImageView) controlPanel.findViewById(R.id.video_cover));
     }
 
-    override fun onBackPressed() {
-        if (MediaPlayerManager.blockBackPress(this)) {
-            return
+    private fun setupMediaPlayer(mediaPlayer: IMediaPlayer<*>) {
+        artVideoView.mediaPlayer?.release()
+        artVideoView.mediaPlayer = mediaPlayer
+        when (mediaPlayer) {
+            is SystemPlayer -> {
+                mediaPlayer.setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/07/06/mp4/180706094003288023.mp4"))
+            }
+            is IjkPlayer -> {
+                mediaPlayer.setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/07/06/mp4/180706094003288023.mp4"))
+            }
+            is ExoPlayer -> {
+                val mediaSource = ExoSourceBuilder(this, "http://vfx.mtime.cn/Video/2018/07/06/mp4/180706094003288023.mp4")
+                        .apply {
+                            this.isLooping = false
+                            this.cacheEnable = true
+                            this.preview = true
+                        }
+                        .build()
+                mediaPlayer.mediaSource = mediaSource
+            }
         }
-        super.onBackPressed()
+
+
     }
 
     fun onClick(view: View) {
@@ -116,19 +116,15 @@ class MainActivity : BaseActivity() {
                         e.printStackTrace()
                     }
                 }.let {
-                    salientVideoView.mediaPlayer = it
+                    artVideoView.mediaPlayer = it
                 }
-                salientVideoView.prepare()
+                artVideoView.prepare()
             }
             R.id.fullWindow -> {
                 hideSoftInput()
                 val fullScreenVideoView = FullscreenVideoView(this)
                 val systemMediaPlayer = SystemPlayer()
-                try {
-                    systemMediaPlayer.setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/06/29/mp4/180629124637890547.mp4"))
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
+                systemMediaPlayer.setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/06/29/mp4/180629124637890547.mp4"))
                 fullScreenVideoView.mediaPlayer = systemMediaPlayer
                 //开始播放
                 fullScreenVideoView.prepare()
@@ -140,15 +136,54 @@ class MainActivity : BaseActivity() {
                 hideSoftInput()
                 val tinyVideoView = TinyVideoView(this)
                 val systemMediaPlayer = SystemPlayer()
-                try {
-                    systemMediaPlayer.setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/06/29/mp4/180629124637890547.mp4"))
-                } catch (e: IOException) {
-                    e.printStackTrace()
-                }
+                systemMediaPlayer.setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/06/29/mp4/180629124637890547.mp4"))
                 tinyVideoView.mediaPlayer = systemMediaPlayer
                 tinyVideoView.prepare()
 
                 MediaPlayerManager.startTinyWindow(this, tinyVideoView)
+            }
+        }
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.isChecked) return super.onOptionsItemSelected(item)
+        val id = item.itemId
+        when (id) {
+            R.id.menu_MediaPlayer -> {
+                mMenu?.getItem(0)?.title = "Using: SystemPlayer"
+                setupMediaPlayer(SystemPlayer())
+            }
+            R.id.menu_IjkPlayer -> {
+                mMenu?.getItem(0)?.title = "Using: IjkPlayer"
+                setupMediaPlayer(IjkPlayer())
+            }
+            R.id.menu_ExoPlayer -> {
+                mMenu?.getItem(0)?.title = "Using: ExoPlayer"
+                setupMediaPlayer(ExoPlayer(this))
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    /**
+     * 刷新标题栏菜单状态
+     */
+    override fun refreshMenuState() {
+        mMenu?.also {
+            when (mediaPlayer) {
+                is SystemPlayer -> {
+                    it.getItem(1).getSubMenu().getItem(0).setChecked(true);
+                    it.getItem(0).setTitle("Using: SystemPlayer");
+                }
+                is IjkPlayer -> {
+                    it.getItem(1).getSubMenu().getItem(1).setChecked(true);
+                    it.getItem(0).setTitle("Using: IjkPlayer");
+                }
+                is ExoPlayer -> {
+                    it.getItem(1).getSubMenu().getItem(2).setChecked(true);
+                    it.getItem(0).setTitle("Using: ExoPlayer");
+                }
             }
         }
     }

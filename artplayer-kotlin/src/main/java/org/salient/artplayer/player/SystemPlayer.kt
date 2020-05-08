@@ -14,6 +14,7 @@ import org.salient.artplayer.bean.VideoInfo
 import org.salient.artplayer.bean.VideoSize
 import org.salient.artplayer.conduction.PlayerState
 import java.io.FileDescriptor
+import java.io.IOException
 import java.net.HttpCookie
 
 /**
@@ -55,41 +56,49 @@ class SystemPlayer : IMediaPlayer<MediaPlayer>, OnPreparedListener,
         impl.setOnVideoSizeChangedListener(this)
     }
 
+    @Throws(IOException::class, IllegalArgumentException::class, SecurityException::class, java.lang.IllegalStateException::class)
     fun setDataSource(context: Context, uri: Uri) {
         impl.setDataSource(context, uri)
         playerStateLD.value = PlayerState.INITIALIZED
     }
 
+    @Throws(IOException::class, IllegalArgumentException::class, SecurityException::class, java.lang.IllegalStateException::class)
     fun setDataSource(context: Context, uri: Uri, headers: Map<String?, String?>?) {
         impl.setDataSource(context, uri, headers)
         playerStateLD.value = PlayerState.INITIALIZED
     }
 
+    @Throws(IOException::class)
     fun setDataSource(context: Context, uri: Uri, headers: Map<String?, String?>?, cookies: List<HttpCookie>?) {
         impl.setDataSource(context, uri, headers, cookies)
         playerStateLD.value = PlayerState.INITIALIZED
     }
 
+    @Throws(IOException::class, IllegalArgumentException::class, SecurityException::class, java.lang.IllegalStateException::class)
     fun setDataSource(path: String) {
         impl.setDataSource(path)
         playerStateLD.value = PlayerState.INITIALIZED
     }
 
+    @Throws(IOException::class, IllegalArgumentException::class, java.lang.IllegalStateException::class)
     fun setDataSource(fd: FileDescriptor) {
         impl.setDataSource(fd)
         playerStateLD.value = PlayerState.INITIALIZED
     }
 
+    @Throws(IOException::class, IllegalArgumentException::class,java.lang.IllegalStateException::class)
     fun setDataSource(fd: FileDescriptor, offset: Long, length: Long) {
         impl.setDataSource(fd, offset, length)
         playerStateLD.value = PlayerState.INITIALIZED
     }
 
+    @Throws(IOException::class, IllegalArgumentException::class, java.lang.IllegalStateException::class)
     fun setDataSource(afd: AssetFileDescriptor) {
         impl.setDataSource(afd)
         playerStateLD.value = PlayerState.INITIALIZED
     }
 
+    @Throws(IllegalArgumentException::class, java.lang.IllegalStateException::class)
     fun setDataSource(dataSource: MediaDataSource) {
         impl.setDataSource(dataSource)
         playerStateLD.value = PlayerState.INITIALIZED

@@ -44,7 +44,6 @@ dependencies {
     api("com.google.android.exoplayer:extension-rtmp:$exoPlayerVersion")
 
     implementation project(':artplayer-kotlin')
-    implementation "androidx.core:core-ktx:+"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 apply from: './bintary_push.gradle'

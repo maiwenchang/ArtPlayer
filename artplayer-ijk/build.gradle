@@ -39,7 +39,7 @@ dependencies {
 
     implementation project(':artplayer-kotlin')
 
-    implementation "tv.danmaku.ijk.media:ijkplayer-java:$ijkPlayerVersion"
+    api "tv.danmaku.ijk.media:ijkplayer-java:$ijkPlayerVersion"
 }
 
 apply from: './bintary_push.gradle'

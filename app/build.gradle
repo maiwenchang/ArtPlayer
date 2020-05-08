@@ -75,11 +75,11 @@ android {
 
         //required
         implementation project(':artplayer-kotlin')
-        implementation project(':artplayer-ijk')
-        implementation project(':artplayer-exo')
         //default controller panel: optional
 //        implementation project(':artplayer-ui')
-
+        implementation project(':artplayer-ijk')
+        implementation "org.salient.artvideoplayer:artplayer-armv7a:0.8.0"
+        implementation project(':artplayer-exo')
 
     }
 }
