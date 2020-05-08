@@ -129,6 +129,9 @@ class IjkPlayer : IMediaPlayer<IjkMediaPlayer>,
             0
         }
 
+    override val playerState: PlayerState
+        get() = playerStateLD.value ?: PlayerState.IDLE
+
     override fun prepare() {
         try {
             impl.prepareAsync()

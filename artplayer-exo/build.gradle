@@ -1,4 +1,6 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
@@ -23,6 +25,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
     }
 
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8
+    }
+
     lintOptions {
         abortOnError false
     }
@@ -38,5 +44,10 @@ dependencies {
     api("com.google.android.exoplayer:extension-rtmp:$exoPlayerVersion")
 
     implementation project(':artplayer-kotlin')
+    implementation "androidx.core:core-ktx:+"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
 apply from: './bintary_push.gradle'
+repositories {
+    mavenCentral()
+}

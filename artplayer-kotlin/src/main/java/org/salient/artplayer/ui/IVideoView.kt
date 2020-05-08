@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.ImageView
 import androidx.lifecycle.LifecycleObserver
 import org.salient.artplayer.audio.IAudioManager
+import org.salient.artplayer.conduction.PlayerState
 import org.salient.artplayer.player.IMediaPlayer
 
 /**
@@ -33,6 +34,11 @@ interface IVideoView : TextureView.SurfaceTextureListener, LifecycleObserver {
      * 音频管理器
      */
     var audioManager : IAudioManager
+
+    /**
+     * 播放器状态
+     */
+    val playerState: PlayerState
 
     /**
      * 初始化播放

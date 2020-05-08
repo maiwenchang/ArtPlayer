@@ -76,6 +76,7 @@ android {
         //required
         implementation project(':artplayer-kotlin')
         implementation project(':artplayer-ijk')
+        implementation project(':artplayer-exo')
         //default controller panel: optional
 //        implementation project(':artplayer-ui')
 

@@ -41,7 +41,7 @@ open class VideoView : FrameLayout, IVideoView {
     private var surfaceTexture: SurfaceTexture? = null
     private var surface: Surface? = null
 
-    override val cover: ImageView = ImageView(context).apply { visibility = View.GONE }
+    final override val cover: ImageView = ImageView(context).apply { visibility = View.GONE }
 
     final override var mediaPlayer: IMediaPlayer<*>? = null
         set(value) {
@@ -55,6 +55,9 @@ open class VideoView : FrameLayout, IVideoView {
     override val isPlaying: Boolean
         get() = mediaPlayer?.isPlaying == true
 
+    override val playerState: PlayerState
+        get() = mediaPlayer?.playerStateLD?.value ?: PlayerState.IDLE
+
     init {
         tag = WindowType.NORMAL
         this.setBackgroundColor(Color.BLACK)
@@ -62,7 +65,7 @@ open class VideoView : FrameLayout, IVideoView {
         textureView?.surfaceTextureListener = this
         val layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER)
         this.addView(textureView, layoutParams)
-        this.addView(cover, layoutParams)
+        this.addView(this.cover, layoutParams)
         registerLifecycleCallback()
         registerMediaPlayerObserver(this.mediaPlayer)
     }

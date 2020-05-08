@@ -22,6 +22,7 @@ interface IMediaPlayer<T> {
     val duration: Long
     val videoHeight: Int
     val videoWidth: Int
+    val playerState:PlayerState
     val playerStateLD: LiveData<PlayerState>
     val videoSizeLD: LiveData<VideoSize>
     val bufferingProgressLD: LiveData<Int>
