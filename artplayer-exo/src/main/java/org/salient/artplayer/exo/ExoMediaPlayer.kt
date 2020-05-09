@@ -27,7 +27,7 @@ import java.io.IOException
  * email: cv.stronger@gmail.com
  * date: 2020-05-04 10:06 AM.
  */
-class ExoPlayer(context: Context) : IMediaPlayer<SimpleExoPlayer>, Player.EventListener, AnalyticsListener {
+class ExoMediaPlayer(context: Context) : IMediaPlayer<SimpleExoPlayer>, Player.EventListener, AnalyticsListener {
 
     var mediaSource: com.google.android.exoplayer2.source.MediaSource? = null
         set(value) {
@@ -60,8 +60,8 @@ class ExoPlayer(context: Context) : IMediaPlayer<SimpleExoPlayer>, Player.EventL
         playerStateLD.value = PlayerState.IDLE
         impl.setAudioAttributes(AudioAttributes.Builder()
                 .setUsage(C.USAGE_MEDIA)
-                .setContentType(C.CONTENT_TYPE_MOVIE)
-                .build(), true)
+                .setContentType(C.CONTENT_TYPE_MUSIC)
+                .build(), false)
         impl.addListener(this)
         impl.addAnalyticsListener(this)
     }
@@ -118,8 +118,9 @@ class ExoPlayer(context: Context) : IMediaPlayer<SimpleExoPlayer>, Player.EventL
     override fun prepareAsync() {
         mediaSource?.let {
             impl.prepare(it)
+            playerStateLD.value = PlayerState.PREPARING
             impl.playWhenReady = true
-            playerStateLD.value = PlayerState.PREPARED
+//            playerStateLD.value = PlayerState.PREPARED
         }
     }
 
@@ -213,7 +214,7 @@ class ExoPlayer(context: Context) : IMediaPlayer<SimpleExoPlayer>, Player.EventL
         if (isLoading) {
             playerStateLD.value = PlayerState.PREPARING
         } else if (playerStateLD.value == PlayerState.PREPARING) {
-            playerStateLD.value = PlayerState.PREPARED
+//            playerStateLD.value = PlayerState.PREPARED
         }
     }
 

@@ -24,7 +24,7 @@ import java.net.HttpCookie
  * email: cv.stronger@gmail.com
  * date: 2020-05-04 10:06 AM.
  */
-class SystemPlayer : IMediaPlayer<MediaPlayer>, OnPreparedListener,
+class SystemMediaPlayer : IMediaPlayer<MediaPlayer>, OnPreparedListener,
         OnCompletionListener,
         OnBufferingUpdateListener,
         OnSeekCompleteListener,

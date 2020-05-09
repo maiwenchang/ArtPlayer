@@ -41,27 +41,20 @@ open class DefaultAudioManager(context: Context, mediaPlayer: IMediaPlayer<*>?) 
     }
 
     override fun requestAudioFocus() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            audioFocusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
-                    .setAudioAttributes(audioAttributes)
-                    .setAcceptsDelayedFocusGain(false)
-                    .setOnAudioFocusChangeListener(onAudioFocusChangeListener)
-                    .build()
-                    .also {
-                        audioManager.requestAudioFocus(it)
-                    }
-        } else {
-            audioManager.requestAudioFocus(onAudioFocusChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN)
-        }
+        abandonAudioFocus()
+        audioFocusRequest = AudioFocusRequest.Builder(AudioManager.AUDIOFOCUS_GAIN)
+                .setAudioAttributes(audioAttributes)
+                .setAcceptsDelayedFocusGain(true)
+                .setOnAudioFocusChangeListener(onAudioFocusChangeListener)
+                .build()
+                .also {
+                    audioManager.requestAudioFocus(it)
+                }
     }
 
     override fun abandonAudioFocus() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            audioFocusRequest?.let {
-                audioManager.abandonAudioFocusRequest(it)
-            }
-        } else {
-            audioManager.abandonAudioFocus(onAudioFocusChangeListener)
+        audioFocusRequest?.let {
+            audioManager.abandonAudioFocusRequest(it)
         }
     }
 }

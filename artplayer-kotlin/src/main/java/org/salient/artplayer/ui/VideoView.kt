@@ -220,6 +220,7 @@ open class VideoView : FrameLayout, IVideoView {
     private fun removeMediaPlayerObserver(mediaPlayer: IMediaPlayer<*>?) {
         mediaPlayer?.videoSizeLD?.removeObserver(videoSizeObserver)
         mediaPlayer?.playerStateLD?.removeObserver(playerStateObserver)
+        audioManager.abandonAudioFocus()
     }
 
     /**

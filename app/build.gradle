@@ -79,6 +79,7 @@ android {
 //        implementation project(':artplayer-ui')
         implementation project(':artplayer-ijk')
         implementation "org.salient.artvideoplayer:artplayer-armv7a:0.8.0"
+        implementation "org.salient.artvideoplayer:artplayer-x86:0.8.0"
         implementation project(':artplayer-exo')
 
     }

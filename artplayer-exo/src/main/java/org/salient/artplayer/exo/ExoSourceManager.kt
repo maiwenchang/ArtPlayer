@@ -5,10 +5,7 @@ import android.net.Uri
 import android.text.TextUtils
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.database.ExoDatabaseProvider
-import com.google.android.exoplayer2.upstream.DataSource
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
+import com.google.android.exoplayer2.upstream.*
 import com.google.android.exoplayer2.upstream.cache.*
 import com.google.android.exoplayer2.util.Util
 import java.io.File
@@ -30,30 +27,23 @@ object ExoSourceManager {
     const val EXO_MEDIA_TYPE_RTMP = 4
 
     /**
-     * 获取SourceFactory，是否带Cache
+     * 获取DataSourceFactory
      */
-    fun getDataSourceFactoryCache(context: Context, cacheEnable: Boolean, preview: Boolean, cacheDir: File?, headers: Map<String, String>?, maxCacheSize: Long): DataSource.Factory {
-        if (cacheEnable) {
-            val cache = getCacheInstance(context, cacheDir, maxCacheSize)
-            if (cache != null) {
-                return CacheDataSourceFactory(cache, getDataSourceFactory(context, preview, headers), CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
-            }
-        }
-        return getDataSourceFactory(context, preview, headers)
+    fun getCacheDataSourceFactory(context: Context, headers: Map<String, String>?, transferListener: TransferListener?, cache: Cache): DataSource.Factory {
+        return CacheDataSourceFactory(cache, getDefaultDataSourceFactory(context, headers, transferListener), CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
     }
 
     /**
-     * 获取SourceFactory
+     * 获取DefaultDataSourceFactory
      */
-    fun getDataSourceFactory(context: Context, preview: Boolean, headers: Map<String, String>?): DataSource.Factory {
-        return DefaultDataSourceFactory(context, if (preview) null else DefaultBandwidthMeter.Builder(context).build(),
-                getHttpDataSourceFactory(context, preview, headers))
+    fun getDefaultDataSourceFactory(context: Context, headers: Map<String, String>?, transferListener: TransferListener?): DataSource.Factory {
+        return DefaultDataSourceFactory(context, transferListener, getHttpDataSourceFactory(context, headers, transferListener))
     }
 
-    fun getHttpDataSourceFactory(context: Context, preview: Boolean, headers: Map<String, String>?): DataSource.Factory {
+    fun getHttpDataSourceFactory(context: Context, headers: Map<String, String>?, transferListener: TransferListener?): DataSource.Factory {
         val dataSourceFactory = DefaultHttpDataSourceFactory(
                 Util.getUserAgent(context, TAG),
-                if (preview) null else DefaultBandwidthMeter.Builder(context).build())
+                transferListener)
         headers?.forEach { key, value ->
             dataSourceFactory.defaultRequestProperties[key] = value
         }
@@ -81,7 +71,7 @@ object ExoSourceManager {
     }
 
     /**
-     * 获取本地缓存目录
+     * 获取本地缓存
      */
     @Synchronized
     fun getCacheInstance(context: Context, cacheDir: File?, maxCacheSize: Long = EXO_CACHE_DEFAULT_MAX_SIZE): Cache? {

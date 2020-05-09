@@ -64,7 +64,7 @@ import org.salient.artplayer.VideoView
 
 val videoView = VideoView(context)
 val systemMediaPlayer = SystemMediaPlayer()
-systemMediaPlayer.impl.setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/07/06/mp4/180706094003288023.mp4"))
+systemMediaPlayer.setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/07/06/mp4/180706094003288023.mp4"))
 videoView.mediaPlayer = systemMediaPlayer
 videoView.prepare()
 ```
@@ -111,6 +111,7 @@ Glide.with(context)
 
 
 ### 构建环境
+- Kotlin 1.37.2
 - Java 1.8
 - Android Studio 3.6.0
 - Gradle 5.6.4
