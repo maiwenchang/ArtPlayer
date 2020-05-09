@@ -3,7 +3,6 @@ package org.salient.artplayer.exo
 import android.content.Context
 import android.net.Uri
 import com.google.android.exoplayer2.C
-import com.google.android.exoplayer2.ext.rtmp.RtmpDataSourceFactory
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.source.LoopingMediaSource
 import com.google.android.exoplayer2.source.MediaSource
