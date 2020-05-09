@@ -24,7 +24,6 @@ object ExoSourceManager {
      * 默认最大缓存 512M
      */
     const val EXO_CACHE_DEFAULT_MAX_SIZE = 512 * 1024 * 1024.toLong()
-    const val EXO_MEDIA_TYPE_RTMP = 4
 
     /**
      * 获取DataSourceFactory
@@ -61,8 +60,6 @@ object ExoSourceManager {
             } else if (it.endsWith(".ism") || it.endsWith(".isml")
                     || it.endsWith(".ism/manifest") || it.endsWith(".isml/manifest")) {
                 C.TYPE_SS
-            } else if (it.startsWith("rtmp:")) {
-                EXO_MEDIA_TYPE_RTMP
             } else {
                 C.TYPE_OTHER
             }

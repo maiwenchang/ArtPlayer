@@ -80,10 +80,6 @@ class ExoSourceBuilder(private val context: Context, private val dataSource: Str
                         defaultDataSourceFactory).createMediaSource(contentUri)
             }
             C.TYPE_HLS -> HlsMediaSource.Factory(dataSourceFactoryCache).createMediaSource(contentUri)
-            ExoSourceManager.EXO_MEDIA_TYPE_RTMP -> {
-                ProgressiveMediaSource.Factory(RtmpDataSourceFactory(transferListener), DefaultExtractorsFactory())
-                        .createMediaSource(contentUri)
-            }
             C.TYPE_OTHER -> {
                 ProgressiveMediaSource.Factory(dataSourceFactoryCache, DefaultExtractorsFactory())
                         .createMediaSource(contentUri)
