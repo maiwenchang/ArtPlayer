@@ -17,6 +17,7 @@ import org.salient.artplayer.conduction.PlayerState
 interface IMediaPlayer<T> {
 
     var impl: T
+    var playWhenReady: Boolean
     val isPlaying: Boolean
     val currentPosition: Long
     val duration: Long

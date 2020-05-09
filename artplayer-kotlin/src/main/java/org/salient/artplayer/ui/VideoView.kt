@@ -238,10 +238,13 @@ open class VideoView : FrameLayout, IVideoView {
         Log.d(TAG, "PlayerState: ${it.javaClass.canonicalName}")
         when (it) {
             PlayerState.PREPARED -> {
-                mediaPlayer?.start()
+                if (mediaPlayer?.playWhenReady == true) {
+                    mediaPlayer?.start()
+                }
             }
             PlayerState.STARTED -> {
                 audioManager.requestAudioFocus()
+                //移除封面
                 postDelayed({
                     cover.visibility = View.GONE
                 }, 50)

@@ -32,6 +32,7 @@ class IjkPlayer : IMediaPlayer<IjkMediaPlayer>,
         tv.danmaku.ijk.media.player.IMediaPlayer.OnVideoSizeChangedListener {
 
     override var impl: IjkMediaPlayer = IjkMediaPlayer()
+    override var playWhenReady: Boolean = true
 
     override val playerStateLD: MutableLiveData<PlayerState> = MutableLiveData()
     override val videoSizeLD: MutableLiveData<VideoSize> = MutableLiveData()

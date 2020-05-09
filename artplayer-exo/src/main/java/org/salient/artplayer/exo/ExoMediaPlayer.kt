@@ -38,7 +38,7 @@ class ExoMediaPlayer(context: Context) : IMediaPlayer<SimpleExoPlayer>, Player.E
         }
 
     override lateinit var impl: SimpleExoPlayer
-
+    override var playWhenReady: Boolean = true
     override val playerStateLD: MutableLiveData<PlayerState> = MutableLiveData()
     override val videoSizeLD: MutableLiveData<VideoSize> = MutableLiveData()
     override val bufferingProgressLD: MutableLiveData<Int> = MutableLiveData()
@@ -117,10 +117,9 @@ class ExoMediaPlayer(context: Context) : IMediaPlayer<SimpleExoPlayer>, Player.E
 
     override fun prepareAsync() {
         mediaSource?.let {
-            impl.prepare(it)
             playerStateLD.value = PlayerState.PREPARING
-            impl.playWhenReady = true
-//            playerStateLD.value = PlayerState.PREPARED
+            impl.prepare(it)
+            impl.playWhenReady = playWhenReady
         }
     }
 
@@ -211,21 +210,16 @@ class ExoMediaPlayer(context: Context) : IMediaPlayer<SimpleExoPlayer>, Player.E
     }
 
     override fun onLoadingChanged(isLoading: Boolean) {
-        if (isLoading) {
-            playerStateLD.value = PlayerState.PREPARING
-        } else if (playerStateLD.value == PlayerState.PREPARING) {
-//            playerStateLD.value = PlayerState.PREPARED
-        }
+        Log.d(javaClass.name, "onLoadingChanged() called with: isLoading = $isLoading")
     }
 
     override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+        Log.d(javaClass.name, "onPlayerStateChanged() called with: playWhenReady = $playWhenReady, playbackState = $playbackState")
         try {
             when (playbackState) {
                 Player.STATE_IDLE -> playerStateLD.value = PlayerState.IDLE
-                Player.STATE_READY -> if (impl.playWhenReady) {
-                    playerStateLD.value = PlayerState.STARTED
-                } else {
-                    playerStateLD.value = PlayerState.PAUSED
+                Player.STATE_READY -> if (playerState == PlayerState.PREPARING) {
+                    playerStateLD.value = PlayerState.PREPARED
                 }
                 Player.STATE_BUFFERING -> bufferingProgressLD.value = impl.bufferedPercentage
                 Player.STATE_ENDED -> playerStateLD.value = PlayerState.COMPLETED

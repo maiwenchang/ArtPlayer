@@ -33,6 +33,7 @@ class SystemMediaPlayer : IMediaPlayer<MediaPlayer>, OnPreparedListener,
         OnVideoSizeChangedListener {
 
     override var impl: MediaPlayer = MediaPlayer()
+    override var playWhenReady: Boolean = true
 
     override val playerStateLD: MutableLiveData<PlayerState> = MutableLiveData()
     override val videoSizeLD: MutableLiveData<VideoSize> = MutableLiveData()
