@@ -33,7 +33,9 @@ class MainActivity : BaseActivity() {
 
         btn_start.setOnClickListener {
             //开始播放
-            if (artVideoView.playerState == PlayerState.INITIALIZED || artVideoView.playerState == PlayerState.STOPPED) {
+            if (artVideoView.playerState == PlayerState.INITIALIZED) {
+                artVideoView.prepare()
+            } else if (artVideoView.playerState == PlayerState.STOPPED) {
                 artVideoView.prepare()
             } else if (!artVideoView.isPlaying) {
                 artVideoView.start()

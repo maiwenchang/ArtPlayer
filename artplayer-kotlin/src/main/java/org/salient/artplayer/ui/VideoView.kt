@@ -52,8 +52,40 @@ open class VideoView : FrameLayout, IVideoView {
 
     override var audioManager: IAudioManager = DefaultAudioManager(context, this.mediaPlayer)
 
+    /**
+     * 是否正在播放
+     */
     override val isPlaying: Boolean
         get() = mediaPlayer?.isPlaying == true
+
+    /**
+     * 当前位置
+     */
+    override val currentPosition: Long
+        get() = mediaPlayer?.currentPosition ?: 0
+
+    /**
+     * 视频时长
+     */
+    override val duration: Long
+        get() = when (playerState) {
+            PlayerState.PREPARED, PlayerState.STARTED, PlayerState.PAUSED, PlayerState.STOPPED, PlayerState.COMPLETED -> {
+                mediaPlayer?.duration ?: 0
+            }
+            else -> 0
+        }
+
+    /**
+     * 视频高度
+     */
+    override val videoHeight: Int
+        get() = mediaPlayer?.videoHeight ?: 0
+
+    /**
+     * 视频宽度
+     */
+    override val videoWidth: Int
+        get() = mediaPlayer?.videoWidth ?: 0
 
     override val playerState: PlayerState
         get() = mediaPlayer?.playerStateLD?.value ?: PlayerState.IDLE
@@ -70,10 +102,15 @@ open class VideoView : FrameLayout, IVideoView {
         registerMediaPlayerObserver(this.mediaPlayer)
     }
 
+    /**
+     * 准备
+     */
     override fun prepare() {
         Log.d(TAG, "prepare() called")
         attach()
-        mediaPlayer?.prepareAsync()
+        when (playerState) {
+            PlayerState.INITIALIZED, PlayerState.STOPPED -> mediaPlayer?.prepareAsync()
+        }
     }
 
     /**
@@ -81,13 +118,23 @@ open class VideoView : FrameLayout, IVideoView {
      */
     override fun start() {
         Log.d(TAG, "start() called")
-        mediaPlayer?.start()
+        when (playerState) {
+            PlayerState.PREPARED, PlayerState.STARTED, PlayerState.PAUSED, PlayerState.COMPLETED -> mediaPlayer?.start()
+        }
     }
 
+    /**
+     * 重播
+     */
     override fun replay() {
         Log.d(TAG, "replay() called")
-        mediaPlayer?.seekTo(0)
-        mediaPlayer?.start()
+        when (playerState) {
+            PlayerState.PREPARED, PlayerState.STARTED, PlayerState.PAUSED, PlayerState.COMPLETED -> {
+                mediaPlayer?.seekTo(0)
+                mediaPlayer?.start()
+            }
+        }
+
     }
 
     /**
@@ -95,7 +142,9 @@ open class VideoView : FrameLayout, IVideoView {
      */
     override fun pause() {
         Log.d(TAG, "pause() called")
-        mediaPlayer?.pause()
+        when (playerState) {
+            PlayerState.STARTED, PlayerState.PAUSED, PlayerState.COMPLETED -> mediaPlayer?.pause()
+        }
     }
 
     /**
@@ -103,7 +152,11 @@ open class VideoView : FrameLayout, IVideoView {
      */
     override fun stop() {
         Log.d(TAG, "stop() called")
-        mediaPlayer?.stop()
+        when (playerState) {
+            PlayerState.PREPARED, PlayerState.STARTED, PlayerState.PAUSED, PlayerState.STOPPED, PlayerState.COMPLETED -> {
+                mediaPlayer?.stop()
+            }
+        }
     }
 
     /**
@@ -128,7 +181,9 @@ open class VideoView : FrameLayout, IVideoView {
      */
     override fun seekTo(time: Long) {
         Log.d(TAG, "seekTo() called with: time = $time")
-        mediaPlayer?.seekTo(time)
+        when (playerState) {
+            PlayerState.PREPARED, PlayerState.STARTED, PlayerState.PAUSED, PlayerState.COMPLETED -> mediaPlayer?.seekTo(time)
+        }
     }
 
     /**

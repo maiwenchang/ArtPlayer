@@ -22,14 +22,37 @@ interface IVideoView : TextureView.SurfaceTextureListener, LifecycleObserver {
      * 封面
      */
     val cover: ImageView
+
     /**
      * 播放器内核
      */
     var mediaPlayer: IMediaPlayer<*>?
+
     /**
      * 是否正在播放
      */
     val isPlaying: Boolean
+
+    /**
+     * 当前位置
+     */
+    val currentPosition: Long
+
+    /**
+     * 视频时长
+     */
+    val duration: Long
+
+    /**
+     * 视频高度
+     */
+    val videoHeight: Int
+
+    /**
+     * 视频宽度
+     */
+    val videoWidth: Int
+
     /**
      * 音频管理器
      */

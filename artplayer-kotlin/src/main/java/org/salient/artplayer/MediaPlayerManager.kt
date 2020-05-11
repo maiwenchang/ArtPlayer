@@ -89,7 +89,7 @@ object MediaPlayerManager {
      */
     fun dismissTinyWindow(activity: Activity) {
         val decorView = activity.findViewById<ViewGroup>(Window.ID_ANDROID_CONTENT)
-        val tinyVideoView = decorView.findViewWithTag<FullscreenVideoView?>(WindowType.TINY)
+        val tinyVideoView = decorView.findViewWithTag<TinyVideoView?>(WindowType.TINY)
         tinyVideoView?.let {
             it.origin?.attach()
             decorView.removeView(it)
