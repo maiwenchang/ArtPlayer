@@ -16,9 +16,10 @@ Kotlin实现的视频播放器，将MediaPlayer与VideoView解耦合，支持切
 - ExoPlayer支持
 - 全屏，小屏播放
 - 内部支持RecyclerView中播放
-- 自定义UI
+- 完全自定义UI
 - 静音
 - 循环播放
+- 倍速播放(IjkPlayer支持)
 - 手势操作支持（小窗：单指拖动，双指缩放；全屏：音量，亮度，快进）
 - 重力感应支持
 - 多播放器同时播放
