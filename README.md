@@ -15,13 +15,10 @@ Kotlin实现的视频播放器，将MediaPlayer与VideoView解耦合，支持切
 - ijkPlayer支持
 - ExoPlayer支持
 - 全屏，小屏播放
-- 内部支持RecyclerView中播放
 - 完全自定义UI
 - 静音
 - 循环播放
 - 倍速播放(IjkPlayer支持)
-- 手势操作支持（小窗：单指拖动，双指缩放；全屏：音量，亮度，快进）
-- 重力感应支持
 - 多播放器同时播放
 - Raw/Assets，本地视频文件播放支持
 - Activity生命周期感知，实现了onPause暂停播放，onDestory停止播放并释放资源
@@ -106,6 +103,8 @@ Glide.with(context)
 
 ### 开发中
 - Kotlin版本
+- 手势操作支持（小窗：单指拖动，双指缩放；全屏：音量，亮度，快进）
+- 重力感应支持
 
 ### 支持
 - 请在 github 上公开讨论[技术问题](https://github.com/maiwenchang/ArtPlayer/issues)
