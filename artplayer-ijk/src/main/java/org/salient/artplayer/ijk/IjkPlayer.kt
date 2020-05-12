@@ -273,12 +273,16 @@ class IjkPlayer : IMediaPlayer<IjkMediaPlayer>,
 
     // +++++++++++++++++++++++++++++ ijk only ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
+    /**
+     * 设置倍速
+     */
     fun setSpeed(speed: Float) {
         impl.setSpeed(speed)
     }
 
-    val tcpSpeed: Long = impl.tcpSpeed
-
+    /**
+     * 是否开启硬件加速
+     */
     fun setEnableMediaCodec(isEnable: Boolean) {
         val value = if (isEnable) 1 else 0
         impl.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", value.toLong()) //开启硬解码

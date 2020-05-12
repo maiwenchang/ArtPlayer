@@ -41,7 +41,7 @@ open class VideoView : FrameLayout, IVideoView {
     private var surfaceTexture: SurfaceTexture? = null
     private var surface: Surface? = null
 
-    final override val cover: ImageView = ImageView(context).apply { visibility = View.GONE }
+    final override val cover: ImageView by lazy { ImageView(context).apply { visibility = View.GONE } }
 
     final override var mediaPlayer: IMediaPlayer<*>? = null
         set(value) {
@@ -87,18 +87,25 @@ open class VideoView : FrameLayout, IVideoView {
     override val videoWidth: Int
         get() = mediaPlayer?.videoWidth ?: 0
 
+    /**
+     * 播放器状态
+     */
     override val playerState: PlayerState
         get() = mediaPlayer?.playerStateLD?.value ?: PlayerState.IDLE
 
     init {
         tag = WindowType.NORMAL
         this.setBackgroundColor(Color.BLACK)
+        //添加播放器视图容器
         textureView = ResizeTextureView(context)
         textureView?.surfaceTextureListener = this
         val layoutParams = LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER)
         this.addView(textureView, layoutParams)
+        //添加封面遮罩容器
         this.addView(this.cover, layoutParams)
+        //注册生命周期监听
         registerLifecycleCallback()
+        //注册播放器状态监听
         registerMediaPlayerObserver(this.mediaPlayer)
     }
 
