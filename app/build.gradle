@@ -74,7 +74,7 @@ android {
         testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 
         //required
-        implementation project(':artplayer-kotlin')
+        implementation project(':artplayer-core')
         //default controller panel: optional
 //        implementation project(':artplayer-ui')
         implementation project(':artplayer-ijk')

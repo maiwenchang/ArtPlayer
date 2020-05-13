@@ -37,7 +37,7 @@ dependencies {
     implementation "androidx.appcompat:appcompat:$androidxLibraryVersion"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation project(':artplayer-kotlin')
+    implementation project(':artplayer-core')
 
     api "tv.danmaku.ijk.media:ijkplayer-java:$ijkPlayerVersion"
 }

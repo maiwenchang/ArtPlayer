@@ -33,4 +33,4 @@ dependencies {
     compileOnly project(':artplayer-kotlin')
 }
 
-apply from: './bintary_push.gradle'
+//apply from: './bintary_push.gradle'
