@@ -94,6 +94,7 @@
                 android:id="@+id/api"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_margin="10dp"
                 android:onClick="onClick"
                 android:text="演示 Api" />
@@ -121,6 +122,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:onClick="onClick"
+                android:visibility="gone"
                 android:text="列表 List" />
 
             <Button
@@ -128,6 +130,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
+                android:visibility="gone"
                 android:onClick="onClick"
                 android:text="重力感应横竖屏" />
 
@@ -137,6 +140,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:onClick="onClick"
+                android:visibility="gone"
                 android:text="扩展 Extension" />
 
         </LinearLayout>

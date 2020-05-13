@@ -24,9 +24,10 @@ abstract class BaseActivity : AppCompatActivity() {
     val allComing: List<VideoBean>
         get() {
             val list: MutableList<VideoBean> = ArrayList()
-            val mMovieData = BaseApplication.getMovieData()
+            val mMovieData = BaseApplication.movieData
             if (mMovieData != null) {
-                for (moviecomingsBean in mMovieData.moviecomings) {
+                val moviecomings = mMovieData.moviecomings ?: emptyList()
+                for (moviecomingsBean in moviecomings) {
                     val videos = moviecomingsBean.videos
                     if (videos != null && videos.size > 0) {
                         list.add(videos[0])
@@ -39,9 +40,10 @@ abstract class BaseActivity : AppCompatActivity() {
     val allAttention: List<VideoBean>
         get() {
             val list: MutableList<VideoBean> = ArrayList()
-            val mMovieData = BaseApplication.getMovieData()
+            val mMovieData = BaseApplication.movieData
             if (mMovieData != null) {
-                for (attentionBean in mMovieData.attention) {
+                val attentions = mMovieData.attention ?: emptyList()
+                for (attentionBean in attentions) {
                     val videos = attentionBean.videos
                     if (videos != null && videos.size > 0) {
                         list.add(videos[0])
@@ -53,7 +55,7 @@ abstract class BaseActivity : AppCompatActivity() {
 
     val randomVideo: VideoBean?
         get() {
-            val mMovieData = BaseApplication.getMovieData()
+            val mMovieData = BaseApplication.movieData
             if (mMovieData != null) {
                 val allAttention = allAttention
                 return allAttention[getRandomInt(0, allAttention.size)]
