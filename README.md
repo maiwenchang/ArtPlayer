@@ -25,11 +25,11 @@ Kotlin实现的视频播放器，将MediaPlayer与VideoView解耦合，支持切
 
 ### 预览
 <img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/main.png" height="500"/>
-//<img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/mediaplayer.png" height="500"/>
-//<img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/api.png" height="500"/>
-//<img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/list.png" height="500"/>
-//<img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/recyclerview.png" height="500"/>
-//<img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/extension.png" height="500"/>
+<img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/mediaplayer.png" height="500"/>
+<img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/api.png" height="500"/>
+<img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/list.png" height="500"/>
+<img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/recyclerview.png" height="500"/>
+<img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/extension.png" height="500"/>
 
 ### 下载
 
