@@ -24,7 +24,12 @@ Kotlin实现的视频播放器，将MediaPlayer与VideoView解耦合，支持切
 - Activity生命周期感知，实现了onPause暂停播放，onDestory停止播放并释放资源
 
 ### 预览
-<img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/main.png" height="500"/><img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/mediaplayer.png" height="500"/><img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/api.png" height="500"/><img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/list.png" height="500"/><img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/recyclerview.png" height="500"/><img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/extension.png" height="500"/>
+<img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/main.png" height="500"/>
+//<img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/mediaplayer.png" height="500"/>
+//<img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/api.png" height="500"/>
+//<img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/list.png" height="500"/>
+//<img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/recyclerview.png" height="500"/>
+//<img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/extension.png" height="500"/>
 
 ### 下载
 
@@ -33,25 +38,29 @@ Kotlin实现的视频播放器，将MediaPlayer与VideoView解耦合，支持切
 
 
 ### 开始使用
-`build.gradle`
+核心依赖
 ```
-dependencies {
-    // required
-    implementation 'org.salient.artvideoplayer:artplayer-java:0.8.0'
-    // Default control panel: optional
-    implementation 'org.salient.artvideoplayer:artplayer-ui:0.8.0'
-     //ijkPlayer: optional
-     implementation 'org.salient.artvideoplayer:artplayer-ijk:0.8.0'
-     implementation "org.salient.artvideoplayer:artplayer-armv7a:0.8.0"
-      //Other ABIs: optional
-     implementation "org.salient.artvideoplayer:artplayer-armv5:0.8.0"
-     implementation "org.salient.artvideoplayer:artplayer-x86:0.8.0"
-     // Other ABIs: optional (minSdk version >= 21)
-     implementation "org.salient.artvideoplayer:artplayer-arm64:0.8.0"
-     implementation "org.salient.artvideoplayer:artplayer-x86_64:0.8.0"
-     //ExoPlayer2 : optional
-     implementation "org.salient.artvideoplayer:artplayer-exo:0.8.0"
-}
+implementation 'org.salient.artvideoplayer:artplayer-core:1.0.0'
+```
+
+选择使用ExoPlayer
+```
+implementation "org.salient.artvideoplayer:artplayer-exo:1.0.0"
+```
+
+选择使用IjkPlayer
+```
+implementation 'org.salient.artvideoplayer:artplayer-ijk:1.0.0'
+implementation "org.salient.artvideoplayer:artplayer-armv7a:1.0.0"
+```
+
+需要支持不同的cpu架构
+```
+implementation "org.salient.artvideoplayer:artplayer-armv5:1.0.0"
+implementation "org.salient.artvideoplayer:artplayer-x86:1.0.0"
+//下面两个需要minSdk version >= 21
+implementation "org.salient.artvideoplayer:artplayer-arm64:1.0.0"
+implementation "org.salient.artvideoplayer:artplayer-x86_64:1.0.0"
 ```
 
 ### 使用方法
