@@ -150,7 +150,7 @@ class MainActivity : BaseActivity() {
         val id = item.itemId
         when (id) {
             R.id.menu_MediaPlayer -> {
-                mMenu?.getItem(0)?.title = "Using: SystemPlayer"
+                mMenu?.getItem(0)?.title = "Using: MediaPlayer"
                 setupMediaPlayer(SystemMediaPlayer())
             }
             R.id.menu_IjkPlayer -> {
@@ -173,7 +173,7 @@ class MainActivity : BaseActivity() {
             when (mediaPlayer) {
                 is SystemMediaPlayer -> {
                     it.getItem(1).getSubMenu().getItem(0).setChecked(true);
-                    it.getItem(0).setTitle("Using: SystemPlayer");
+                    it.getItem(0).setTitle("Using: MediaPlayer");
                 }
                 is IjkPlayer -> {
                     it.getItem(1).getSubMenu().getItem(1).setChecked(true);
