@@ -28,7 +28,7 @@ Kotlin实现的视频播放器，将MediaPlayer与VideoView解耦合，支持切
 
 ### 下载
 
- - [Demo Download](https://github.com/maiwenchang/ArtPlayer/raw/master/app/debug/artplayer-debug.apk)
+ - [Demo Download](https://github.com/maiwenchang/ArtPlayer/releases/download/v1.0.0/artplayer-release.apk)
  - ![image](https://github.com/maiwenchang/ArtPlayer/raw/master/pic/apkqrcode.png)
 
 
