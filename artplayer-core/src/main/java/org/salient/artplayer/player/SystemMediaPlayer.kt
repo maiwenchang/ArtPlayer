@@ -7,8 +7,10 @@ import android.media.MediaDataSource
 import android.media.MediaPlayer
 import android.media.MediaPlayer.*
 import android.net.Uri
+import android.os.Build
 import android.view.Surface
 import android.view.SurfaceHolder
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import org.salient.artplayer.bean.VideoInfo
 import org.salient.artplayer.bean.VideoSize
@@ -69,6 +71,7 @@ class SystemMediaPlayer : IMediaPlayer<MediaPlayer>, OnPreparedListener,
         playerStateLD.value = PlayerState.INITIALIZED
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @Throws(IOException::class)
     fun setDataSource(context: Context, uri: Uri, headers: Map<String?, String?>?, cookies: List<HttpCookie>?) {
         impl.setDataSource(context, uri, headers, cookies)
@@ -93,12 +96,14 @@ class SystemMediaPlayer : IMediaPlayer<MediaPlayer>, OnPreparedListener,
         playerStateLD.value = PlayerState.INITIALIZED
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
     @Throws(IOException::class, IllegalArgumentException::class, java.lang.IllegalStateException::class)
     fun setDataSource(afd: AssetFileDescriptor) {
         impl.setDataSource(afd)
         playerStateLD.value = PlayerState.INITIALIZED
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     @Throws(IllegalArgumentException::class, java.lang.IllegalStateException::class)
     fun setDataSource(dataSource: MediaDataSource) {
         impl.setDataSource(dataSource)
