@@ -6,6 +6,6 @@ include ':artplayer-arm64'
 include ':artplayer-armv5'
 include ':artplayer-armv7a'
 include ':artplayer-x86'
-include ':artplayer-x86_64'
+//include ':artplayer-ui'
 
 
