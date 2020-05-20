@@ -11,6 +11,8 @@ Kotlin实现的视频播放器，将MediaPlayer与VideoView解耦合，支持切
 <img src="https://github.com/maiwenchang/ArtPlayer/raw/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png"/>
 </p>
 
+[查看文档](https://github.com/maiwenchang/ArtPlayer.wiki.git)
+
 ### 特点
 - ijkPlayer支持
 - ExoPlayer支持
