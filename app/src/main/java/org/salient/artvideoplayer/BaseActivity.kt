@@ -10,14 +10,18 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import org.salient.artplayer.MediaPlayerManager.blockBackPress
+import org.salient.artplayer.exo.ExoMediaPlayer
+import org.salient.artplayer.ijk.IjkPlayer
+import org.salient.artplayer.player.SystemMediaPlayer
 import org.salient.artvideoplayer.bean.VideoBean
 import java.util.*
 
 /**
- * Created by Mai on 2018/7/17
- * *
- * Description:
- * *
+ * description: Activity基类
+ *
+ * @author Maiwenchang
+ * email: cv.stronger@gmail.com
+ * date: 2020-05-20 09:06 AM.
  */
 abstract class BaseActivity : AppCompatActivity() {
 
@@ -104,30 +108,4 @@ abstract class BaseActivity : AppCompatActivity() {
         hideSoftInput()
     }
 
-    protected var mMenu: Menu? = null
-    /**
-     * 刷新标题栏菜单状态
-     */
-    abstract fun refreshMenuState()
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean { // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.menu_bar_setting, menu)
-        mMenu = menu
-        refreshMenuState()
-        return true
-    }
-
-    override fun onMenuOpened(featureId: Int, menu: Menu): Boolean {
-        if (mMenu == null) return super.onMenuOpened(featureId, menu)
-        refreshMenuState()
-        return super.onMenuOpened(featureId, mMenu!!)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean { // Handle action bar item clicks here. The action bar will
-// automatically handle clicks on the Home/Up button, so long
-// as you specify a parent activity in AndroidManifest.xml.
-        if (item.isChecked) return super.onOptionsItemSelected(item)
-        val id = item.itemId
-        return super.onOptionsItemSelected(item)
-    }
 }

@@ -1,7 +1,9 @@
 package org.salient.artvideoplayer.activity
 
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.Toolbar
@@ -17,11 +19,17 @@ import org.salient.artplayer.ui.FullscreenVideoView
 import org.salient.artplayer.ui.TinyVideoView
 import org.salient.artvideoplayer.BaseActivity
 import org.salient.artvideoplayer.R
+import org.salient.artvideoplayer.activity.tiny.TinyWindowActivity
 import java.io.IOException
 
+/**
+ * description: 首页
+ *
+ * @author Maiwenchang
+ * email: cv.stronger@gmail.com
+ * date: 2020-05-20 09:06 AM.
+ */
 class MainActivity : BaseActivity() {
-    private var mediaPlayer: IMediaPlayer<*>? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,7 +61,7 @@ class MainActivity : BaseActivity() {
         btn_fullscreen.setOnClickListener {
             //开启全屏
             val fullScreenVideoView = FullscreenVideoView(this, origin = artVideoView)
-            fullScreenVideoView.mediaPlayer = mediaPlayer
+            fullScreenVideoView.mediaPlayer = artVideoView.mediaPlayer
             MediaPlayerManager.startFullscreen(this, fullScreenVideoView)
 
             fullScreenVideoView.setOnClickListener {
@@ -66,7 +74,7 @@ class MainActivity : BaseActivity() {
         btn_tiny.setOnClickListener {
             //开启小窗
             val tinyVideoView = TinyVideoView(this, origin = artVideoView)
-            tinyVideoView.mediaPlayer = mediaPlayer
+            tinyVideoView.mediaPlayer = artVideoView.mediaPlayer
             MediaPlayerManager.startTinyWindow(this, tinyVideoView)
 
             tinyVideoView.setOnClickListener {
@@ -81,7 +89,6 @@ class MainActivity : BaseActivity() {
     private fun setupMediaPlayer(mediaPlayer: IMediaPlayer<*>) {
         artVideoView.mediaPlayer?.release()
         artVideoView.mediaPlayer = mediaPlayer
-        this.mediaPlayer = mediaPlayer
         when (mediaPlayer) {
             is SystemMediaPlayer -> {
                 mediaPlayer.setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/07/06/mp4/180706094003288023.mp4"))
@@ -114,7 +121,6 @@ class MainActivity : BaseActivity() {
                         e.printStackTrace()
                     }
                 }.let {
-                    this.mediaPlayer = it
                     artVideoView.mediaPlayer = it
                 }
                 artVideoView.prepare()
@@ -123,7 +129,7 @@ class MainActivity : BaseActivity() {
                 hideSoftInput()
                 val fullScreenVideoView = FullscreenVideoView(this)
                 val systemMediaPlayer = SystemMediaPlayer()
-                systemMediaPlayer.setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/06/29/mp4/180629124637890547.mp4"))
+                systemMediaPlayer.setDataSource(this, Uri.parse(randomVideo?.url))
                 fullScreenVideoView.mediaPlayer = systemMediaPlayer
                 //开始播放
                 fullScreenVideoView.prepare()
@@ -132,18 +138,25 @@ class MainActivity : BaseActivity() {
 
             }
             R.id.tinyWindow -> {
-                hideSoftInput()
-                val tinyVideoView = TinyVideoView(this)
-                val systemMediaPlayer = SystemMediaPlayer()
-                systemMediaPlayer.setDataSource(this, Uri.parse("http://vfx.mtime.cn/Video/2018/06/29/mp4/180629124637890547.mp4"))
-                tinyVideoView.mediaPlayer = systemMediaPlayer
-                tinyVideoView.prepare()
-
-                MediaPlayerManager.startTinyWindow(this, tinyVideoView)
+                startActivity(Intent(this, TinyWindowActivity::class.java))
             }
         }
     }
 
+    protected var mMenu: Menu? = null
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean { // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.menu_bar_setting, menu)
+        mMenu = menu
+        refreshMenuState()
+        return true
+    }
+
+    override fun onMenuOpened(featureId: Int, menu: Menu): Boolean {
+        if (mMenu == null) return super.onMenuOpened(featureId, menu)
+        refreshMenuState()
+        return super.onMenuOpened(featureId, mMenu!!)
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.isChecked) return super.onOptionsItemSelected(item)
@@ -168,9 +181,9 @@ class MainActivity : BaseActivity() {
     /**
      * 刷新标题栏菜单状态
      */
-    override fun refreshMenuState() {
+    private fun refreshMenuState() {
         mMenu?.also {
-            when (mediaPlayer) {
+            when (artVideoView.mediaPlayer) {
                 is SystemMediaPlayer -> {
                     it.getItem(1).getSubMenu().getItem(0).setChecked(true);
                     it.getItem(0).setTitle("Using: MediaPlayer");
