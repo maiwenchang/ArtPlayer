@@ -11,7 +11,7 @@ This is a flexible video player. MediaPlayer is completely separate from VideoVi
 <img src="https://github.com/maiwenchang/ArtPlayer/raw/master/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png"/>
 </p>
 
-[Wiki of ArtPlayer](https://github.com/maiwenchang/ArtPlayer.wiki.git)
+[Full Wiki of ArtPlayer](https://github.com/maiwenchang/ArtPlayer/wiki)
 
 ### Features
 - Fullscreen,TinyWindow play
