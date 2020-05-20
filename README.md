@@ -1,8 +1,9 @@
 [English](https://github.com/maiwenchang/ArtVideoPlayer/blob/master/README.English.md) | 简体中文
 # ArtPlayer
 
-[![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=21)
+![GitHub top language](https://img.shields.io/github/languages/top/maiwenchang/artPlayer)
 [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)](https://github.com/maiwenchang/ArtVideoPlayer/blob/master/LICENSE)
+[![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=21)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/maiwenchang/ArtPlayer?color=g)
 
 ### 简介
