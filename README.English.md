@@ -36,94 +36,77 @@ This is a flexible video player. MediaPlayer is completely separate from VideoVi
 
 
 ### Getting started
-`build.gradle`
+basic dependency
 ```
-dependencies {
-    // required
-    implementation 'org.salient.artvideoplayer:artplayer-kotlin:0.8.0'
+implementation 'org.salient.artvideoplayer:artplayer-core:1.0.0'
+```
 
-    // Default control panel: optional
-    implementation 'org.salient.artvideoplayer:artplayer-ui:0.8.0'
+using ExoPlayer
+```
+implementation "org.salient.artvideoplayer:artplayer-exo:1.0.0"
+```
 
-     //ijkPlayer: optional
-     implementation 'org.salient.artvideoplayer:artplayer-ijk:0.8.0'
-     implementation "org.salient.artvideoplayer:artplayer-armv7a:0.8.0"
+using IjkPlayer
+```
+implementation 'org.salient.artvideoplayer:artplayer-ijk:1.0.0'
+implementation "org.salient.artvideoplayer:artplayer-armv7a:1.0.0"
+```
 
-      //Other ABIs: optional
-     implementation "org.salient.artvideoplayer:artplayer-armv5:0.8.0"
-     implementation "org.salient.artvideoplayer:artplayer-x86:0.8.0"
-     // Other ABIs: optional (minSdk version >= 21)
-     implementation "org.salient.artvideoplayer:artplayer-arm64:0.8.0"
-     implementation "org.salient.artvideoplayer:artplayer-x86_64:0.8.0"
+support different cpu architecture
+```
+implementation "org.salient.artvideoplayer:artplayer-armv5:1.0.0"
+implementation "org.salient.artvideoplayer:artplayer-x86:1.0.0"
+//required minSdk version >= 21
+implementation "org.salient.artvideoplayer:artplayer-arm64:1.0.0"
+implementation "org.salient.artvideoplayer:artplayer-x86_64:1.0.0"
+```
 
-     //ExoPlayer2 : optional
-     implementation "org.salient.artvideoplayer:artplayer-exo:0.8.0"
+### 使用方法
+
+kotlin
+``` kotlin
+import org.salient.artplayer.VideoView
+
+val videoView = VideoView(context)
+videoView.mediaPlayer = SystemMediaPlayer().apply{
+    setDataSource(context, Uri.parse("http://vfx.mtime.cn/Video/2018/07/06/mp4/180706094003288023.mp4"))
 }
+videoView.prepare()
 ```
-
-### Usage
-
- java
- ``` java
- import org.salient.artplayer.VideoView;
-
- VideoView videoView = new VideoView(this);
- videoView.setUp("http://vfx.mtime.cn/Video/2018/06/27/mp4/180627094726195356.mp4");
- videoView.setControlPanel(new ControlPanel(this));
- videoView.start();
- ```
 
  xml
-  ``` xml
- <org.salient.artplayer.VideoView
- 	android:id="@+id/video_view"
- 	android:layout_width="match_parent"
- 	android:layout_height="200dp"/>
- ```
+``` xml
+<org.salient.artplayer.VideoView
+	android:id="@+id/video_view"
+	android:layout_width="match_parent"
+	android:layout_height="200dp"/>
+```
 
 `AndroidManifest.xml`
-  ``` xml
+``` xml
 <activity
     android:name=".YourActivity"
     android:configChanges="orientation|screenSize" /> <!-- required -->
- ```
+```
 
 Activity
-  ``` java
-@Override
-public void onBackPressed() {
-    if (MediaPlayerManager.instance().backPress(this)) {
-        return;
+``` kotlin
+// block the backpress event of the fullscreen playback
+override fun onBackPressed() {
+    if (MediaPlayerManager.blockBackPress(this)) {
+        return
     }
-    super.onBackPressed();
+    super.onBackPressed()
 }
-
-@Override
-protected void onPause() {
-    super.onPause();
-    MediaPlayerManager.instance().pause();
-}
-
-@Override
-protected void onDestroy() {
-    super.onDestroy();
-    MediaPlayerManager.instance().releasePlayerAndView(this);
-}
- ```
-
-
-setup orientation listener
-  ``` java
-MediaPlayerManager.instance().setOnOrientationChangeListener(new OrientationChangeListener());
  ```
 
  setup cover
  ``` java
  //If using the ControlPanel，we can get the ImageView of the cover by `findViewById()` method
  //of the ControlPanel which extends FrameLayout：
- Glide.with(MainActivity.this)
-         .load("http://img5.mtime.cn/mg/2018/07/06/093947.51483272.jpg")
-         .into((ImageView) controlPanel.findViewById(R.id.video_cover));
+Glide.with(context)
+        .load("http://img5.mtime.cn/mg/2018/07/06/093947.51483272.jpg")
+        .into(videoView.cover);
  ```
 
 
