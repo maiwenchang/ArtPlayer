@@ -3,6 +3,7 @@ English | [简体中文](https://github.com/maiwenchang/ArtVideoPlayer/blob/mast
 
 [![API](https://img.shields.io/badge/API-21%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=21)
 [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)](https://github.com/maiwenchang/ArtVideoPlayer/blob/master/LICENSE)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/maiwenchang/ArtPlayer?color=g)
 
 ### Introduction
 This is a flexible video player. MediaPlayer is completely separate from VideoView and can be replaced with other player kernels such as ExoPlayer and ijkPlayer. Developers can fully customize the player view, which we call the control panel. In addition, developers can use MediaPlayerManager to control playback behaviours, such as full-screen mode, small screen mode, and smart matching modes in RecyclerView.
