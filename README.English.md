@@ -122,7 +122,7 @@ Glide.with(context)
 
 ### Support
 - Public technical discussion on github is preferred.[Technical problems](https://github.com/maiwenchang/ArtPlayer/issues)
-
+- [Wiki](https://github.com/maiwenchang/ArtPlayer/wiki)
 
 ### My Build Environment
 - Java 1.8

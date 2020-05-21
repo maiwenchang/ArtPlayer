@@ -107,7 +107,7 @@ Glide.with(context)
 
 ### 支持
 - 请在 github 上公开讨论[技术问题](https://github.com/maiwenchang/ArtPlayer/issues)
-
+- 详细的说明文档请查看[Wiki](https://github.com/maiwenchang/ArtPlayer/wiki)
 
 ### 构建环境
 - Kotlin 1.37.2
