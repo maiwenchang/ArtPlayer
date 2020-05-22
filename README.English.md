@@ -28,15 +28,6 @@ This is a flexible video player. MediaPlayer is completely separate from VideoVi
 - Gravity sensor support
 - Raw/Assets, and local playback support
 
-### Preview
-<img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/main.png" height="500"/><img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/mediaplayer.png" height="500"/><img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/api.png" height="500"/><img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/list.png" height="500"/><img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/recyclerview.png" height="500"/><img src="https://github.com/maiwenchang/ArtPlayer/raw/master/pic/extension.png" height="500"/>
-
-### Download
-
- - [Demo Download](https://github.com/maiwenchang/ArtPlayer/raw/master/app/debug/artplayer-debug.apk)
- - ![image](https://github.com/maiwenchang/ArtPlayer/raw/master/pic/apkqrcode.png)
-
-
 ### Getting started
 basic dependency
 ```
