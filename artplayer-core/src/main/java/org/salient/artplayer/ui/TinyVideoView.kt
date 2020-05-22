@@ -1,6 +1,7 @@
 package org.salient.artplayer.ui
 
 import android.content.Context
+import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.Gravity
 import android.view.ViewGroup
@@ -16,9 +17,18 @@ import org.salient.artplayer.ui.gesture.TinyWindowGestureListener
  */
 class TinyVideoView(
         context: Context,
-        val origin: VideoView? = null,
-        val params: ViewGroup.LayoutParams? = null
-) : VideoView(context) {
+        override val origin: VideoView? = null,
+        override val params: ViewGroup.LayoutParams? = null
+) : VideoView(context), ITinyVideoView {
+
+    /**
+     * 是否可以拖动
+     */
+    override var isMovable: Boolean = true
+    /**
+     * 是否可以缩放
+     */
+    override var isScalable: Boolean = true
 
     init {
         tag = WindowType.TINY
@@ -31,12 +41,11 @@ class TinyVideoView(
             }
         }
 
-        val gestureListener = TinyWindowGestureListener(this)
-        val mGestureDetector = GestureDetector(getContext(), gestureListener)
+        val gestureListener = TinyWindowGestureListener(this, isMovable, isScalable)
+        val gestureDetector = GestureDetector(getContext(), gestureListener)
         setOnTouchListener { v, event ->
-            if (mGestureDetector.onTouchEvent(event)) true
+            if (gestureDetector.onTouchEvent(event)) true
             else gestureListener.onTouch(v, event)
         }
     }
-
 }

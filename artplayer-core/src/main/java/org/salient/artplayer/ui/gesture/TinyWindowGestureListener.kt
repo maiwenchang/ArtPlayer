@@ -16,7 +16,7 @@ import org.salient.artplayer.ui.VideoView
  * email: cv.stronger@gmail.com
  * date: 2020-05-22 10:06 PM.
  */
-class TinyWindowGestureListener(private val target: VideoView) : SimpleOnGestureListener(), OnTouchListener {
+class TinyWindowGestureListener(private val target: VideoView, var isMovable: Boolean = true, var isScalable: Boolean = true) : SimpleOnGestureListener(), OnTouchListener {
     private var currentX = 0f
     private var currentY = 0f
     private var currentWidth = 0f
@@ -55,6 +55,7 @@ class TinyWindowGestureListener(private val target: VideoView) : SimpleOnGesture
      * 根据手指移动窗口
      */
     private fun moveWindow(target: View, e1: MotionEvent, e2: MotionEvent): Boolean {
+        if (!isMovable) return false
         val viewParent = target.parent as ViewGroup
         val parentWidth = viewParent.width
         val parentHeight = viewParent.height
@@ -88,6 +89,7 @@ class TinyWindowGestureListener(private val target: VideoView) : SimpleOnGesture
      * 根据两个手指缩放窗口
      */
     private fun zoomWindow(target: View, e1: MotionEvent, e2: MotionEvent): Boolean {
+        if (!isScalable) return false
         if (e2.pointerCount == 2 && e2.action == MotionEvent.ACTION_MOVE) {
             val x = e2.getX(0) - e2.getX(1)
             val y = e2.getY(0) - e2.getY(1)
