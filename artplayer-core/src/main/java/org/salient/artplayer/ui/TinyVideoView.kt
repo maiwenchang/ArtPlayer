@@ -1,7 +1,6 @@
 package org.salient.artplayer.ui
 
 import android.content.Context
-import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.Gravity
 import android.view.ViewGroup
@@ -9,7 +8,8 @@ import org.salient.artplayer.conduction.WindowType
 import org.salient.artplayer.ui.gesture.TinyWindowGestureListener
 
 /**
- * description: 视频播放视容器 - 小窗
+ * description: 视频播放视容器 - 小窗模式
+ * 特性：单指拖动，双指缩放，双击暂停/恢复播放
  *
  * @author Maiwenchang
  * email: cv.stronger@gmail.com
