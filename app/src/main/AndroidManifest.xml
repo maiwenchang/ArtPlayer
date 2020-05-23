@@ -55,7 +55,7 @@
             android:label="扩展 ExtensionActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activity.tiny.TinyWindowActivity"
+            android:name=".activity.TinyWindowActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="TinyWindowActivity"
             android:screenOrientation="portrait" />

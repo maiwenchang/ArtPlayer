@@ -5,7 +5,7 @@ import android.view.GestureDetector
 import android.view.Gravity
 import android.view.ViewGroup
 import org.salient.artplayer.conduction.WindowType
-import org.salient.artplayer.ui.gesture.TinyWindowGestureListener
+import org.salient.artplayer.ui.gesture.TinyViewGestureListener
 
 /**
  * description: 视频播放视容器 - 小窗模式
@@ -41,7 +41,7 @@ class TinyVideoView(
             }
         }
 
-        val gestureListener = TinyWindowGestureListener(this, isMovable, isScalable)
+        val gestureListener = TinyViewGestureListener(this, isMovable, isScalable)
         val gestureDetector = GestureDetector(getContext(), gestureListener)
         setOnTouchListener { v, event ->
             if (gestureDetector.onTouchEvent(event)) true

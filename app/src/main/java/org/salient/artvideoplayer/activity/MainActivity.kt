@@ -19,7 +19,6 @@ import org.salient.artplayer.ui.FullscreenVideoView
 import org.salient.artplayer.ui.TinyVideoView
 import org.salient.artvideoplayer.BaseActivity
 import org.salient.artvideoplayer.R
-import org.salient.artvideoplayer.activity.tiny.TinyWindowActivity
 import java.io.IOException
 
 /**

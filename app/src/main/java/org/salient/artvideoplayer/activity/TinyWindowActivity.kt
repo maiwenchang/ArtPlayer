@@ -1,4 +1,4 @@
-package org.salient.artvideoplayer.activity.tiny
+package org.salient.artvideoplayer.activity
 
 import android.content.res.Configuration
 import android.net.Uri
@@ -50,10 +50,10 @@ class TinyWindowActivity : BaseActivity() {
                 }
                 val layoutParams = FrameLayout.LayoutParams(width, height)
                 var leftRight = Gravity.END
-                var topBottom = Gravity.BOTTOM
                 if (left.isChecked) {
                     leftRight = Gravity.START
                 }
+                var topBottom = Gravity.BOTTOM
                 if (top.isChecked) {
                     topBottom = Gravity.TOP
                 }
@@ -80,6 +80,8 @@ class TinyWindowActivity : BaseActivity() {
                         val uri = Uri.parse(randomVideo?.url)
                         setDataSource(this@TinyWindowActivity, uri)
                     }
+                    isMovable = cb_isMovable.isChecked
+                    isMovable = cb_isScalable.isChecked
                 }
                 tinyVideoView.prepare()
                 MediaPlayerManager.startTinyWindow(this@TinyWindowActivity, tinyVideoView)

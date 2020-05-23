@@ -16,7 +16,7 @@ import org.salient.artplayer.ui.VideoView
  * email: cv.stronger@gmail.com
  * date: 2020-05-22 10:06 PM.
  */
-class TinyWindowGestureListener(private val target: VideoView, var isMovable: Boolean = true, var isScalable: Boolean = true) : SimpleOnGestureListener(), OnTouchListener {
+class TinyViewGestureListener(private val target: VideoView, var isMovable: Boolean = true, var isScalable: Boolean = true) : SimpleOnGestureListener(), OnTouchListener {
     private var currentX = 0f
     private var currentY = 0f
     private var currentWidth = 0f

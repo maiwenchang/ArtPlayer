@@ -52,12 +52,15 @@
                 android:id="@+id/btn_start"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
                 android:text="start"/>
 
             <Button
                 android:id="@+id/btn_pause"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:text="pause"/>
 
@@ -65,6 +68,7 @@
                 android:id="@+id/btn_stop"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
+                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:text="stop"/>
 
