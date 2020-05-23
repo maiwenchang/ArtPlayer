@@ -21,14 +21,25 @@ class TinyVideoView(
         override val params: ViewGroup.LayoutParams? = null
 ) : VideoView(context), ITinyVideoView {
 
+    private var gestureListener: TinyViewGestureListener
+
     /**
      * 是否可以拖动
      */
     override var isMovable: Boolean = true
+        set(value) {
+            field = value
+            gestureListener.isMovable = value
+        }
+
     /**
      * 是否可以缩放
      */
     override var isScalable: Boolean = true
+        set(value) {
+            field = value
+            gestureListener.isScalable = value
+        }
 
     init {
         tag = WindowType.TINY
@@ -41,7 +52,7 @@ class TinyVideoView(
             }
         }
 
-        val gestureListener = TinyViewGestureListener(this, isMovable, isScalable)
+        gestureListener = TinyViewGestureListener(this, isMovable, isScalable)
         val gestureDetector = GestureDetector(getContext(), gestureListener)
         setOnTouchListener { v, event ->
             if (gestureDetector.onTouchEvent(event)) true

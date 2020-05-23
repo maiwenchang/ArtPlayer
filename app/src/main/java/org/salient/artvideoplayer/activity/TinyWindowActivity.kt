@@ -81,7 +81,7 @@ class TinyWindowActivity : BaseActivity() {
                         setDataSource(this@TinyWindowActivity, uri)
                     }
                     isMovable = cb_isMovable.isChecked
-                    isMovable = cb_isScalable.isChecked
+                    isScalable = cb_isScalable.isChecked
                 }
                 tinyVideoView.prepare()
                 MediaPlayerManager.startTinyWindow(this@TinyWindowActivity, tinyVideoView)
