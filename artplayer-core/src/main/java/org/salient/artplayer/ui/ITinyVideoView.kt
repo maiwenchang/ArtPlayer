@@ -14,12 +14,7 @@ interface ITinyVideoView {
     /**
      * 源视图
      */
-    val origin: VideoView?
-
-    /**
-     * 布局参数
-     */
-    val params: ViewGroup.LayoutParams?
+    var origin: VideoView?
 
     /**
      * 是否可以拖动

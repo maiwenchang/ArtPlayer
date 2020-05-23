@@ -17,8 +17,8 @@ import org.salient.artplayer.ui.gesture.TinyViewGestureListener
  */
 class TinyVideoView(
         context: Context,
-        override val origin: VideoView? = null,
-        override val params: ViewGroup.LayoutParams? = null
+        params: ViewGroup.LayoutParams? = null,
+        override var origin: VideoView? = null
 ) : VideoView(context), ITinyVideoView {
 
     private var gestureListener: TinyViewGestureListener
