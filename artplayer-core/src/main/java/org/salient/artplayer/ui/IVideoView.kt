@@ -2,7 +2,6 @@ package org.salient.artplayer.ui
 
 import android.graphics.Bitmap
 import android.view.TextureView
-import android.view.View
 import android.widget.ImageView
 import androidx.lifecycle.LifecycleObserver
 import org.salient.artplayer.audio.IAudioManager

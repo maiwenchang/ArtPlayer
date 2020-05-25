@@ -21,7 +21,7 @@ class TinyVideoView(
         override var origin: VideoView? = null
 ) : VideoView(context), ITinyVideoView {
 
-    private var gestureListener: TinyViewGestureListener
+    private val gestureListener: TinyViewGestureListener
 
     /**
      * 是否可以拖动

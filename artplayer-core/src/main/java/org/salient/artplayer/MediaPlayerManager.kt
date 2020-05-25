@@ -42,8 +42,7 @@ object MediaPlayerManager {
         decorView.findViewWithTag<VideoView?>(WindowType.FULLSCREEN)?.let {
             decorView.removeView(it)
         }
-        val lp = ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
-        decorView.addView(fullscreenVideoView, lp)
+        decorView.addView(fullscreenVideoView, fullscreenVideoView.layoutParams)
         fullscreenVideoView.origin?.getBitmap()?.let {
             if (!fullscreenVideoView.isPlaying) {
                 fullscreenVideoView.cover.setImageBitmap(it)

@@ -21,14 +21,14 @@ class TinyViewGestureListener(private val target: VideoView, var isMovable: Bool
     private var currentY = 0f
     private var currentWidth = 0f
     private var currentHeight = 0f
-    private var baseValue = 0f  //缩放时，两指间初始距离
+    private var initDistance = 0f  //缩放时，两指间初始距离
 
     override fun onDown(e: MotionEvent): Boolean {
-        baseValue = 0f
         currentX = target.x
         currentY = target.y
         currentWidth = target.width.toFloat()
         currentHeight = target.height.toFloat()
+        initDistance = 0f
         return true
     }
 
@@ -94,10 +94,10 @@ class TinyViewGestureListener(private val target: VideoView, var isMovable: Bool
             val x = e2.getX(0) - e2.getX(1)
             val y = e2.getY(0) - e2.getY(1)
             val value = Math.sqrt(x * x + y * y.toDouble()).toFloat() // 计算两点的距离
-            if (baseValue == 0f) {
-                baseValue = value
-            } else if (Math.abs(value - baseValue) >= 2) {
-                val scale = value / baseValue // 当前两点间的距离除以手指落下时两点间的距离就是需要缩放的比例。
+            if (initDistance == 0f) {
+                initDistance = value
+            } else if (Math.abs(value - initDistance) >= 2) {
+                val scale = value / initDistance // 当前两点间的距离除以手指落下时两点间的距离就是需要缩放的比例。
                 if (Math.abs(scale) > 0.05) {
                     val layoutParams = target.layoutParams
                     var height = currentHeight * scale
@@ -163,13 +163,14 @@ class TinyViewGestureListener(private val target: VideoView, var isMovable: Bool
         val action = event.action
         if (action == MotionEvent.ACTION_UP) {
             revisePosition(target)
+            initDistance = 0f
         }
         return false
     }
 
     override fun onDoubleTap(e: MotionEvent): Boolean {
         //双击播放或暂停
-        if (target.isPlaying == true) {
+        if (target.isPlaying) {
             target.pause()
         } else if (target.playerState.code > PlayerState.PREPARED.code) {
             target.start()

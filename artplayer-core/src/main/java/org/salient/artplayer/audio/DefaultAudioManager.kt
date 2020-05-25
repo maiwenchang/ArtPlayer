@@ -36,8 +36,12 @@ open class DefaultAudioManager(context: Context, mediaPlayer: IMediaPlayer<*>?) 
         audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, level.toInt(), AudioManager.FLAG_PLAY_SOUND)
     }
 
-    override fun getMaxVolume(): Float {
-        return audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC).toFloat()
+    override fun getVolume(): Int {
+        return audioManager.getStreamVolume(AudioManager.STREAM_MUSIC)
+    }
+
+    override fun getMaxVolume(): Int {
+        return audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
     }
 
     override fun requestAudioFocus() {

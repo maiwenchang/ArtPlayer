@@ -28,9 +28,15 @@ interface IAudioManager {
     fun setVolume(volume: Int)
 
     /**
+     * 设置音量
+     * @param volume 0 ~ maxVolume
+     */
+    fun getVolume(): Int
+
+    /**
      * 获取最大音量
      */
-    fun getMaxVolume(): Float
+    fun getMaxVolume(): Int
 
     /**
      * 申请音频焦点
