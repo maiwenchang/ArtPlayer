@@ -4,13 +4,10 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
-import android.net.ConnectivityManager
-import android.net.NetworkInfo
 import android.view.Window
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ContextThemeWrapper
-import java.util.*
 
 /**
  * description: 工具类
@@ -20,42 +17,6 @@ import java.util.*
  * date: 2020-05-04 10:06 AM.
  */
 object Utils {
-    fun stringForTime(timeMs: Long): String {
-        if (timeMs <= 0 || timeMs >= 24 * 60 * 60 * 1000) {
-            return "00:00"
-        }
-        val totalSeconds = timeMs / 1000
-        val seconds = (totalSeconds % 60).toInt()
-        val minutes = (totalSeconds / 60 % 60).toInt()
-        val hours = (totalSeconds / 3600).toInt()
-        val stringBuilder = StringBuilder()
-        val mFormatter = Formatter(stringBuilder, Locale.getDefault())
-        return if (hours > 0) {
-            mFormatter.format("%d:%02d:%02d", hours, minutes, seconds).toString()
-        } else {
-            mFormatter.format("%02d:%02d", minutes, seconds).toString()
-        }
-    }
-
-    fun isNetConnected(context: Context): Boolean {
-        val connectivity = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (connectivity != null) {
-            val info = connectivity.activeNetworkInfo
-            if (info != null && info.isConnected) {
-                return info.state == NetworkInfo.State.CONNECTED
-            }
-        }
-        return false
-    }
-
-    fun isWifiConnected(context: Context): Boolean {
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-        if (connectivityManager != null) {
-            val wifiNetworkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI)
-            return wifiNetworkInfo.isConnected
-        }
-        return false
-    }
 
     /**
      * Get activity from context object
@@ -105,7 +66,7 @@ object Utils {
         }
     }
 
-    fun getWindow(context: Context?): Window? {
+    private fun getWindow(context: Context?): Window? {
         return if (getAppCompActivity(context) != null) {
             getAppCompActivity(context)?.window
         } else {
