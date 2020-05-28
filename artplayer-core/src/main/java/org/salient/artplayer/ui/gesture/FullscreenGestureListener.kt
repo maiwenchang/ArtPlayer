@@ -23,6 +23,10 @@ class FullscreenGestureListener(private val target: VideoView) : SimpleOnGesture
     private var currentWidth = 0f
     private var currentHeight = 0f
 
+    private var currentVolume: Int = 0
+    private var currentBrightness: Float = 0f
+    private var currentProgress: Long = 0
+
     private var isFirstTouch = false //按住屏幕不放的第一次点击，则为true
     private var isChangeProgress = false//判断是改变进度条则为true，否则为false
     private var isChangeBrightness = false //判断是不是改变亮度的操作
@@ -38,15 +42,12 @@ class FullscreenGestureListener(private val target: VideoView) : SimpleOnGesture
         isChangeProgress = false
         isChangeVolume = false
         isChangeBrightness = false
+
+        currentVolume = target.audioManager.getVolume()
+        currentBrightness = Utils.scanForActivity(target.context)?.window?.attributes?.screenBrightness
+                ?: 0f
+        currentProgress = if (target.isPlaying) target.currentPosition else 0
         return true
-    }
-
-    override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-        return target.performClick()
-    }
-
-    override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
-        return super.onFling(e1, e2, velocityX, velocityY)
     }
 
     override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
@@ -68,11 +69,11 @@ class FullscreenGestureListener(private val target: VideoView) : SimpleOnGesture
                 isFirstTouch = false
             }
             if (isChangeProgress) {
-                onSeekProgressControl(((x - mOldX) * 0.1f / currentWidth).toInt())
+                onSeekProgressControl((x - mOldX) / currentWidth)
             } else if (isChangeBrightness) {
-                onBrightnessSlide((mOldY - y) * 0.1f / currentHeight)
+                onBrightnessSlide((mOldY - y) / currentHeight)
             } else if (isChangeVolume) {
-                onVolumeSlide((mOldY - y) * 0.1f / currentHeight)
+                onVolumeSlide((mOldY - y) / currentHeight)
             }
             return true
         }
@@ -84,13 +85,10 @@ class FullscreenGestureListener(private val target: VideoView) : SimpleOnGesture
      *
      * @param seekDistance
      */
-    private fun onSeekProgressControl(percent: Int) {
-        Log.d(javaClass.simpleName, "seekDistance : $percent")
-        val currentPosition = target.currentPosition
+    private fun onSeekProgressControl(percent: Float) {
         val duration = target.duration
-        var offset = currentPosition + percent
+        var offset = (currentProgress + percent * duration).toLong()
         offset = if (offset < 0) 0 else if (offset > duration) duration else offset
-        Log.d(javaClass.simpleName, "offset : $offset")
         target.seekTo(offset)
     }
 
@@ -101,11 +99,8 @@ class FullscreenGestureListener(private val target: VideoView) : SimpleOnGesture
      */
     private fun onVolumeSlide(percent: Float) {
         val maxVolume = target.audioManager.getMaxVolume()
-        val volume = target.audioManager.getVolume()
-        var index: Float = volume + percent * maxVolume
-        Log.d(javaClass.simpleName, "maxVolume: $maxVolume, volume: $volume index: index")
+        var index: Float = currentVolume + percent * maxVolume
         index = if (index > maxVolume) maxVolume.toFloat() else if (index < 0) 0f else index
-        Log.d(javaClass.simpleName, "index : $index")
         // 变更声音
         target.audioManager.setVolume(index.toInt())
     }
@@ -118,22 +113,10 @@ class FullscreenGestureListener(private val target: VideoView) : SimpleOnGesture
     private fun onBrightnessSlide(percent: Float) {
         val activity = Utils.scanForActivity(target.context) ?: return
         val attributes = activity.window.attributes
-        val currentBrightness = attributes.screenBrightness
         var brightness = currentBrightness + percent
         brightness = if (brightness > 1.0f) 1.0f else if (brightness < 0.1f) 0.1f else brightness
-        Log.d(javaClass.simpleName, "percent : $percent, currentBrightness : $currentBrightness, brightness : $brightness")
         attributes.screenBrightness = brightness
         activity.window.attributes = attributes
-    }
-
-    override fun onDoubleTap(e: MotionEvent): Boolean {
-        //双击播放或暂停
-        if (target.isPlaying) {
-            target.pause()
-        } else if (target.playerState.code > PlayerState.PREPARED.code) {
-            target.start()
-        }
-        return true
     }
 
     override fun onTouch(v: View, event: MotionEvent): Boolean {
@@ -144,5 +127,19 @@ class FullscreenGestureListener(private val target: VideoView) : SimpleOnGesture
             isChangeBrightness = false
         }
         return false
+    }
+
+    override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+        return target.performClick()
+    }
+
+    override fun onDoubleTap(e: MotionEvent): Boolean {
+        //双击播放或暂停
+        if (target.isPlaying) {
+            target.pause()
+        } else if (target.playerState.code > PlayerState.PREPARED.code) {
+            target.start()
+        }
+        return true
     }
 }

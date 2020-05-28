@@ -32,15 +32,6 @@ class TinyViewGestureListener(private val target: VideoView, var isMovable: Bool
         return true
     }
 
-    override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-        target.performClick()
-        return false
-    }
-
-    override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
-        return super.onFling(e1, e2, velocityX, velocityY)
-    }
-
     override fun onScroll(e1: MotionEvent, e2: MotionEvent, distanceX: Float, distanceY: Float): Boolean {
         if (e2.pointerCount == 1) { //单指移动
             return moveWindow(target, e1, e2)
@@ -165,6 +156,12 @@ class TinyViewGestureListener(private val target: VideoView, var isMovable: Bool
             revisePosition(target)
             initDistance = 0f
         }
+        return false
+    }
+
+
+    override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
+        target.performClick()
         return false
     }
 
