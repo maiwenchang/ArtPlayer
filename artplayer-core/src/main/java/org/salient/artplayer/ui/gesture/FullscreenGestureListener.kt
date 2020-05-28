@@ -7,6 +7,7 @@ import android.view.View
 import org.salient.artplayer.conduction.PlayerState
 import org.salient.artplayer.extend.Utils
 import org.salient.artplayer.ui.VideoView
+import kotlin.math.abs
 
 
 /**
@@ -23,7 +24,7 @@ class FullscreenGestureListener(private val target: VideoView) : SimpleOnGesture
     private var currentHeight = 0f
 
     private var isFirstTouch = false //按住屏幕不放的第一次点击，则为true
-    private var isChangePosition = false//判断是改变进度条则为true，否则为false
+    private var isChangeProgress = false//判断是改变进度条则为true，否则为false
     private var isChangeBrightness = false //判断是不是改变亮度的操作
     private var isChangeVolume = false //判断是不是改变音量的操作
 
@@ -34,15 +35,14 @@ class FullscreenGestureListener(private val target: VideoView) : SimpleOnGesture
         currentHeight = target.height.toFloat()
 
         isFirstTouch = true
-        isChangePosition = false
+        isChangeProgress = false
         isChangeVolume = false
         isChangeBrightness = false
         return true
     }
 
     override fun onSingleTapConfirmed(e: MotionEvent): Boolean {
-        target.performClick()
-        return false
+        return target.performClick()
     }
 
     override fun onFling(e1: MotionEvent, e2: MotionEvent, velocityX: Float, velocityY: Float): Boolean {
@@ -57,8 +57,8 @@ class FullscreenGestureListener(private val target: VideoView) : SimpleOnGesture
             val x = e2.rawX.toInt()
             val y = e2.rawY.toInt()
             if (isFirstTouch) {
-                isChangePosition = Math.abs(distanceX) >= Math.abs(distanceY)
-                if (!isChangePosition) {
+                isChangeProgress = abs(distanceX) >= abs(distanceY)
+                if (!isChangeProgress) {
                     if (mOldX > currentWidth * 2.0 / 3) { //右边三分之一区域滑动
                         isChangeVolume = true
                     } else if (mOldX < currentWidth / 3.0) { //左边三分之一区域滑动
@@ -67,12 +67,12 @@ class FullscreenGestureListener(private val target: VideoView) : SimpleOnGesture
                 }
                 isFirstTouch = false
             }
-            if (isChangePosition) {
-                onSeekProgressControl(x - mOldX)
+            if (isChangeProgress) {
+                onSeekProgressControl(((x - mOldX) * 0.1f / currentWidth).toInt())
             } else if (isChangeBrightness) {
-                onBrightnessSlide((mOldY - y) * 2 / currentHeight)
+                onBrightnessSlide((mOldY - y) * 0.1f / currentHeight)
             } else if (isChangeVolume) {
-                onVolumeSlide((mOldY - y) * 2 / currentHeight)
+                onVolumeSlide((mOldY - y) * 0.1f / currentHeight)
             }
             return true
         }
@@ -84,14 +84,14 @@ class FullscreenGestureListener(private val target: VideoView) : SimpleOnGesture
      *
      * @param seekDistance
      */
-    private fun onSeekProgressControl(seekDistance: Float) {
-        Log.d(javaClass.simpleName, "seekDistance : $seekDistance")
+    private fun onSeekProgressControl(percent: Int) {
+        Log.d(javaClass.simpleName, "seekDistance : $percent")
         val currentPosition = target.currentPosition
         val duration = target.duration
-        var offset = (currentPosition + seekDistance / currentWidth * 30 * duration)
-        offset = if (offset < 0) 0f else if (offset > 100) 100f else offset
+        var offset = currentPosition + percent
+        offset = if (offset < 0) 0 else if (offset > duration) duration else offset
         Log.d(javaClass.simpleName, "offset : $offset")
-//        target.seekTo(offset.toLong())
+        target.seekTo(offset)
     }
 
     /**
@@ -102,8 +102,10 @@ class FullscreenGestureListener(private val target: VideoView) : SimpleOnGesture
     private fun onVolumeSlide(percent: Float) {
         val maxVolume = target.audioManager.getMaxVolume()
         val volume = target.audioManager.getVolume()
-        var index: Float = percent * maxVolume + volume
+        var index: Float = volume + percent * maxVolume
+        Log.d(javaClass.simpleName, "maxVolume: $maxVolume, volume: $volume index: index")
         index = if (index > maxVolume) maxVolume.toFloat() else if (index < 0) 0f else index
+        Log.d(javaClass.simpleName, "index : $index")
         // 变更声音
         target.audioManager.setVolume(index.toInt())
     }
@@ -119,7 +121,7 @@ class FullscreenGestureListener(private val target: VideoView) : SimpleOnGesture
         val currentBrightness = attributes.screenBrightness
         var brightness = currentBrightness + percent
         brightness = if (brightness > 1.0f) 1.0f else if (brightness < 0.1f) 0.1f else brightness
-        Log.d(javaClass.simpleName,"percent : $percent, currentBrightness : $currentBrightness, brightness : $brightness")
+        Log.d(javaClass.simpleName, "percent : $percent, currentBrightness : $currentBrightness, brightness : $brightness")
         attributes.screenBrightness = brightness
         activity.window.attributes = attributes
     }
@@ -137,7 +139,7 @@ class FullscreenGestureListener(private val target: VideoView) : SimpleOnGesture
     override fun onTouch(v: View, event: MotionEvent): Boolean {
         val action = event.action
         if (action == MotionEvent.ACTION_UP) {
-            isChangePosition = false
+            isChangeProgress = false
             isChangeVolume = false
             isChangeBrightness = false
         }
