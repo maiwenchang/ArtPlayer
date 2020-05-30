@@ -40,6 +40,7 @@ class SystemMediaPlayer : IMediaPlayer<MediaPlayer>, OnPreparedListener,
     override val playerStateLD: MutableLiveData<PlayerState> = MutableLiveData()
     override val videoSizeLD: MutableLiveData<VideoSize> = MutableLiveData()
     override val bufferingProgressLD: MutableLiveData<Int> = MutableLiveData()
+    override val seekCompleteLD: MutableLiveData<Boolean> = MutableLiveData()
     override val videoInfoLD: MutableLiveData<VideoInfo> = MutableLiveData()
     override val videoErrorLD: MutableLiveData<VideoInfo> = MutableLiveData()
 
@@ -271,7 +272,7 @@ class SystemMediaPlayer : IMediaPlayer<MediaPlayer>, OnPreparedListener,
     }
 
     override fun onSeekComplete(mp: MediaPlayer?) {
-        playerStateLD.value = PlayerState.SEEK_COMPLETE
+        seekCompleteLD.value = true
     }
 
     override fun onError(mp: MediaPlayer?, what: Int, extra: Int): Boolean {

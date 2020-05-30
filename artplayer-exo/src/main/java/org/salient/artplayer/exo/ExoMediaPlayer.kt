@@ -42,6 +42,7 @@ class ExoMediaPlayer(context: Context) : IMediaPlayer<SimpleExoPlayer>, Player.E
     override val playerStateLD: MutableLiveData<PlayerState> = MutableLiveData()
     override val videoSizeLD: MutableLiveData<VideoSize> = MutableLiveData()
     override val bufferingProgressLD: MutableLiveData<Int> = MutableLiveData()
+    override val seekCompleteLD: MutableLiveData<Boolean> = MutableLiveData()
     override val videoInfoLD: MutableLiveData<VideoInfo> = MutableLiveData()
     override val videoErrorLD: MutableLiveData<VideoInfo> = MutableLiveData()
 
@@ -239,7 +240,7 @@ class ExoMediaPlayer(context: Context) : IMediaPlayer<SimpleExoPlayer>, Player.E
     }
 
     override fun onSeekProcessed() {
-        playerStateLD.value = PlayerState.SEEK_COMPLETE
+        seekCompleteLD.value = true
     }
 
     override fun onLoadStarted(eventTime: AnalyticsListener.EventTime, loadEventInfo: MediaSourceEventListener.LoadEventInfo, mediaLoadData: MediaSourceEventListener.MediaLoadData) {

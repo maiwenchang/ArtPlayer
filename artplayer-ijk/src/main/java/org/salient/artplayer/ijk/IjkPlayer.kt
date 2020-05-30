@@ -37,6 +37,7 @@ class IjkPlayer : IMediaPlayer<IjkMediaPlayer>,
     override val playerStateLD: MutableLiveData<PlayerState> = MutableLiveData()
     override val videoSizeLD: MutableLiveData<VideoSize> = MutableLiveData()
     override val bufferingProgressLD: MutableLiveData<Int> = MutableLiveData()
+    override val seekCompleteLD: MutableLiveData<Boolean> = MutableLiveData()
     override val videoInfoLD: MutableLiveData<VideoInfo> = MutableLiveData()
     override val videoErrorLD: MutableLiveData<VideoInfo> = MutableLiveData()
 
@@ -249,7 +250,7 @@ class IjkPlayer : IMediaPlayer<IjkMediaPlayer>,
     }
 
     override fun onSeekComplete(mediaPlayer: tv.danmaku.ijk.media.player.IMediaPlayer?) {
-        playerStateLD.value = PlayerState.SEEK_COMPLETE
+        seekCompleteLD.value = true
     }
 
     override fun onError(mediaPlayer: tv.danmaku.ijk.media.player.IMediaPlayer?, what: Int, extra: Int): Boolean {

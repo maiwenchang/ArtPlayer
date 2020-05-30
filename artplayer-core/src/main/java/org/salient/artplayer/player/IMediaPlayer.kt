@@ -61,6 +61,10 @@ interface IMediaPlayer<T> {
      */
     val bufferingProgressLD: LiveData<Int>
     /**
+     * 是否跳转完成
+     */
+    val seekCompleteLD: LiveData<Boolean>
+    /**
      * 视频信息
      */
     val videoInfoLD: LiveData<VideoInfo>

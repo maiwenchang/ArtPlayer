@@ -40,7 +40,4 @@ sealed class PlayerState(val code: Int) {
     object END :
             PlayerState(1 shl 10)
 
-    object SEEK_COMPLETE :
-            PlayerState(1 shl 11)
-
 }
