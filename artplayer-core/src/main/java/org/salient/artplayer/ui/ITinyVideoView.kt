@@ -16,13 +16,4 @@ interface ITinyVideoView {
      */
     var origin: VideoView?
 
-    /**
-     * 是否可以拖动
-     */
-    var isMovable : Boolean
-
-    /**
-     * 是否可以缩放
-     */
-    var isScalable: Boolean
 }

@@ -26,7 +26,7 @@ class TinyVideoView(
     /**
      * 是否可以拖动
      */
-    override var isMovable: Boolean = true
+    var isMovable: Boolean = true
         set(value) {
             field = value
             gestureListener.isMovable = value
@@ -35,7 +35,7 @@ class TinyVideoView(
     /**
      * 是否可以缩放
      */
-    override var isScalable: Boolean = true
+    var isScalable: Boolean = true
         set(value) {
             field = value
             gestureListener.isScalable = value

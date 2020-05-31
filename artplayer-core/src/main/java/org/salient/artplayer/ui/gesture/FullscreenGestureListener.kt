@@ -1,6 +1,5 @@
 package org.salient.artplayer.ui.gesture
 
-import android.util.Log
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
 import android.view.View
@@ -17,7 +16,12 @@ import kotlin.math.abs
  * email: cv.stronger@gmail.com
  * date: 2020-05-22 10:06 PM.
  */
-class FullscreenGestureListener(private val target: VideoView) : SimpleOnGestureListener(), View.OnTouchListener {
+class FullscreenGestureListener(
+        private val target: VideoView,
+        var isVolumeGestureEnable:Boolean, //是否开启音量手势
+        var isBrightnessGestureEnable: Boolean, //是否开启亮度手势
+        var isProgressGestureEnable: Boolean //是否开启进度拖动手势
+) : SimpleOnGestureListener(), View.OnTouchListener {
     private var currentX = 0f
     private var currentY = 0f
     private var currentWidth = 0f
@@ -62,11 +66,12 @@ class FullscreenGestureListener(private val target: VideoView) : SimpleOnGesture
                 isChangeProgress = abs(distanceX) >= abs(distanceY)
                 if (!isChangeProgress) {
                     if (mOldX > currentWidth * 2.0 / 3) { //右边三分之一区域滑动
-                        isChangeVolume = true
+                        isChangeVolume = true && isVolumeGestureEnable
                     } else if (mOldX < currentWidth / 3.0) { //左边三分之一区域滑动
-                        isChangeBrightness = true
+                        isChangeBrightness = true && isBrightnessGestureEnable
                     }
                 }
+                isChangeProgress = isChangeProgress && isProgressGestureEnable
                 isFirstTouch = false
             }
             if (isChangeProgress) {

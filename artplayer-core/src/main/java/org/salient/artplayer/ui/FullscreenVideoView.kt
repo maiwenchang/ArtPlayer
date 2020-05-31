@@ -20,14 +20,30 @@ class FullscreenVideoView(context: Context,
                           override val params: ViewGroup.LayoutParams? = null
 ) : VideoView(context), IFullscreenVideoView {
 
-    private val gestureListener: FullscreenGestureListener
+    var isVolumeGestureEnable: Boolean = true //是否开启音量手势
+        set(value) {
+            field = value
+            gestureListener?.isVolumeGestureEnable = value
+        }
+    var isBrightnessGestureEnable: Boolean = true //是否开启亮度手势
+        set(value) {
+            field = value
+            gestureListener?.isBrightnessGestureEnable = value
+        }
+    var isProgressGestureEnable: Boolean = true //是否开启进度拖动手势
+        set(value) {
+            field = value
+            gestureListener?.isProgressGestureEnable = value
+        }
+
+    private val gestureListener: FullscreenGestureListener?
 
     init {
         tag = WindowType.FULLSCREEN
         layoutParams = params
                 ?: ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
 
-        gestureListener = FullscreenGestureListener(this)
+        gestureListener = FullscreenGestureListener(this, isVolumeGestureEnable, isBrightnessGestureEnable, isProgressGestureEnable)
         val gestureDetector = GestureDetector(getContext(), gestureListener)
         setOnTouchListener { v, event ->
             if (gestureDetector.onTouchEvent(event)) true
