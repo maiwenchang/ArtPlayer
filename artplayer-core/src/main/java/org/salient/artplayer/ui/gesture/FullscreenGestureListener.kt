@@ -26,7 +26,7 @@ class FullscreenGestureListener(private val target: VideoView) : SimpleOnGesture
     private var currentVolume: Int = 0
     private var currentBrightness: Float = 0f
     private var currentProgress: Long = 0
-    private var progressOffset : Long = 0
+    private var progressOffset: Long = 0
 
     private var isFirstTouch = false //按住屏幕不放的第一次点击，则为true
     private var isChangeProgress = false//判断是改变进度条则为true，否则为false
@@ -87,12 +87,9 @@ class FullscreenGestureListener(private val target: VideoView) : SimpleOnGesture
      * @param seekDistance
      */
     private fun onSeekProgressControl(percent: Float) {
-        Log.d(javaClass.simpleName,"percent $percent")
         val duration = target.duration
         val offset = (currentProgress + percent * duration).toLong()
-        Log.d(javaClass.simpleName,"currentProgress : $currentProgress, offset: $offset , duration: $duration")
-        progressOffset = if (offset < 0) 0 else if (offset > duration) duration else offset
-        Log.d(javaClass.simpleName,"offset $progressOffset")
+        progressOffset = if (offset <= 100) 100 else if (offset > duration) duration else offset
     }
 
     /**

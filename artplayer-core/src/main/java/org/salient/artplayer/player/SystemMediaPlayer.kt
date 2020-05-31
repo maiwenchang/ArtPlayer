@@ -203,7 +203,11 @@ class SystemMediaPlayer : IMediaPlayer<MediaPlayer>, OnPreparedListener,
 
     override fun seekTo(time: Long) {
         try {
-            impl.seekTo(time.toInt())
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                impl.seekTo(time, SEEK_CLOSEST)
+            } else {
+                impl.seekTo(time.toInt())
+            }
         } catch (e: IllegalStateException) {
             e.printStackTrace()
         }
