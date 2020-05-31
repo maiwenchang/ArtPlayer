@@ -5,7 +5,7 @@ import android.view.GestureDetector
 import android.view.Gravity
 import android.view.ViewGroup
 import org.salient.artplayer.conduction.WindowType
-import org.salient.artplayer.ui.gesture.TinyViewGestureListener
+import org.salient.artplayer.ui.extend.TinyViewGestureListener
 
 /**
  * description: 视频播放视容器 - 小窗模式
@@ -15,7 +15,7 @@ import org.salient.artplayer.ui.gesture.TinyViewGestureListener
  * email: cv.stronger@gmail.com
  * date: 2020-05-04 10:06 AM.
  */
-class TinyVideoView(
+open class TinyVideoView(
         context: Context,
         params: ViewGroup.LayoutParams? = null,
         override var origin: VideoView? = null

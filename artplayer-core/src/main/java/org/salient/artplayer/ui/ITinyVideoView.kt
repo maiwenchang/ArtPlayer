@@ -1,7 +1,5 @@
 package org.salient.artplayer.ui
 
-import android.view.ViewGroup
-
 /**
  * description: 视频容器-小窗模式抽象
  *

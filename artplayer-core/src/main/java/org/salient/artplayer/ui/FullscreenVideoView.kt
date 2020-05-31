@@ -4,8 +4,7 @@ import android.content.Context
 import android.view.GestureDetector
 import android.view.ViewGroup
 import org.salient.artplayer.conduction.WindowType
-import org.salient.artplayer.ui.gesture.FullscreenGestureListener
-import org.salient.artplayer.ui.gesture.TinyViewGestureListener
+import org.salient.artplayer.ui.extend.FullscreenGestureListener
 
 /**
  * description: 视频播放视容器 - 全屏
@@ -15,9 +14,9 @@ import org.salient.artplayer.ui.gesture.TinyViewGestureListener
  * email: cv.stronger@gmail.com
  * date: 2020-05-04 10:06 AM.
  */
-class FullscreenVideoView(context: Context,
-                          override val origin: VideoView? = null,
-                          override val params: ViewGroup.LayoutParams? = null
+open class FullscreenVideoView(context: Context,
+                               override val origin: VideoView? = null,
+                               final override val params: ViewGroup.LayoutParams? = null
 ) : VideoView(context), IFullscreenVideoView {
 
     var isVolumeGestureEnable: Boolean = true //是否开启音量手势

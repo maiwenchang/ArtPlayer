@@ -1,4 +1,4 @@
-package org.salient.artplayer.ui.gesture
+package org.salient.artplayer.ui.extend
 
 import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent

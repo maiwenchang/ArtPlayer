@@ -27,7 +27,7 @@ import java.io.IOException
  * email: cv.stronger@gmail.com
  * date: 2020-05-04 10:06 AM.
  */
-class ExoMediaPlayer(context: Context) : IMediaPlayer<SimpleExoPlayer>, Player.EventListener, AnalyticsListener {
+open class ExoMediaPlayer(context: Context) : IMediaPlayer<SimpleExoPlayer>, Player.EventListener, AnalyticsListener {
 
     var mediaSource: com.google.android.exoplayer2.source.MediaSource? = null
         set(value) {
@@ -37,9 +37,9 @@ class ExoMediaPlayer(context: Context) : IMediaPlayer<SimpleExoPlayer>, Player.E
             }
         }
 
-    override lateinit var impl: SimpleExoPlayer
+    final override lateinit var impl: SimpleExoPlayer
     override var playWhenReady: Boolean = true
-    override val playerStateLD: MutableLiveData<PlayerState> = MutableLiveData()
+    final override val playerStateLD: MutableLiveData<PlayerState> = MutableLiveData()
     override val videoSizeLD: MutableLiveData<VideoSize> = MutableLiveData()
     override val bufferingProgressLD: MutableLiveData<Int> = MutableLiveData()
     override val seekCompleteLD: MutableLiveData<Boolean> = MutableLiveData()

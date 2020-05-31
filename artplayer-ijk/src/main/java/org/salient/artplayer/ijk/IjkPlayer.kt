@@ -22,7 +22,7 @@ import java.io.IOException
  * email: cv.stronger@gmail.com
  * date: 2020-05-04 10:06 AM.
  */
-class IjkPlayer : IMediaPlayer<IjkMediaPlayer>,
+open class IjkPlayer : IMediaPlayer<IjkMediaPlayer>,
         tv.danmaku.ijk.media.player.IMediaPlayer.OnPreparedListener,
         tv.danmaku.ijk.media.player.IMediaPlayer.OnCompletionListener,
         tv.danmaku.ijk.media.player.IMediaPlayer.OnBufferingUpdateListener,
@@ -31,10 +31,10 @@ class IjkPlayer : IMediaPlayer<IjkMediaPlayer>,
         tv.danmaku.ijk.media.player.IMediaPlayer.OnInfoListener,
         tv.danmaku.ijk.media.player.IMediaPlayer.OnVideoSizeChangedListener {
 
-    override var impl: IjkMediaPlayer = IjkMediaPlayer()
+    final override var impl: IjkMediaPlayer = IjkMediaPlayer()
     override var playWhenReady: Boolean = true
 
-    override val playerStateLD: MutableLiveData<PlayerState> = MutableLiveData()
+    final override val playerStateLD: MutableLiveData<PlayerState> = MutableLiveData()
     override val videoSizeLD: MutableLiveData<VideoSize> = MutableLiveData()
     override val bufferingProgressLD: MutableLiveData<Int> = MutableLiveData()
     override val seekCompleteLD: MutableLiveData<Boolean> = MutableLiveData()

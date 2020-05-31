@@ -26,7 +26,7 @@ import java.net.HttpCookie
  * email: cv.stronger@gmail.com
  * date: 2020-05-04 10:06 AM.
  */
-class SystemMediaPlayer : IMediaPlayer<MediaPlayer>, OnPreparedListener,
+open class SystemMediaPlayer : IMediaPlayer<MediaPlayer>, OnPreparedListener,
         OnCompletionListener,
         OnBufferingUpdateListener,
         OnSeekCompleteListener,
@@ -34,10 +34,10 @@ class SystemMediaPlayer : IMediaPlayer<MediaPlayer>, OnPreparedListener,
         OnInfoListener,
         OnVideoSizeChangedListener {
 
-    override var impl: MediaPlayer = MediaPlayer()
+    final override var impl: MediaPlayer = MediaPlayer()
     override var playWhenReady: Boolean = true
 
-    override val playerStateLD: MutableLiveData<PlayerState> = MutableLiveData()
+    final override val playerStateLD: MutableLiveData<PlayerState> = MutableLiveData()
     override val videoSizeLD: MutableLiveData<VideoSize> = MutableLiveData()
     override val bufferingProgressLD: MutableLiveData<Int> = MutableLiveData()
     override val seekCompleteLD: MutableLiveData<Boolean> = MutableLiveData()
