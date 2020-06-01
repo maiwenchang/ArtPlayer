@@ -125,15 +125,9 @@ class MainActivity : BaseActivity() {
                 artVideoView.prepare()
             }
             R.id.fullWindow -> {
-                hideSoftInput()
-                val fullScreenVideoView = FullscreenVideoView(this)
-                val systemMediaPlayer = SystemMediaPlayer()
-                systemMediaPlayer.setDataSource(this, Uri.parse(randomVideo?.url))
-                fullScreenVideoView.mediaPlayer = systemMediaPlayer
-                //开始播放
-                fullScreenVideoView.prepare()
-
-                MediaPlayerManager.startFullscreen(this, fullScreenVideoView)
+//                hideSoftInput()
+//
+                startActivity(Intent(this, FullscreenActivity::class.java))
 
             }
             R.id.tinyWindow -> {

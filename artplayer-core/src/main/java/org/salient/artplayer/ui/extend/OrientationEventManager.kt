@@ -24,10 +24,7 @@ class OrientationEventManager {
     private var orientationEventListener: OrientationEventListener? = null //加速度传感器监听
 
     fun orientationDisable() {
-        if (orientationEventListener != null) {
-            orientationEventListener?.disable()
-            orientationEventListener = null
-        }
+        orientationEventListener?.disable()
     }
 
     fun orientationEnable(context: Context, videoView: VideoView, orientationChangeListener: OnOrientationChangeListener?) {
@@ -36,19 +33,24 @@ class OrientationEventManager {
             // 加速度传感器监听，用于自动旋转屏幕
             override fun onOrientationChanged(orientation: Int) {
                 Log.d(javaClass.name, "onOrientationChanged() called with orientation: $orientation");
-                try { //系统是否开启方向锁定
+                try {
+                    //系统是否开启方向锁定
                     isRotateLocked = Settings.System.getInt(context.contentResolver, Settings.System.ACCELEROMETER_ROTATION)
                 } catch (e: SettingNotFoundException) {
                     e.printStackTrace()
                 }
                 if (isRotateLocked == 0) return  //方向被锁定，直接返回
-                if ((orientation >= 300 || orientation <= 30) && System.currentTimeMillis() - orientationListenerDelayTime > 200) { //屏幕顶部朝上
+                val operationDelay = System.currentTimeMillis() - orientationListenerDelayTime > 500
+                if ((orientation >= 300 || orientation <= 30) && operationDelay) {
+                    //屏幕顶部朝上
                     onOrientationPortrait(videoView)
                     orientationListenerDelayTime = System.currentTimeMillis()
-                } else if (orientation in 260..280 && System.currentTimeMillis() - orientationListenerDelayTime > 200) { //屏幕左边朝上
+                } else if (orientation in 260..280 && operationDelay) {
+                    //屏幕左边朝上
                     onOrientationLandscape(videoView)
                     orientationListenerDelayTime = System.currentTimeMillis()
-                } else if (orientation in 70..90 && System.currentTimeMillis() - orientationListenerDelayTime > 200) { //屏幕右边朝上
+                } else if (orientation in 70..90 && operationDelay) {
+                    //屏幕右边朝上
                     onOrientationReverseLandscape(videoView)
                     orientationListenerDelayTime = System.currentTimeMillis()
                 }
@@ -63,7 +65,7 @@ class OrientationEventManager {
      */
     private fun onOrientationLandscape(videoView: VideoView) {
         if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) return
-        if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+        if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
             currentOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
             return
         }
@@ -76,7 +78,7 @@ class OrientationEventManager {
      */
     private fun onOrientationReverseLandscape(videoView: VideoView) {
         if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE) return
-        if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_PORTRAIT) {
+        if (currentOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
             currentOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
             return
         }

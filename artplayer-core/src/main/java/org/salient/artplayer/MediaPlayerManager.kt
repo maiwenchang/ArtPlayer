@@ -2,6 +2,7 @@ package org.salient.artplayer
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
+import android.view.OrientationEventListener
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
@@ -36,7 +37,7 @@ object MediaPlayerManager {
     /**
      * 开启全屏
      */
-    fun startFullscreen(activity: Activity, fullscreenVideoView: FullscreenVideoView) {
+    fun startFullscreen(activity: Activity, fullscreenVideoView: FullscreenVideoView, orientation: Int = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
         Utils.hideSupportActionBar(activity)
         val decorView = activity.findViewById<ViewGroup>(Window.ID_ANDROID_CONTENT)
         decorView.findViewWithTag<VideoView?>(WindowType.FULLSCREEN)?.let {
@@ -49,7 +50,15 @@ object MediaPlayerManager {
                 fullscreenVideoView.cover.visibility = View.VISIBLE
             }
         }
+        Utils.setRequestedOrientation(activity, orientation)
         Utils.setRequestedOrientation(activity, ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE)
+    }
+
+    /**
+     * 开启反向全屏
+     */
+    fun startFullscreenReverse(activity: Activity, fullscreenVideoView: FullscreenVideoView) {
+        startFullscreen(activity, fullscreenVideoView, ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE)
     }
 
     /**
@@ -59,6 +68,7 @@ object MediaPlayerManager {
         val decorView = activity.findViewById<ViewGroup>(Window.ID_ANDROID_CONTENT)
         val fullscreenVideoView = decorView.findViewWithTag<FullscreenVideoView?>(WindowType.FULLSCREEN)
         fullscreenVideoView?.let {
+            it.origin?.mediaPlayer = it.mediaPlayer
             it.origin?.attach()
             Utils.setRequestedOrientation(activity, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
             decorView.removeView(it)

@@ -9,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import org.salient.artplayer.MediaPlayerManager
 import org.salient.artplayer.MediaPlayerManager.blockBackPress
 import org.salient.artplayer.exo.ExoMediaPlayer
 import org.salient.artplayer.ijk.IjkPlayer
@@ -77,7 +78,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (blockBackPress(this)) {
+        if (MediaPlayerManager.blockBackPress(this)) {
             return
         }
         super.onBackPressed()

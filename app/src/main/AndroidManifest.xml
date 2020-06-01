@@ -68,6 +68,10 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="ApiRawAssetsActivity"
             android:screenOrientation="portrait" />
+        <activity android:name=".activity.FullscreenActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="FullscreenActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

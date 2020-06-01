@@ -74,7 +74,6 @@ android {
 
         //required
         implementation project(':artplayer-core')
-//        implementation project(':artplayer-ui')
         implementation project(':artplayer-exo')
         implementation project(':artplayer-ijk')
         implementation "org.salient.artvideoplayer:artplayer-armv7a:1.0.0"
