@@ -68,7 +68,6 @@ object MediaPlayerManager {
         val decorView = activity.findViewById<ViewGroup>(Window.ID_ANDROID_CONTENT)
         val fullscreenVideoView = decorView.findViewWithTag<FullscreenVideoView?>(WindowType.FULLSCREEN)
         fullscreenVideoView?.let {
-            it.origin?.mediaPlayer = it.mediaPlayer
             it.origin?.attach()
             Utils.setRequestedOrientation(activity, ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
             decorView.removeView(it)

@@ -74,6 +74,7 @@ class FullscreenActivity : BaseActivity() {
                 val systemMediaPlayer = SystemMediaPlayer()
                 systemMediaPlayer.setDataSource(this, Uri.parse(randomVideo?.url))
                 fullScreenVideoView.mediaPlayer = systemMediaPlayer
+                video_view.mediaPlayer = systemMediaPlayer
                 if (cb_auto_orientate_enable.isChecked) {
                     orientationEventManager.orientationEnable(this, fullScreenVideoView, orientationEventListener)
                 } else {
