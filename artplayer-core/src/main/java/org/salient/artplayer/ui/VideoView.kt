@@ -311,13 +311,18 @@ open class VideoView : FrameLayout, IVideoView {
                     cover.visibility = View.GONE
                 }, 50)
             }
-            PlayerState.STOPPED -> {
+            PlayerState.STOPPED, PlayerState.END -> {
                 audioManager.abandonAudioFocus()
             }
             PlayerState.ERROR -> {
                 audioManager.abandonAudioFocus()
             }
         }
+    }
+
+    override fun onDetachedFromWindow() {
+        removeMediaPlayerObserver(mediaPlayer)
+        super.onDetachedFromWindow()
     }
 
 }

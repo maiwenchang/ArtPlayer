@@ -125,10 +125,7 @@ class MainActivity : BaseActivity() {
                 artVideoView.prepare()
             }
             R.id.fullWindow -> {
-//                hideSoftInput()
-//
                 startActivity(Intent(this, FullscreenActivity::class.java))
-
             }
             R.id.tinyWindow -> {
                 startActivity(Intent(this, TinyWindowActivity::class.java))
