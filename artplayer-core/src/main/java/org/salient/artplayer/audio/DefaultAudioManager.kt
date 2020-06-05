@@ -7,6 +7,7 @@ import android.media.AudioFocusRequest
 import android.media.AudioManager
 import android.os.Build
 import org.salient.artplayer.player.IMediaPlayer
+import java.lang.ref.WeakReference
 
 /**
  * description: 音频管理
@@ -24,7 +25,7 @@ open class DefaultAudioManager(context: Context, mediaPlayer: IMediaPlayer<*>?) 
             .build()
     private var audioFocusRequest: AudioFocusRequest? = null
 
-    override var onAudioFocusChangeListener: AudioManager.OnAudioFocusChangeListener = DefaultAudioFocusChangeListener(context, this, mediaPlayer)
+    override var onAudioFocusChangeListener: AudioManager.OnAudioFocusChangeListener = DefaultAudioFocusChangeListener(WeakReference(context), this, mediaPlayer)
 
     override fun mute() {
         audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, 0, AudioManager.FLAG_PLAY_SOUND)

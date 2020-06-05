@@ -320,9 +320,4 @@ open class VideoView : FrameLayout, IVideoView {
         }
     }
 
-    override fun onDetachedFromWindow() {
-        removeMediaPlayerObserver(mediaPlayer)
-        super.onDetachedFromWindow()
-    }
-
 }

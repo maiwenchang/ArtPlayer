@@ -5,6 +5,7 @@ import android.content.Context
 import android.media.AudioManager
 import android.media.AudioManager.OnAudioFocusChangeListener
 import org.salient.artplayer.player.IMediaPlayer
+import java.lang.ref.WeakReference
 
 /**
  * description: 声音焦点变化管理类
@@ -14,7 +15,7 @@ import org.salient.artplayer.player.IMediaPlayer
  * date: 2020-05-04 10:06 AM.
  */
 open class DefaultAudioFocusChangeListener(
-        private val context: Context,
+        private val contextReference: WeakReference<Context>,
         private val audioManager: IAudioManager,
         private val mediaPlayer: IMediaPlayer<*>?
 ) : OnAudioFocusChangeListener {
@@ -22,6 +23,7 @@ open class DefaultAudioFocusChangeListener(
     override fun onAudioFocusChange(focusChange: Int) {
         when (focusChange) {
             AudioManager.AUDIOFOCUS_GAIN -> {
+                val context = contextReference.get() ?: return
                 // 重新获得焦点，恢复正常音量，恢复播放
                 if (playOnAudioFocus && mediaPlayer?.isPlaying != true) {
                     mediaPlayer?.start();
@@ -32,6 +34,7 @@ open class DefaultAudioFocusChangeListener(
             }
             AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK -> {
                 //短暂失去焦点，无须停止播放，只适当降低播放器音量
+                val context = contextReference.get() ?: return
                 val duckVolume = getCurrentVolume(context) * 0.8f
                 mediaPlayer?.setVolume(duckVolume);
             }
