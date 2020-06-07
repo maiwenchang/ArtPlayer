@@ -31,27 +31,27 @@ This is a flexible video player. MediaPlayer is completely separate from VideoVi
 ### Getting started
 basic dependency
 ```
-implementation 'org.salient.artvideoplayer:artplayer-core:1.0.0'
+implementation 'org.salient.artvideoplayer:artplayer-core:1.1.0'
 ```
 
 using ExoPlayer
 ```
-implementation "org.salient.artvideoplayer:artplayer-exo:1.0.0"
+implementation "org.salient.artvideoplayer:artplayer-exo:1.1.0"
 ```
 
 using IjkPlayer
 ```
-implementation 'org.salient.artvideoplayer:artplayer-ijk:1.0.0'
-implementation "org.salient.artvideoplayer:artplayer-armv7a:1.0.0"
+implementation 'org.salient.artvideoplayer:artplayer-ijk:1.1.0'
+implementation "org.salient.artvideoplayer:artplayer-armv7a:1.1.0"
 ```
 
 support different cpu architecture
 ```
-implementation "org.salient.artvideoplayer:artplayer-armv5:1.0.0"
-implementation "org.salient.artvideoplayer:artplayer-x86:1.0.0"
+implementation "org.salient.artvideoplayer:artplayer-armv5:1.1.0"
+implementation "org.salient.artvideoplayer:artplayer-x86:1.1.0"
 //required minSdk version >= 21
-implementation "org.salient.artvideoplayer:artplayer-arm64:1.0.0"
-implementation "org.salient.artvideoplayer:artplayer-x86_64:1.0.0"
+implementation "org.salient.artvideoplayer:artplayer-arm64:1.1.0"
+implementation "org.salient.artvideoplayer:artplayer-x86_64:1.1.0"
 ```
 
 ### 使用方法

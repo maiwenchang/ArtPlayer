@@ -26,31 +26,33 @@ Kotlin实现的视频播放器，将MediaPlayer与VideoView解耦合，支持切
 - 多播放器同时播放
 - Raw/Assets，本地视频文件播放支持
 - Activity生命周期感知，实现了onPause暂停播放，onDestory停止播放并释放资源
+- 手势操作支持（小窗：单指拖动，双指缩放；全屏：音量，亮度，快进）
+- 重力感应支持
 
 ### 开始使用
 核心依赖
 ```
-implementation 'org.salient.artvideoplayer:artplayer-core:1.0.0'
+implementation 'org.salient.artvideoplayer:artplayer-core:1.1.0'
 ```
 
 选择使用ExoPlayer
 ```
-implementation "org.salient.artvideoplayer:artplayer-exo:1.0.0"
+implementation "org.salient.artvideoplayer:artplayer-exo:1.1.0"
 ```
 
 选择使用IjkPlayer
 ```
-implementation 'org.salient.artvideoplayer:artplayer-ijk:1.0.0'
-implementation "org.salient.artvideoplayer:artplayer-armv7a:1.0.0"
+implementation 'org.salient.artvideoplayer:artplayer-ijk:1.1.0'
+implementation "org.salient.artvideoplayer:artplayer-armv7a:1.1.0"
 ```
 
 需要支持不同的cpu架构
 ```
-implementation "org.salient.artvideoplayer:artplayer-armv5:1.0.0"
-implementation "org.salient.artvideoplayer:artplayer-x86:1.0.0"
+implementation "org.salient.artvideoplayer:artplayer-armv5:1.1.0"
+implementation "org.salient.artvideoplayer:artplayer-x86:1.1.0"
 //下面两个需要minSdk version >= 21
-implementation "org.salient.artvideoplayer:artplayer-arm64:1.0.0"
-implementation "org.salient.artvideoplayer:artplayer-x86_64:1.0.0"
+implementation "org.salient.artvideoplayer:artplayer-arm64:1.1.0"
+implementation "org.salient.artvideoplayer:artplayer-x86_64:1.1.0"
 ```
 
 ### 使用方法
@@ -99,11 +101,6 @@ Glide.with(context)
         .load("http://img5.mtime.cn/mg/2018/07/06/093947.51483272.jpg")
         .into(videoView.cover);
 ```
-
-### 开发中
-- Kotlin版本
-- 手势操作支持（小窗：单指拖动，双指缩放；全屏：音量，亮度，快进）
-- 重力感应支持
 
 ### 支持
 - 请在 github 上公开讨论[技术问题](https://github.com/maiwenchang/ArtPlayer/issues)

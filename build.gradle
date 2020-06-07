@@ -15,8 +15,8 @@ buildscript {
         artPlayerVersion = "0.8.0"
     }
 
-    ext.libraryVersionCode = 10000
-    ext.libraryVersionName = "1.0.0"
+    ext.libraryVersionCode = 10100
+    ext.libraryVersionName = "1.1.0"
 
     repositories {
         google()
