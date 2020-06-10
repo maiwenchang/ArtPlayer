@@ -103,14 +103,6 @@ Glide.with(context)
  ```
 
 
-
-### ON-PLAN
-- Kotlin version
-
-### NOT-ON-PLAN
-- Multiple MediaPlayer playback
-
-
 ### Support
 - Public technical discussion on github is preferred.[Technical problems](https://github.com/maiwenchang/ArtPlayer/issues)
 - [Wiki](https://github.com/maiwenchang/ArtPlayer/wiki)
