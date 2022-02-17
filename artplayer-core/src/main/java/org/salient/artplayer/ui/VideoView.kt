@@ -35,7 +35,7 @@ open class VideoView : FrameLayout, IVideoView {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr)
-    constructor(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes): super(context,attrs,defStyleAttr,defStyleRes)
+    constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int,defStyleRes: Int): super(context,attrs,defStyleAttr,defStyleRes)
 
     private val TAG = javaClass.simpleName
     private var textureView: ResizeTextureView? = null
