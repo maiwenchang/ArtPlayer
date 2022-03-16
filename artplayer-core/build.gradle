@@ -52,5 +52,5 @@ dependencies {
     implementation "androidx.activity:activity-ktx:$ktx_version"
 }
 
-apply from: './bintary_push.gradle'
+//apply from: './bintary_push.gradle'
 

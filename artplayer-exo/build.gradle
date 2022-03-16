@@ -46,7 +46,7 @@ dependencies {
     implementation project(':artplayer-core')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
-apply from: './bintary_push.gradle'
+//apply from: './bintary_push.gradle'
 repositories {
     mavenCentral()
 }

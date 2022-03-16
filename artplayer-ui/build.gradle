@@ -36,4 +36,4 @@ dependencies {
     compileOnly project(':artplayer-core')
 }
 
-//apply from: './bintary_push.gradle'
+////apply from: './bintary_push.gradle'

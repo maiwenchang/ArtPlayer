@@ -38,4 +38,4 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "tv.danmaku.ijk.media:ijkplayer-armv5:$ijkPlayerVersion"
 }
-apply from: './bintary_push.gradle'
+//apply from: './bintary_push.gradle'

@@ -42,7 +42,7 @@ dependencies {
     api "tv.danmaku.ijk.media:ijkplayer-java:$ijkPlayerVersion"
 }
 
-apply from: './bintary_push.gradle'
+//apply from: './bintary_push.gradle'
 repositories {
     mavenCentral()
 }
