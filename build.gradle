@@ -5,10 +5,10 @@ buildscript {
 
     ext {
         // App dependencies
-        compileSdkVersion = 29
+        compileSdkVersion = 31
         minSdkVersion = 21
-        targetSdkVersion = 29
-        androidxLibraryVersion = '1.1.0'
+        targetSdkVersion = 31
+        compactVersion = '1.1.0'
         ktx_version = '1.1.0'
         ijkPlayerVersion = '0.8.8'
         exoPlayerVersion = '2.11.3'
@@ -20,6 +20,7 @@ buildscript {
 
     repositories {
         google()
+        mavenCentral()
         jcenter()
     }
     dependencies {
@@ -34,8 +35,8 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
         mavenCentral()
+        jcenter()
     }
 
     // 解决 : bintray 上传如果注释中有中文，可能会出现：编码GBK的不可映射字符

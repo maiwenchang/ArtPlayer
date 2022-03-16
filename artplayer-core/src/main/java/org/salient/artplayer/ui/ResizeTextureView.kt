@@ -18,8 +18,10 @@ class ResizeTextureView : TextureView {
     private var mVideoHeight = 0
     private var screenType: ScaleType = ScaleType.DEFAULT
 
-    constructor(context: Context?) : super(context) {}
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {}
+    constructor(context: Context) : super(context) {
+
+    }
+    constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {}
 
     fun setVideoSize(width: Int, height: Int) {
         mVideoWidth = width

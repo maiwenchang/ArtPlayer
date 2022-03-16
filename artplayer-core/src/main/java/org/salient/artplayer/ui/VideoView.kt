@@ -222,14 +222,14 @@ open class VideoView : FrameLayout, IVideoView {
             this.surfaceTexture = surfaceTexture
             attach()
         } else if (textureView?.surfaceTexture != surfaceTexture) {
-            textureView?.surfaceTexture = surfaceTexture
+            textureView?.setSurfaceTexture(surfaceTexture)
         }
     }
 
     override fun onSurfaceTextureSizeChanged(surfaceTexture: SurfaceTexture, width: Int, height: Int) {
         Log.d(TAG, "onSurfaceTextureSizeChanged() called with: surfaceTexture = $surfaceTexture, width = $width, height = $height")
         if (textureView?.surfaceTexture != surfaceTexture) {
-            textureView?.surfaceTexture = surfaceTexture
+            textureView?.setSurfaceTexture(surfaceTexture)
         }
     }
 
@@ -241,7 +241,7 @@ open class VideoView : FrameLayout, IVideoView {
 
     override fun onSurfaceTextureUpdated(surfaceTexture: SurfaceTexture) {
         if (textureView?.surfaceTexture != surfaceTexture) {
-            textureView?.surfaceTexture = surfaceTexture
+            textureView?.setSurfaceTexture(surfaceTexture)
         }
     }
 

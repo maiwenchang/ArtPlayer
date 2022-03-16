@@ -38,7 +38,7 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    implementation("androidx.appcompat:appcompat:$androidxLibraryVersion")
+    implementation("androidx.appcompat:appcompat:$compactVersion")
 
     api("com.google.android.exoplayer:exoplayer:$exoPlayerVersion")
     api("com.google.android.exoplayer:extension-rtmp:$exoPlayerVersion")

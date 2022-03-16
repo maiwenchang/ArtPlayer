@@ -47,10 +47,14 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
-    implementation "androidx.appcompat:appcompat:$androidxLibraryVersion"
+    implementation "androidx.appcompat:appcompat:$compactVersion"
     implementation "androidx.core:core-ktx:$ktx_version"
     implementation "androidx.activity:activity-ktx:$ktx_version"
 }
-
+configurations.all {
+    resolutionStrategy {
+        force "androidx.core:core-ktx:$ktx_version"
+    }
+}
 //apply from: './bintary_push.gradle'
 
