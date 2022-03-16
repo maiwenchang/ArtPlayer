@@ -9,8 +9,6 @@ android {
     defaultConfig {
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
-        versionCode rootProject.libraryVersionCode
-        versionName rootProject.libraryVersionName
 
     }
 
@@ -43,6 +41,3 @@ dependencies {
 }
 
 //apply from: './bintary_push.gradle'
-repositories {
-    mavenCentral()
-}

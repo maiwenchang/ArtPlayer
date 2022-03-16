@@ -62,13 +62,13 @@ android {
         implementation "com.google.android.material:material:1.5.0"
         implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
         //FlexboxLayout
-        implementation 'com.google.android:flexbox:1.0.0'
+        implementation 'com.google.android.flexbox:flexbox:3.0.0'
         androidTestImplementation 'com.android.support.test:runner:1.0.2'
         androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-        implementation 'com.google.code.gson:gson:2.8.5'
+        implementation 'com.google.code.gson:gson:2.8.6'
         implementation 'com.github.bumptech.glide:glide:4.9.0'
-        debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
-        releaseImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+        debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.8.1'
+        releaseImplementation 'com.squareup.leakcanary:leakcanary-android:2.8.1'
         //releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
         testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
 
@@ -76,21 +76,18 @@ android {
         implementation project(':artplayer-core')
         implementation project(':artplayer-exo')
         implementation project(':artplayer-ijk')
-        implementation "org.salient.artvideoplayer:artplayer-armv7a:1.0.0"
-        implementation "org.salient.artvideoplayer:artplayer-armv5:1.0.0"
-        implementation "org.salient.artvideoplayer:artplayer-x86:1.0.0"
-        implementation "org.salient.artvideoplayer:artplayer-arm64:1.0.0"
-        implementation "org.salient.artvideoplayer:artplayer-x86_64:1.0.0"
+        implementation project(':artplayer-armv7a')
+//        implementation "org.salient.artvideoplayer:artplayer-armv7a:1.0.0"
+//        implementation "org.salient.artvideoplayer:artplayer-armv5:1.0.0"
+//        implementation "org.salient.artvideoplayer:artplayer-x86:1.0.0"
+//        implementation "org.salient.artvideoplayer:artplayer-arm64:1.0.0"
+//        implementation "org.salient.artvideoplayer:artplayer-x86_64:1.0.0"
 
     }
 }
 dependencies {
     implementation "androidx.core:core-ktx:$ktx_version"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-}
-repositories {
-    google()
-    mavenCentral()
 }
 
 configurations.all {
